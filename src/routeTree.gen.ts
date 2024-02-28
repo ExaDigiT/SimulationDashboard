@@ -11,10 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SimulationsImport } from './routes/simulations'
 import { Route as IndexImport } from './routes/index'
-import { Route as SimulationsIndexImport } from './routes/simulations/index'
+import { Route as SimulationsIndexImport } from './routes/simulations.index'
+import { Route as SimulationsNewImport } from './routes/simulations.new'
+import { Route as SimulationsSimulationIdImport } from './routes/simulations.$simulationId'
 
 // Create/Update Routes
+
+const SimulationsRoute = SimulationsImport.update({
+  path: '/simulations',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -22,8 +30,18 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const SimulationsIndexRoute = SimulationsIndexImport.update({
-  path: '/simulations/',
-  getParentRoute: () => rootRoute,
+  path: '/',
+  getParentRoute: () => SimulationsRoute,
+} as any)
+
+const SimulationsNewRoute = SimulationsNewImport.update({
+  path: '/new',
+  getParentRoute: () => SimulationsRoute,
+} as any)
+
+const SimulationsSimulationIdRoute = SimulationsSimulationIdImport.update({
+  path: '/$simulationId',
+  getParentRoute: () => SimulationsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -34,9 +52,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/simulations': {
+      preLoaderRoute: typeof SimulationsImport
+      parentRoute: typeof rootRoute
+    }
+    '/simulations/$simulationId': {
+      preLoaderRoute: typeof SimulationsSimulationIdImport
+      parentRoute: typeof SimulationsImport
+    }
+    '/simulations/new': {
+      preLoaderRoute: typeof SimulationsNewImport
+      parentRoute: typeof SimulationsImport
+    }
     '/simulations/': {
       preLoaderRoute: typeof SimulationsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SimulationsImport
     }
   }
 }
@@ -45,7 +75,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  SimulationsIndexRoute,
+  SimulationsRoute.addChildren([
+    SimulationsSimulationIdRoute,
+    SimulationsNewRoute,
+    SimulationsIndexRoute,
+  ]),
 ])
 
 /* prettier-ignore-end */
