@@ -1,11 +1,11 @@
 import { ArrowLongDownIcon } from "@heroicons/react/16/solid";
-import { SimulationColumn } from "./SimulationsGridColumns";
+import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
 
 function SimulationsDataGridHeaderCell({
   column,
   onSort,
 }: {
-  column: SimulationColumn;
+  column: ColumnHeader;
   onSort: (
     columnString: string,
     sorted: boolean,
@@ -37,7 +37,7 @@ export function SimulationsDataGridHeader({
   columns,
   onSort,
 }: {
-  columns: SimulationColumn[];
+  columns: ColumnHeader[];
   onSort: (
     columnName: string,
     sorted: boolean,
