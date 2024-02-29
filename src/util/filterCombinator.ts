@@ -11,3 +11,15 @@ export function sortCombinator(columns: ColumnHeader[]) {
     return prev + "";
   }, "");
 }
+
+export function operatorCombinator(columns: ColumnHeader[]) {
+  return columns.reduce((prev, curr) => {
+    const columnFilters = curr.activeFilters.reduce(
+      (previousFilters, currentFilter) =>
+        previousFilters +
+        `${previousFilters ? "&" : ""}${curr.propertyName}=${currentFilter.operator}:${currentFilter.value}`,
+      ""
+    );
+    return prev + `${prev ? "&" : ""}${columnFilters}`;
+  }, "");
+}

@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Simulation } from "../../../models/Simulation.model";
 import { SimulationsDataGridHeader } from "./SimulationsDataGridHeader";
-import { columns as SimulationColumns } from "./SimulationsGridColumns";
 import { SimulationsDataGridRow } from "./SimulationsDataGridRow";
+import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
 
 const simulations: Simulation[] = [
   {
@@ -30,27 +29,17 @@ const simulations: Simulation[] = [
   },
 ];
 
-export function SimulationsDataGrid() {
-  const [columns, setColumns] = useState(SimulationColumns);
-
-  const onSort = (
+export function SimulationsDataGrid({
+  columns,
+  onSort,
+}: {
+  columns: ColumnHeader[];
+  onSort: (
     columnName: string,
     sorted: boolean,
     direction: "asc" | "desc"
-  ) => {
-    const updatedColumns = [...columns];
-    const currentColumn = updatedColumns.find(
-      (column) => column.name === columnName
-    );
-
-    if (currentColumn) {
-      currentColumn.sort.sorted = sorted;
-      currentColumn.sort.direction = direction;
-    }
-
-    setColumns(updatedColumns);
-  };
-
+  ) => void;
+}) {
   return (
     <div className="flex flex-col">
       <SimulationsDataGridHeader columns={columns} onSort={onSort} />

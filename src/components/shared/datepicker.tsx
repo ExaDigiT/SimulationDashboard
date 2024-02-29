@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 
 export interface DatePickerProps {
-  label: string;
+  label?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   value: string;
 }
@@ -9,9 +9,11 @@ export interface DatePickerProps {
 export function DatePicker(props: DatePickerProps) {
   return (
     <div className="flex flex-col">
-      <label htmlFor="start-date" className="mb-2 pl-3">
-        {props.label}
-      </label>
+      {props.label && (
+        <label htmlFor="start-date" className="mb-2 pl-3">
+          {props.label}
+        </label>
+      )}
       <input
         type="datetime-local"
         id="start-date"

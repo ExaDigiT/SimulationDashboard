@@ -19,6 +19,7 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "text",
   },
   {
     name: "State",
@@ -37,6 +38,12 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "select",
+    selectOptions: [
+      { label: "Running", value: "running" },
+      { label: "Success", value: "success" },
+      { label: "Failure", value: "fail" },
+    ],
   },
   {
     name: "User",
@@ -55,6 +62,7 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "text",
   },
   {
     name: "Logical Start",
@@ -71,6 +79,7 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "datetime",
   },
   {
     name: "Logical End",
@@ -87,6 +96,7 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "datetime",
   },
   {
     name: "Run Start",
@@ -103,6 +113,7 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "datetime",
   },
   {
     name: "Run End",
@@ -119,5 +130,6 @@ export const columns: ColumnHeader[] = [
     ],
     activeFilters: [],
     sort: { sorted: false, direction: null },
+    inputType: "datetime",
   },
 ] as const;

@@ -3,13 +3,20 @@ import { HTMLProps } from "react";
 export interface ButtonProps extends HTMLProps<HTMLButtonElement> {
   variant: "filled" | "outlined" | "text";
   type: "submit" | "reset" | "button";
+  dense?: boolean;
 }
 
-export function Button({ children, variant, type, ...rest }: ButtonProps) {
+export function Button({
+  children,
+  variant,
+  type,
+  dense,
+  ...rest
+}: ButtonProps) {
   return (
     <button
       type={type}
-      className={`px-4 py-2 rounded-md ${variant === "filled" && "bg-blue-500 text-white"} ${variant === "outlined" && `border-2 hover:bg-neutral-200 transition-colors duration-500 ease-in-out ${rest.disabled && "opacity-75"}`}`}
+      className={`px-4 py-2 rounded-md transition-all duration-500 ${variant === "filled" && "bg-blue-500 text-white hover:opacity-75"} ${variant === "outlined" && `border-2 hover:bg-neutral-200 ${rest.disabled && "opacity-75"}`} ${dense && "py-1"}`}
       {...rest}
     >
       {children}
