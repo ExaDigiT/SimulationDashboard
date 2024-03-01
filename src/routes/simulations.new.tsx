@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { RAPSForm } from "../components/simulations/raps.form";
 import { BasicSettingsForm } from "../components/simulations/basicSettings.form";
@@ -6,6 +6,8 @@ import { Button } from "../components/shared/button";
 import { CoolingForm } from "../components/simulations/cooling.form";
 import { SimulationRequest } from "../models/SimulationRequest.model";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useMutation } from "@tanstack/react-query";
+import axios from "../util/apis";
 
 export const Route = createFileRoute("/simulations/new")({
   component: NewSimultation,
@@ -26,13 +28,22 @@ const steps: {
 function NewSimultation() {
   const [currentStep, setCurrentStep] = useState(0);
   const [form, setForm] = useState<SimulationRequest>(new SimulationRequest());
+  const navigate = useNavigate();
 
   const CurrentForm =
     currentStep < steps.length ? steps[currentStep].Content : null;
 
-  const onNext = (type: "next" | "submit") => {
+  const onSubmit = useMutation({
+    mutationFn: async ({ form }: { form: SimulationRequest }) => {
+      const res = await axios.post("/frontier/simulation/run", form);
+      console.log(res);
+    },
+  });
+
+  const onNext = async (type: "next" | "submit") => {
     if (type === "submit") {
-      console.log(form);
+      await onSubmit.mutateAsync({ form });
+      navigate({ to: "/simulations/" });
     } else {
       setCurrentStep((currentStep) => currentStep + 1);
     }
