@@ -13,13 +13,15 @@ export function sortCombinator(columns: ColumnHeader[]) {
 }
 
 export function operatorCombinator(columns: ColumnHeader[]) {
-  return columns.reduce((prev, curr) => {
-    const columnFilters = curr.activeFilters.reduce(
-      (previousFilters, currentFilter) =>
-        previousFilters +
-        `${previousFilters ? "&" : ""}${curr.propertyName}=${currentFilter.operator}:${currentFilter.value}`,
-      ""
-    );
-    return prev + `${prev ? "&" : ""}${columnFilters}`;
-  }, "");
+  return columns
+    .filter((column) => column.activeFilters.length > 0)
+    .reduce((prev, curr) => {
+      const columnFilters = curr.activeFilters.reduce(
+        (previousFilters, currentFilter) =>
+          previousFilters +
+          `${previousFilters ? "&" : ""}${curr.propertyName}=${currentFilter.operator}:${currentFilter.value}`,
+        ""
+      );
+      return prev + `${prev ? "&" : ""}${columnFilters}`;
+    }, "");
 }
