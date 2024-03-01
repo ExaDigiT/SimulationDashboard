@@ -2,12 +2,13 @@ import {
   Link,
   LinkProps,
   Outlet,
-  createRootRoute,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { RouterContext } from "../App";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: Root,
 });
 
@@ -23,7 +24,7 @@ function Root() {
           Simulations
         </StyledLink>
       </header>
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-y-auto">
         <Outlet />
       </div>
       <TanStackRouterDevtools />
