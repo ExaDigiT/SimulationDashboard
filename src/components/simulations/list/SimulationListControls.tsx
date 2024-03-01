@@ -1,19 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { SimulationsDataGridFilter } from "./SimulationsDataGridFilters";
 import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
+import { SimulationsDataGridHistogram } from "./SimulationsDataGridHistogram";
 
 export function SimulationListControls({
   columns,
   setColumns,
+  totalRows,
 }: {
   columns: ColumnHeader[];
   setColumns: (columns: ColumnHeader[]) => void;
+  totalRows: number;
 }) {
   return (
     <div className="h-16 flex">
-      <div className="flex-1 border-b-2">Place Holder for Timeline Graph</div>
+      <SimulationsDataGridHistogram />
       <div className="flex flex-col">
-        <span className="border-b-2 px-3 py-1 border-l-2">1 Simulation(s)</span>
+        <span className="border-b-2 px-3 py-1 border-l-2">
+          {totalRows} Simulation(s)
+        </span>
         <SimulationsDataGridFilter columns={columns} setColumns={setColumns} />
       </div>
       <Link

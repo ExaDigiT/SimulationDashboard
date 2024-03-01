@@ -14,7 +14,7 @@ function SimulationsDataGridHeaderCell({
 }) {
   return (
     <button
-      className="place-self-center flex items-center gap-3 py-3 group w-full justify-center"
+      className="place-self-center flex items-center gap-3 py-3 group w-full justify-center border-l-2"
       onClick={(e) => {
         e.preventDefault();
         const direction = column.sort.sorted

@@ -11,9 +11,11 @@ function SimulationDataGridCell({
 }) {
   return (
     <div
-      className={`flex w-full items-center ${center && "justify-center"} justify-center`}
+      className={`flex w-full items-center ${center && "justify-center"} justify-center border-l-2 py-3 flex-nowrap px-2`}
     >
-      <span className="overflow-hidden text-nowrap text-ellipsis">{value}</span>
+      <span className="overflow-hidden text-nowrap text-ellipsis" title={value}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -25,9 +27,9 @@ export function SimulationsDataGridRow({
 }) {
   return (
     <Link
-      to="/simulations/$simulationId"
+      to="/simulations/$simulationId/configuration"
       params={{ simulationId: simulation.id }}
-      className="grid grid-cols-7 py-3 border-b-2 hover:bg-neutral-100 duration-500 transition-colors"
+      className="grid grid-cols-7 border-b-2 hover:bg-neutral-100 duration-500 transition-colors"
     >
       <SimulationDataGridCell value={simulation.id} center />
       <SimulationDataGridCell
