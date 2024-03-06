@@ -51,7 +51,7 @@ export function SimulationsDataGridFilter({
   return (
     <>
       <button
-        className={`flex items-center justify-center flex-1 w-full gap-2 hover:bg-neutral-100 duration-500 transition-all border-l-2 border-b-2 ${isActiveFilters && "bg-blue-500 text-white border-blue-500 hover:bg-blue-500 hover:opacity-75"}`}
+        className={`flex items-center justify-center flex-1 w-full gap-2 hover:opacity-75 duration-500 transition-all border-l-2 border-b-2 border-neutral-700 text-neutral-200 ${isActiveFilters && "bg-blue-500 text-white border-blue-500 hover:bg-blue-500 hover:opacity-75"}`}
         onClick={(e) => {
           e.preventDefault();
           setIsOpen(true);

@@ -1,12 +1,12 @@
 import { ChangeEvent } from "react";
-import { DatePicker } from "../../shared/datepicker";
+import { SharedDatePicker } from "../../shared/datepicker";
 import { Select } from "../../shared/dropdown";
 import { Input } from "../../shared/input";
 
 export function SimulationDataGridFilterInput(
   props:
     | {
-        fieldType: "text" | "datetime";
+        fieldType: "text";
         value: string;
         onChange: (e: ChangeEvent<HTMLInputElement>) => void;
       }
@@ -15,6 +15,11 @@ export function SimulationDataGridFilterInput(
         value: string;
         choices: { label: string; value: string }[];
         onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+      }
+    | {
+        fieldType: "datetime";
+        value: string;
+        onChange: (date: string | null) => void;
       }
 ) {
   switch (props.fieldType) {
@@ -36,7 +41,7 @@ export function SimulationDataGridFilterInput(
         />
       );
     case "datetime":
-      return <DatePicker value={props.value} onChange={props.onChange} />;
+      return <SharedDatePicker value={props.value} onChange={props.onChange} />;
     default:
       return null;
   }

@@ -14,7 +14,7 @@ function SimulationsDataGridHeaderCell({
 }) {
   return (
     <button
-      className="place-self-center flex items-center gap-3 py-3 group w-full justify-center border-l-2"
+      className="place-self-center flex items-center gap-3 py-3 group w-full justify-center border-l-2 text-neutral-200 relative border-neutral-700"
       onClick={(e) => {
         e.preventDefault();
         const direction = column.sort.sorted
@@ -27,7 +27,7 @@ function SimulationsDataGridHeaderCell({
     >
       <span>{column.name}</span>
       <ArrowLongDownIcon
-        className={`h-4 w-4 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
+        className={`absolute right-2 bg-neutral-800 h-4 w-4 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
       />
     </button>
   );
@@ -45,7 +45,7 @@ export function SimulationsDataGridHeader({
   ) => void;
 }) {
   return (
-    <div className="grid grid-cols-7 border-b-2">
+    <div className="grid grid-cols-7 border-b-2 bg-neutral-800 border-neutral-700">
       {columns.map((column) => (
         <SimulationsDataGridHeaderCell
           key={column.name}

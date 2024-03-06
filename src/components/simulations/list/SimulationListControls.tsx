@@ -16,7 +16,7 @@ export function SimulationListControls({
     <div className="h-16 flex">
       <SimulationsDataGridHistogram />
       <div className="flex flex-col">
-        <span className="border-b-2 px-3 py-1 border-l-2">
+        <span className="border-b-2 px-3 py-1 border-l-2 text-neutral-200 border-neutral-700">
           {totalRows} Simulation(s)
         </span>
         <SimulationsDataGridFilter columns={columns} setColumns={setColumns} />
