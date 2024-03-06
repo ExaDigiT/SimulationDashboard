@@ -12,6 +12,11 @@ import { FilterOperators } from "../../../models/filters/filterOperators.enum";
 import { SimulationDataGridFilterInput } from "./SimulationsDataGridFilterInput";
 import { Select } from "../../shared/dropdown";
 import { Tooltip } from "react-tooltip";
+import { useNavigate } from "@tanstack/react-router";
+import {
+  operatorCombinator,
+  sortCombinator,
+} from "../../../util/filterCombinator";
 
 export function SimulationsDataGridFilter({
   columns,
@@ -20,6 +25,7 @@ export function SimulationsDataGridFilter({
   columns: ColumnHeader[];
   setColumns: (columns: ColumnHeader[]) => void;
 }) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [openColumn, setOpenColumn] = useState(0);
   const [updatedColumns, setUpdatedColumns] = useState(
@@ -46,6 +52,25 @@ export function SimulationsDataGridFilter({
         activeFilters: column.activeFilters.filter((filter) => !!filter),
       }))
     );
+    navigate({
+      search: () => {
+        const sortParams = updatedColumns
+          .filter((column) => column.sort.sorted)
+          .reduce<{ [key: string]: string }>((prev, curr) => {
+            const param = sortCombinator([curr]).split("=");
+            return { ...prev, [param[0]]: param[1] };
+          }, {});
+
+        const filterParams = updatedColumns
+          .filter((column) => column.activeFilters.length > 0)
+          .reduce<{ [key: string]: string }>((prev, curr) => {
+            const param = operatorCombinator([curr]).split("=");
+            return { ...prev, [param[0]]: param[1] };
+          }, {});
+        return { ...sortParams, ...filterParams };
+      },
+      params: {},
+    });
     onClose();
   };
 
