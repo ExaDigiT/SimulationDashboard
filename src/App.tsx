@@ -6,6 +6,9 @@ import { createContext } from "react";
 import { routeTree } from "./routeTree.gen";
 import { LoadingSpinner } from "./components/shared/loadingSpinner";
 
+import "react-datepicker/dist/react-datepicker.css";
+import "react-tooltip/dist/react-tooltip.css";
+
 const initOptions: KeycloakConfig = {
   url: "https://obsidian.ccs.ornl.gov/auth/",
   realm: "obsidian",
