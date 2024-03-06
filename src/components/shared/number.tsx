@@ -8,8 +8,8 @@ export interface NumberInputProps extends HTMLProps<HTMLDivElement> {
 
 export function NumberInput(props: NumberInputProps) {
   return (
-    <div {...props} className={props.className + " flex flex-col"}>
-      <label className="mb-2 pl-3">{props.label}</label>
+    <div className={props.className + " flex flex-col"}>
+      <label className="mb-2 pl-3 text-neutral-200">{props.label}</label>
       <input
         {...props.inputProps}
         type="number"

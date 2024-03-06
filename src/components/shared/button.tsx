@@ -16,7 +16,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`px-4 py-2 rounded-md transition-all duration-500 ${variant === "filled" && "bg-blue-500 text-white hover:opacity-75"} ${variant === "outlined" && `border-2 hover:bg-neutral-200 ${rest.disabled && "opacity-75"}`} ${dense && "py-1"}`}
+      className={`px-4 py-2 rounded-md transition-all duration-500 ${variant === "filled" && "bg-blue-500 text-white hover:opacity-75"} ${variant === "outlined" && `border-2 text-neutral-200 border-neutral-200 hover:opacity-50 ${rest.disabled && "opacity-75"}`} ${dense && "py-1"}`}
       {...rest}
     >
       {children}

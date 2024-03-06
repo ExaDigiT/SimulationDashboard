@@ -10,7 +10,9 @@ export interface SelectProps extends HTMLProps<HTMLSelectElement> {
 export function Select(props: SelectProps) {
   return (
     <div className="flex flex-col">
-      {props.label && <label className="mb-2 pl-3">{props.label}</label>}
+      {props.label && (
+        <label className="mb-2 pl-3 text-neutral-200">{props.label}</label>
+      )}
       <select
         {...props}
         onChange={props.onChange}
