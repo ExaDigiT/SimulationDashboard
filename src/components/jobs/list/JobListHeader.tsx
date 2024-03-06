@@ -16,7 +16,6 @@ function JobListHeaderCell({
   onSort: (column: ColumnHeader) => void;
   column: ColumnHeader;
 }) {
-  console.log(column);
   return (
     <button
       className={`${getGridSize(size)} text-neutral-200 border-r-2 border-neutral-900 h-full ${lastIndex && "border-r-0"} relative flex items-center justify-center`}
