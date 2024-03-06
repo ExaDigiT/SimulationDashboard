@@ -6,6 +6,7 @@ export interface DatePickerProps {
   label?: string;
   onChange: (value: string | null) => void;
   value: string;
+  boundedDate?: Date;
 }
 
 export function SharedDatePicker(props: DatePickerProps) {
@@ -26,8 +27,8 @@ export function SharedDatePicker(props: DatePickerProps) {
           props.onChange(newDate?.toISOString() || null);
         }}
         showTimeSelect
-        className="border-2 rounded-md px-2 py-2 w-full"
-        minDate={new Date()}
+        className="border-2 rounded-md px-2 py-2 w-full focus:outline-none text-black"
+        minDate={props.boundedDate}
         dateFormat="MM/dd/yyyy, HH:mm z"
       />
     </div>

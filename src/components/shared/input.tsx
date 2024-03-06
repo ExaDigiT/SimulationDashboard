@@ -16,7 +16,7 @@ export function Input(props: InputProps) {
         {...props}
         id="text-input"
         type="text"
-        className="border-2 rounded-md px-2 py-2 "
+        className="border-2 rounded-md px-2 py-2 focus:outline-none text-black"
         onChange={props.onChange}
         value={props.value}
       />

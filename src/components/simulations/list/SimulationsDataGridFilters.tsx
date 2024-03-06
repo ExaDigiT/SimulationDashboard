@@ -11,6 +11,7 @@ import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
 import { FilterOperators } from "../../../models/filters/filterOperators.enum";
 import { SimulationDataGridFilterInput } from "./SimulationsDataGridFilterInput";
 import { Select } from "../../shared/dropdown";
+import { Tooltip } from "react-tooltip";
 
 export function SimulationsDataGridFilter({
   columns,
@@ -78,7 +79,7 @@ export function SimulationsDataGridFilter({
             {columns.map((column, index) => (
               <button
                 key={column.propertyName}
-                className={`px-4 py-2 border-b-2 hover:bg-neutral-100 duration-500 transition-colors items-start flex ${index === openColumn && "bg-blue-500 text-white hover:bg-blue-500"}`}
+                className={`font-medium px-4 py-2 border-b-2 hover:opacity-50 duration-500 transition-opacity items-start flex ${index === openColumn && "bg-blue-500 text-white hover:opacity-100"}`}
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenColumn(index);
@@ -139,9 +140,13 @@ export function SimulationsDataGridFilter({
                     column.activeFilters.splice(index, 1);
                     setUpdatedColumns(newColumns);
                   }}
+                  data-tooltip-id="delete-filter-tooltip"
+                  data-tooltip-content={"Delete Filter"}
+                  data-tooltip-delay-show={500}
                 >
-                  <TrashIcon className="w-4 h-4 text-red-600" />
+                  <TrashIcon className="w-5 h-5 text-red-600" />
                 </button>
+                <Tooltip id="delete-filter-tooltip" />
               </div>
             ))}
             <button

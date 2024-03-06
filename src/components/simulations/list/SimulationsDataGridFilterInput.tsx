@@ -41,7 +41,12 @@ export function SimulationDataGridFilterInput(
         />
       );
     case "datetime":
-      return <SharedDatePicker value={props.value} onChange={props.onChange} />;
+      return (
+        <SharedDatePicker
+          value={props.value || new Date().toISOString()}
+          onChange={props.onChange}
+        />
+      );
     default:
       return null;
   }

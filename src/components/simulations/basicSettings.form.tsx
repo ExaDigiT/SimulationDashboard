@@ -16,6 +16,7 @@ export function BasicSettingsForm({
           setForm({ ...form, start: newDate || "" });
         }}
         value={form.start}
+        boundedDate={new Date()}
       />
       <SharedDatePicker
         label="End Date"
@@ -23,6 +24,7 @@ export function BasicSettingsForm({
           setForm({ ...form, end: newDate || "" });
         }}
         value={form.end}
+        boundedDate={new Date()}
       />
     </form>
   );

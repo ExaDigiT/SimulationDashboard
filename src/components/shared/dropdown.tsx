@@ -17,13 +17,20 @@ export function Select(props: SelectProps) {
         {...props}
         onChange={props.onChange}
         value={props.value}
-        className={props.className + " border-2 rounded-md px-2 py-2"}
+        className={
+          props.className +
+          " border-2 rounded-md px-2 py-2 text-black focus:outline-none"
+        }
       >
         <option disabled value="">
           {props.placeholder}
         </option>
         {props.choices.map((choice) => (
-          <option key={choice.value} value={choice.value}>
+          <option
+            key={choice.value}
+            value={choice.value}
+            className="text-black placeholder:text-neutral-500"
+          >
             {choice.label}
           </option>
         ))}
