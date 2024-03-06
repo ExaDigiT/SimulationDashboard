@@ -61,10 +61,6 @@ function SimulationList() {
     setColumns(updatedColumns);
   };
 
-  if (isLoading || !data) {
-    return <LoadingSpinner />;
-  }
-
   if (isError) {
     return (
       <div>
@@ -78,14 +74,17 @@ function SimulationList() {
       <SimulationListControls
         columns={columns}
         setColumns={setColumns}
-        totalRows={data.total_results}
+        totalRows={data?.total_results ?? 0}
       />
-
-      <SimulationsDataGrid
-        columns={columns}
-        onSort={onSort}
-        rows={data.results}
-      />
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <SimulationsDataGrid
+          columns={columns}
+          onSort={onSort}
+          rows={data?.results ?? []}
+        />
+      )}
     </div>
   );
 }
