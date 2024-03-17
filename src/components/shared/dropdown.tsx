@@ -19,7 +19,7 @@ export function Select(props: SelectProps) {
         value={props.value}
         className={
           props.className +
-          " border-2 rounded-md px-2 py-2 text-black focus:outline-none"
+          " px-2 py-2 text-neutral-200 focus:outline-none bg-transparent border-b-2 focus:border-blue-500 transition-colors duration-300 ease-in-out hover:border-blue-500"
         }
       >
         <option disabled value="">

@@ -22,22 +22,43 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
     refetchOnWindowFocus: false,
   });
 
-export const simulationCoolingCDUQueryOptions = (simulationId: string) =>
+export const simulationCoolingCDUQueryOptions = (
+  simulationId: string,
+  filterParams?: {
+    start: string;
+    end: string;
+    granularity?: number;
+    resolution?: number;
+  }
+) =>
   queryOptions({
-    queryKey: ["simulation", "cooling", "cdu", simulationId],
+    enabled: !!filterParams,
+    queryKey: ["simulation", "cooling", "cdu", simulationId, filterParams],
     queryFn: async () => {
-      const res = await axios.get<{
-        granularity: number;
-        start: string;
-        end: string;
-        data: CoolingCDU[];
-      }>(`/frontier/simulation/${simulationId}/cooling/cdu`);
+      if (filterParams) {
+        const res = await axios.get<{
+          granularity: number;
+          start: string;
+          end: string;
+          data: CoolingCDU[];
+        }>(`/frontier/simulation/${simulationId}/cooling/cdu`, {
+          params: {
+            start: filterParams.start,
+            end: filterParams.end,
+            resolution: filterParams.resolution,
+            granularity: filterParams.granularity,
+          },
+        });
 
-      return res.data;
+        return res.data;
+      }
+      return null;
     },
     select: (data) => {
-      const racks2d = groupBy(data.data, "timestamp");
-      console.log(racks2d);
-      return { ...data };
+      if (data) {
+        const groupedTimeData = groupBy(data.data, "timestamp");
+
+        return { ...data, data: groupedTimeData };
+      }
     },
   });

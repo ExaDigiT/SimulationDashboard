@@ -28,7 +28,7 @@ function Simulation() {
   const { simulationId } = Route.useParams();
 
   return (
-    <div className="flex justify-center flex-col m-6 flex-1">
+    <div className="flex justify-center flex-col m-6 flex-1 overflow-hidden">
       <div className="flex items-center gap-12 text-neutral-200">
         <Link
           to="/simulations/"

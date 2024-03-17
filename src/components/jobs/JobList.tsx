@@ -80,7 +80,7 @@ export function JobList({
                   onSort={onSort}
                 />
               );
-            } else if (!Array.isArray(job)) {
+            } else if (!Array.isArray(job) && job) {
               return (
                 <div
                   key={virtualItem.key}
