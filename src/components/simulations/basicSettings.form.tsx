@@ -1,5 +1,5 @@
 import { SimulationRequest } from "../../models/SimulationRequest.model";
-import { DatePicker } from "../shared/datepicker";
+import { SharedDatePicker } from "../shared/datepicker";
 
 export function BasicSettingsForm({
   form,
@@ -9,20 +9,22 @@ export function BasicSettingsForm({
   setForm: (form: SimulationRequest) => void;
 }) {
   return (
-    <form className="flex gap-4">
-      <DatePicker
+    <form className="grid grid-cols-3 gap-3">
+      <SharedDatePicker
         label="Start Date"
-        onChange={(e) => {
-          setForm({ ...form, start: e.target.value });
+        onChange={(newDate) => {
+          setForm({ ...form, start: newDate || "" });
         }}
         value={form.start}
+        boundedDate={new Date()}
       />
-      <DatePicker
+      <SharedDatePicker
         label="End Date"
-        onChange={(e) => {
-          setForm({ ...form, end: e.target.value });
+        onChange={(newDate) => {
+          setForm({ ...form, end: newDate || "" });
         }}
         value={form.end}
+        boundedDate={new Date()}
       />
     </form>
   );

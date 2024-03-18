@@ -1,4 +1,4 @@
-import { Job } from "./Job.model";
+import { CustomJob } from "./CustomJob.model";
 
 export type JobsMode = "replay" | "random" | "custom";
 
@@ -6,7 +6,7 @@ export interface IScheduler {
   enabled: boolean;
   down_nodes: string[];
   jobs_mode: JobsMode;
-  jobs: Job[];
+  jobs: CustomJob[];
   seed: number | null;
   num_jobs: number | null;
 }
@@ -14,7 +14,7 @@ export interface IScheduler {
 export class Scheduler implements IScheduler {
   enabled: boolean;
   down_nodes: string[];
-  jobs: Job[];
+  jobs: CustomJob[];
   jobs_mode: JobsMode;
   num_jobs: number | null;
   seed: number | null;

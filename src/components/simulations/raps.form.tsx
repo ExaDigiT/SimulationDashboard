@@ -24,9 +24,9 @@ export function RAPSForm(props: {
       <Select
         label="Job Mode"
         choices={[
-          { label: "Custom", value: "custom" },
+          //{ label: "Custom", value: "custom" },
           { label: "Replay", value: "replay" },
-          //{ label: "Random", value: "random" },
+          { label: "Random", value: "random" },
         ]}
         value={props.form.scheduler.jobs_mode}
         onChange={(e) => {
@@ -58,6 +58,7 @@ export function RAPSForm(props: {
             }}
             label="Number of Jobs"
             className="row-start-2"
+            error={{ error: false, errorText: "Field is Required" }}
           />
           <NumberInput
             label="Seed"
@@ -74,6 +75,7 @@ export function RAPSForm(props: {
               value: props.form.scheduler.seed || 0,
             }}
             className="row-start-2"
+            error={{ error: false, errorText: "Field is Required" }}
           />
         </>
       )}

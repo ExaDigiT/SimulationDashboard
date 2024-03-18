@@ -2,7 +2,7 @@ import { ChangeEvent, HTMLProps } from "react";
 
 export interface SelectProps extends HTMLProps<HTMLSelectElement> {
   choices: { label: string; value: string }[];
-  label: string;
+  label?: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -10,14 +10,29 @@ export interface SelectProps extends HTMLProps<HTMLSelectElement> {
 export function Select(props: SelectProps) {
   return (
     <div className="flex flex-col">
-      <label className="mb-2 pl-3">{props.label}</label>
+      {props.label && (
+        <label className="mb-2 pl-3 text-neutral-200">{props.label}</label>
+      )}
       <select
+        {...props}
         onChange={props.onChange}
         value={props.value}
-        className={props.className + " border-2 rounded-md px-2 py-2"}
+        className={
+          props.className +
+          " px-2 py-2 text-neutral-200 focus:outline-none bg-transparent border-b-2 focus:border-blue-500 transition-colors duration-300 ease-in-out hover:border-blue-500"
+        }
       >
+        <option disabled value="">
+          {props.placeholder}
+        </option>
         {props.choices.map((choice) => (
-          <option value={choice.value}>{choice.label}</option>
+          <option
+            key={choice.value}
+            value={choice.value}
+            className="text-black placeholder:text-neutral-500"
+          >
+            {choice.label}
+          </option>
         ))}
       </select>
     </div>

@@ -1,35 +1,38 @@
 export interface Job {
+  job_id: string;
   name: string;
-  allocation_nodes: number;
+  node_count: number;
+
+  /**
+   * ISO Datetime string
+   */
+  time_snapshot: string;
+
+  /**
+   * ISO Datetime string
+   */
   time_submission: string;
-  time_limit: string;
-  cpu_util: number;
-  gpu_util: number;
-  cpu_trace: number[];
-  gpu_trace: number[];
-  end_state:
+
+  time_limit: number;
+
+  /**
+   * ISO Datetime string
+   */
+  time_start: string;
+
+  /**
+   * ISO Datetime string
+   */
+  time_end: string;
+
+  state_current:
     | "COMPLETED"
     | "PENDING"
     | "RUNNING"
     | "CANCELLED"
-    | "COMPLETING"
-    | "BOOT_FAIL"
-    | "CONFIGURING"
-    | "DEADLINE"
     | "FAILED"
-    | "NODE_FAIL"
-    | "OUT_OF_MEMORY"
-    | "PREEMPTED"
-    | "RESV_DEL_HOLD"
-    | "REQUEUE_FED"
-    | "REQUEUE_HOLD"
-    | "REQUEUED"
-    | "RESIZING"
-    | "REVOKED"
-    | "SINGALING"
-    | "SPECIAL_EXIT"
-    | "STAGE_OUT"
-    | "STOPPED"
-    | "SUSPENDED"
     | "TIMEOUT";
+
+  node_ranges: string;
+  xnames: string[];
 }
