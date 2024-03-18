@@ -41,7 +41,7 @@ const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
   context: { queryClient },
-  defaultPendingComponent: () => LoadingSpinner,
+  defaultPendingComponent: LoadingSpinner,
 });
 
 declare module "@tanstack/react-router" {
