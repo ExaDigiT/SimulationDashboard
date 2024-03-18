@@ -26,6 +26,7 @@ function TabLink(props: LinkProps) {
 
 function Simulation() {
   const { simulationId } = Route.useParams();
+  const search = Route.useSearch();
 
   return (
     <div className="flex justify-center flex-col m-6 flex-1 overflow-hidden">
@@ -44,18 +45,21 @@ function Simulation() {
           <TabLink
             to="/simulations/$simulationId/configuration"
             params={{ simulationId: simulationId }}
+            search={search}
           >
             Configuration
           </TabLink>
           <TabLink
             to="/simulations/$simulationId/jobs"
             params={{ simulationId: simulationId }}
+            search={search}
           >
             Jobs
           </TabLink>
           <TabLink
             to="/simulations/$simulationId/cooling"
             params={{ simulationId: simulationId }}
+            search={search}
           >
             Cooling CDU
           </TabLink>

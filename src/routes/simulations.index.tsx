@@ -18,7 +18,7 @@ const pageLimit = 50;
 
 function SimulationList() {
   const [columns, setColumns] = useState(SimulationColumns);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage] = useState(0);
 
   const { data, isLoading, isError } = useQuery<{
     limit: number;

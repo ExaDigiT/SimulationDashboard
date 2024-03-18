@@ -36,6 +36,7 @@ function SimulationJobs() {
       },
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages) => {
+        console.log(allPages.length <= lastPage.total_results / jobLimit);
         return allPages.length <= lastPage.total_results / jobLimit
           ? allPages.length
           : undefined;

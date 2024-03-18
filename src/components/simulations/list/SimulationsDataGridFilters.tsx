@@ -4,7 +4,7 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { BaseSyntheticEvent, useState } from "react";
+import { useState } from "react";
 import { Modal } from "../../shared/modal";
 import { Button } from "../../shared/button";
 import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
@@ -143,10 +143,12 @@ export function SimulationsDataGridFilter({
                   <SimulationDataGridFilterInput
                     fieldType={currentColumn.inputType}
                     value={filter.value}
-                    onChange={(e: BaseSyntheticEvent) => {
+                    onChange={(value: string | null) => {
                       const newColumns = [...updatedColumns];
                       const column = newColumns[openColumn];
-                      column.activeFilters[index].value = e.target.value;
+                      if (value) {
+                        column.activeFilters[index].value = value;
+                      }
                       setUpdatedColumns(newColumns);
                     }}
                     choices={

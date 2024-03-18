@@ -34,8 +34,8 @@ export const Route = createFileRoute("/simulations/$simulationId/cooling")({
   },
 });
 
-const defaultResolution = 10;
-const defaultGranularity = 1.0;
+//const defaultResolution = 10;
+//const defaultGranularity = 1.0;
 
 function SimulationCooling() {
   const { simulationId } = Route.useParams();

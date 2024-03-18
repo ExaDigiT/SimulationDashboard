@@ -22,6 +22,7 @@ function Root() {
         <StyledLink
           to="/"
           params={{}}
+          search={{}}
           data-tooltip-id="home-icon-tooltip"
           data-tooltip-content={"Home"}
           data-tooltip-delay-show={500}
@@ -31,6 +32,7 @@ function Root() {
         <StyledLink
           to="/simulations"
           params={{}}
+          search={{}}
           data-tooltip-id="simulations-icon-tooltip"
           data-tooltip-content={"Simulations List"}
           data-tooltip-delay-show={500}
