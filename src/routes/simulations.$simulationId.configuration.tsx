@@ -47,11 +47,11 @@ function ConfigurationPartValue({ children }: { children: string }) {
 
 function SimulationConfiguration() {
   const { simulationId } = Route.useParams();
-  const { data, isFetching } = useSuspenseQuery(
+  const { data, isLoading } = useSuspenseQuery(
     simulationConfigurationQueryOptions(simulationId)
   );
 
-  if (isFetching) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
@@ -67,17 +67,16 @@ function SimulationConfiguration() {
         </ConfigurationPart>
         <ConfigurationPart>
           <ConfigurationPartHeader>Progress</ConfigurationPartHeader>
-          <div className="relative h-8 w-full rounded-full border-2 border-neutral-200">
+          <div className="relative h-8 w-full rounded-full border-2 border-neutral-200 group">
             <div
-              className={`absolute top-0 left-0 bg-blue-500 h-full rounded-full flex items-center justify-end px-4 group ${data.progress === 1 && `bg-green-500`}`}
+              className={`absolute top-0 left-0 bg-blue-500 h-full rounded-full flex items-center justify-end px-4 ${data.progress === 1 && `bg-green-500`}`}
               style={{ width: `${data.progress * 100}%` }}
-            >
-              <span
-                className={`text-neutral-200 group-hover:opacity-100 opacity-0 transition-opacity duration-300 ${data.progress === 1 && "opacity-100"}`}
-              >
-                {data.progress === 1 ? "Complete" : `${data.progress * 100}%`}
-              </span>
-            </div>
+            />
+            <span className={`text-neutral-200 absolute right-3 z-10`}>
+              {data.progress === 1
+                ? "Complete"
+                : `${(data.progress * 100).toFixed(1)}%`}
+            </span>
           </div>
         </ConfigurationPart>
       </ConfigurationSection>

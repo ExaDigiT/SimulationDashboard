@@ -20,6 +20,7 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
       return res.data;
     },
     refetchOnWindowFocus: false,
+    refetchInterval: 10000,
   });
 
 export const simulationCoolingCDUQueryOptions = (
