@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { AppContext } from "../../App";
 import { Input } from "../shared/input";
+import { Tooltip } from "react-tooltip";
 
 const defaultResolution = 10;
 const defaultGranularity = 1.0;
@@ -110,6 +111,9 @@ export function TimeStepBar() {
             setTheme("dark");
           }
         }}
+        data-tooltip-id="dark-light-mode-tooltip"
+        data-tooltip-content="Toggle Light/Dark Mode for Graphs"
+        data-tooltip-delay-show={750}
       >
         {!theme || theme === "dark" ? (
           <MoonIcon className="h-6 w-6 text-neutral-200" />
@@ -117,6 +121,7 @@ export function TimeStepBar() {
           <SunIcon className="h-6 w-6 text-neutral-200" />
         )}
       </button>
+      <Tooltip id="dark-light-mode-tooltip" />
     </div>
   );
 }
