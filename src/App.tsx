@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import Keycloak, { KeycloakConfig } from "keycloak-js";
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 import { routeTree } from "./routeTree.gen";
 import { LoadingSpinner } from "./components/shared/loadingSpinner";
@@ -50,11 +50,20 @@ declare module "@tanstack/react-router" {
   }
 }
 
-export const AppContext = createContext({ AuthToken: kc.token });
+export const AppContext = createContext<{
+  AuthToken?: string;
+  theme: string | null;
+  setTheme: (value: string) => void;
+}>({ AuthToken: kc.token, theme: null, setTheme: () => {} });
 
 function App() {
+  const theme = localStorage.getItem("graph-theme");
+  const [_theme, setTheme] = useState(theme);
+
   return (
-    <AppContext.Provider value={{ AuthToken: kc.token }}>
+    <AppContext.Provider
+      value={{ AuthToken: kc.token, theme: _theme, setTheme: setTheme }}
+    >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

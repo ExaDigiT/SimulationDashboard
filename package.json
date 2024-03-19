@@ -26,7 +26,8 @@
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^6.1.6",
     "react-plotly.js": "^2.6.0",
-    "react-tooltip": "^5.26.3"
+    "react-tooltip": "^5.26.3",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.20.1",

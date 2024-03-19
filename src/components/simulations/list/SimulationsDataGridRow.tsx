@@ -24,6 +24,12 @@ export function SimulationsDataGridRow({
       to="/simulations/$simulationId/configuration"
       params={{ simulationId: simulation.id }}
       className="grid grid-cols-7 border-b-2 hover:opacity-75 duration-500 transition-opacity border-neutral-700"
+      search={{
+        start: simulation.start,
+        end: simulation.end,
+        timestepType: "resolution",
+        resolution: 10,
+      }}
     >
       <SimulationDataGridCell value={simulation.id} />
       <div className="flex w-full items-center justify-center border-l-2 py-3 flex-nowrap px-2 border-neutral-700">

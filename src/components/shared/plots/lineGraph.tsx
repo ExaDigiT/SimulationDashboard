@@ -1,6 +1,8 @@
 import { Data, Layout } from "plotly.js";
+import { useContext } from "react";
 import Plot from "react-plotly.js";
 import colors from "tailwindcss/colors";
+import { AppContext } from "../../../App";
 
 const darkModeGraphLayout: Partial<Layout> = {
   autosize: true,
@@ -26,6 +28,30 @@ const darkModeGraphLayout: Partial<Layout> = {
   titlefont: { color: colors.neutral[200] },
 };
 
+const lightModeGraphLayout: Partial<Layout> = {
+  autosize: true,
+  hovermode: "closest",
+  title: undefined,
+  xaxis: {
+    title: "Time",
+    titlefont: { color: colors.neutral[800] },
+    type: "date",
+    gridcolor: colors.neutral[500],
+    color: colors.neutral[800],
+  },
+  yaxis: {
+    title: "Power (kW)",
+    titlefont: { color: colors.neutral[800] },
+    type: "linear",
+    tickformat: ".0f",
+    gridcolor: colors.neutral[500],
+    color: colors.neutral[800],
+  },
+  plot_bgcolor: colors.neutral[50],
+  paper_bgcolor: colors.neutral[50],
+  titlefont: { color: colors.neutral[800] },
+};
+
 export function LineGraph({
   title,
   data,
@@ -33,10 +59,12 @@ export function LineGraph({
   title?: string;
   data: Partial<Data>[];
 }) {
+  const { theme } = useContext(AppContext);
+
   return (
     <Plot
       layout={{
-        ...darkModeGraphLayout,
+        ...(theme === "light" ? lightModeGraphLayout : darkModeGraphLayout),
         title: title,
         colorway: [colors.blue[500]],
       }}
