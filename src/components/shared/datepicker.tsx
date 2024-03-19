@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { parseISO } from "date-fns";
+import { CalendarIcon } from "@heroicons/react/24/outline";
 
 export interface DatePickerProps {
   label?: string;
@@ -20,16 +21,21 @@ export function SharedDatePicker(props: DatePickerProps) {
         </label>
       )}
       <DatePicker
+        showIcon
         selected={date}
         onChange={(newDate, e) => {
           e?.preventDefault();
           setDate(newDate);
           props.onChange(newDate?.toISOString() || null);
         }}
+        toggleCalendarOnIconClick
         showTimeSelect
-        className="border-2 rounded-md px-2 py-2 w-full focus:outline-none text-black"
+        className="border-b-2 !px-2 !pr-9 !py-2 w-full focus:outline-none text-neutral-200 bg-transparent transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
         minDate={props.boundedDate}
         dateFormat="MM/dd/yyyy, HH:mm z"
+        icon={
+          <CalendarIcon className="text-neutral-200 h-5 w-5 right-0 cursor-pointer transition-colors duration-500 hover:text-blue-500" />
+        }
       />
     </div>
   );
