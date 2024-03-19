@@ -32,7 +32,9 @@ export const simulationCoolingCDUQueryOptions = (
   }
 ) =>
   queryOptions({
-    enabled: !!filterParams,
+    enabled:
+      !!filterParams &&
+      (!!filterParams.resolution || !!filterParams.granularity),
     queryKey: ["simulation", "cooling", "cdu", simulationId, filterParams],
     queryFn: async () => {
       if (filterParams) {
