@@ -9,6 +9,8 @@ import { LoadingSpinner } from "./components/shared/loadingSpinner";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-tooltip/dist/react-tooltip.css";
 
+const basepath = import.meta.env.VITE_BASE_PATH ? new URL(import.meta.env.VITE_BASE_PATH).pathname : "/"
+
 const initOptions: KeycloakConfig = {
   url: "https://obsidian.ccs.ornl.gov/auth/",
   realm: "obsidian",
@@ -19,7 +21,7 @@ const kc = new Keycloak(initOptions);
 
 kc.init({
   onLoad: "login-required",
-  redirectUri: "http://localhost:8080",
+  redirectUri: window.location.toString(),
 }).then(
   (auth) => {
     if (auth) {
@@ -65,7 +67,7 @@ function App() {
       value={{ AuthToken: kc.token, theme: _theme, setTheme: setTheme }}
     >
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} basepath={basepath}/>
       </QueryClientProvider>
     </AppContext.Provider>
   );
