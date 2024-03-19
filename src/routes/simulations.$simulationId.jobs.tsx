@@ -17,12 +17,12 @@ export const Route = createFileRoute("/simulations/$simulationId/jobs")({
   component: SimulationJobs,
 });
 
-const jobLimit = 10;
+const jobLimit = 15;
 
 function SimulationJobs() {
   const { simulationId } = Route.useParams();
   const [headers, setHeaders] = useState(JobColumns);
-  const { data, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["simulation", "jobs", simulationId, headers],
       queryFn: async ({ pageParam }) => {
@@ -35,12 +35,10 @@ function SimulationJobs() {
         return res.data;
       },
       initialPageParam: 0,
-      getNextPageParam: (lastPage, allPages) => {
-        console.log(allPages.length <= lastPage.total_results / jobLimit);
-        return allPages.length <= lastPage.total_results / jobLimit
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length <= lastPage.total_results / jobLimit
           ? allPages.length
-          : undefined;
-      },
+          : undefined,
       refetchOnWindowFocus: false,
     });
 
@@ -62,7 +60,7 @@ function SimulationJobs() {
     setHeaders(newHeaders);
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
