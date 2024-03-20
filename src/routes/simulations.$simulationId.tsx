@@ -50,6 +50,13 @@ function Simulation() {
             Configuration
           </TabLink>
           <TabLink
+            to="/simulations/$simulationId/summary"
+            params={{ simulationId: simulationId }}
+            search={search}
+          >
+            Summary
+          </TabLink>
+          <TabLink
             to="/simulations/$simulationId/jobs"
             params={{ simulationId: simulationId }}
             search={search}
@@ -61,7 +68,7 @@ function Simulation() {
             params={{ simulationId: simulationId }}
             search={search}
           >
-            Cooling CDU
+            Power
           </TabLink>
         </div>
         <Outlet />

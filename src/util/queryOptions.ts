@@ -3,6 +3,7 @@ import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { CoolingCDU } from "../models/CoolingCDU.model";
 import { groupBy } from "lodash";
+import { SimulationStatistic } from "../models/SimulationStatistic.model";
 
 export interface ListResponse<T> {
   total_results: number;
@@ -20,7 +21,7 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
       return res.data;
     },
     refetchOnWindowFocus: false,
-    refetchInterval: 10000,
+    refetchInterval: 15000,
   });
 
 export const simulationCoolingCDUQueryOptions = (
@@ -64,4 +65,27 @@ export const simulationCoolingCDUQueryOptions = (
         return { ...data, data: groupedTimeData };
       }
     },
+    refetchInterval: 15000,
+  });
+
+export const simulationSystemLatestStatsQueryOptions = ({
+  simulationId,
+}: {
+  simulationId: string;
+}) =>
+  queryOptions({
+    queryKey: ["simulation", "system", "statistics", simulationId, "latest"],
+    queryFn: async () => {
+      const res = await axios.get<{
+        start: string;
+        end: string;
+        granularity: number;
+        data: SimulationStatistic[];
+      }>(`/frontier/simulation/${simulationId}/scheduler/system`);
+      if (res.data.data.length > 0) {
+        return res.data.data[0];
+      }
+      return null;
+    },
+    refetchInterval: 15000,
   });
