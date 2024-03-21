@@ -26,7 +26,7 @@ function JobListHeaderCell({
     >
       {children}
       <ArrowLongDownIcon
-        className={`absolute right-2 bg-neutral-800 h-4 w-4 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
+        className={`absolute right-2 bg-neutral-700 h-4 w-4 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
       />
     </button>
   );
@@ -41,7 +41,7 @@ interface JobListHeaderProps {
 export function JobListHeader({ headers, style, onSort }: JobListHeaderProps) {
   return (
     <div
-      className="sticky top-0 left-0 w-full grid grid-cols-12 items-center bg-neutral-800 z-10 border-y-2 border-neutral-900"
+      className="sticky top-0 left-0 w-full grid grid-cols-12 items-center bg-neutral-700 z-10 border-y-2 border-neutral-900"
       style={style}
     >
       {headers.map((header, index) => (

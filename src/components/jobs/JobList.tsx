@@ -81,7 +81,7 @@ export function JobList({
   ]);
 
   return (
-    <div className="flex-1 flex-col flex overflow-hidden bg-neutral-700">
+    <div className="flex-1 flex-col flex overflow-hidden bg-transparent">
       <div ref={parentRef} className="flex-1 overflow-auto">
         <div
           className="relative w-full"
@@ -106,7 +106,7 @@ export function JobList({
               return (
                 <div
                   key={virtualItem.key}
-                  className={`absolute top-0 left-0 w-full grid grid-cols-12 items-center hover:opacity-50 transition-opacity duration-500 bg-neutral-700 border-b-2 border-neutral-800`}
+                  className={`absolute top-0 left-0 w-full grid grid-cols-12 items-center hover:opacity-50 transition-opacity duration-500 bg-transparent border-b-2 border-neutral-900`}
                   style={{
                     height: `${virtualItem.size}px`,
                     transform: `translateY(${virtualItem.start}px)`,
