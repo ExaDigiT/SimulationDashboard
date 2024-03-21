@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { LineGraph } from "../components/shared/plots/lineGraph";
 import { TimeStepBar } from "../components/cooling/timeStepBar";
+import { useContext } from "react";
+import { AppContext } from "../App";
 
 type CoolingSearch = {
   start: string;
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/simulations/$simulationId/cooling")({
 });
 
 function SimulationCooling() {
+  const { theme } = useContext(AppContext);
   const { simulationId } = Route.useParams();
   const { granularity, resolution, start, end } = Route.useSearch();
   const { data, isLoading } = useQuery(
@@ -40,12 +43,14 @@ function SimulationCooling() {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className={`flex-1 overflow-y-auto`}>
       <TimeStepBar />
       {!data || isLoading ? (
         <LoadingSpinner />
       ) : (
-        <>
+        <div
+          className={`pr-2 ${theme === "light" ? "bg-neutral-50" : "bg-transparent"}`}
+        >
           <LineGraph
             data={[
               {
@@ -63,6 +68,8 @@ function SimulationCooling() {
               },
             ]}
             title="Total Power Usage"
+            xAxisTitle={{ text: "Time" }}
+            yAxisTitle={{ text: "Power (kW)", standoff: 20 }}
           />
           <LineGraph
             data={[
@@ -81,8 +88,10 @@ function SimulationCooling() {
               },
             ]}
             title="Total Power Loss"
+            xAxisTitle={{ text: "Time" }}
+            yAxisTitle={{ text: "Power (kW)", standoff: 20 }}
           />
-        </>
+        </div>
       )}
     </div>
   );
