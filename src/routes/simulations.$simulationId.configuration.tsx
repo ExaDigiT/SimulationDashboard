@@ -3,7 +3,6 @@ import { convertDateTimeString } from "../util/datetime";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import { Header } from "../components/shared/simulation/header";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
 
@@ -28,9 +27,8 @@ function SimulationConfiguration() {
   }
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-4 overflow-y-auto">
-      <Header>Status</Header>
-      <Section>
+    <div className="flex flex-col px-8 py-8 gap-4 overflow-y-auto flex-1">
+      <Section header="Status">
         <Box>
           <Box.Header>State</Box.Header>
           <Box.Value>
@@ -52,8 +50,7 @@ function SimulationConfiguration() {
           </div>
         </Box>
       </Section>
-      <Header>Timing</Header>
-      <Section>
+      <Section header="Timing">
         <Box>
           <Box.Header>Logical Start</Box.Header>
           <Box.Value>{convertDateTimeString(data.start)}</Box.Value>
@@ -75,8 +72,7 @@ function SimulationConfiguration() {
           </Box.Value>
         </Box>
       </Section>
-      <Header>Scheduler Configuration</Header>
-      <Section>
+      <Section header="Scheduler Configuration">
         <Box>
           <Box.Header>Enabled</Box.Header>
           <Box.Value>
@@ -107,8 +103,7 @@ function SimulationConfiguration() {
           </>
         ) : null}
       </Section>
-      <Header>Cooling Configuration</Header>
-      <Section>
+      <Section header="Cooling Configuration">
         <Box>
           <Box.Header>Enabled</Box.Header>
           <Box.Value>

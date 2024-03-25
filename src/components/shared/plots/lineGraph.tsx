@@ -57,11 +57,13 @@ export function LineGraph({
   data,
   yAxisTitle,
   xAxisTitle,
+  layout,
 }: {
   title?: string;
   data: Partial<Data>[];
   yAxisTitle?: Partial<DataTitle>;
   xAxisTitle?: Partial<DataTitle>;
+  layout?: Partial<Layout>;
 }) {
   const { theme } = useContext(AppContext);
   const currentLayout =
@@ -72,10 +74,11 @@ export function LineGraph({
       layout={{
         ...currentLayout,
         title: title,
-        colorway: [colors.blue[500]],
+        colorway: [colors.blue[500], colors.red[500]],
         yaxis: { ...currentLayout.yaxis, title: yAxisTitle },
         xaxis: { ...currentLayout.xaxis, title: xAxisTitle },
         margin: { l: 100, r: 80 },
+        ...layout,
       }}
       data={data}
       className="w-full"
