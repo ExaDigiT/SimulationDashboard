@@ -82,7 +82,10 @@ export function JobList({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-transparent">
-      <div ref={parentRef} className="flex-1 overflow-auto">
+      <div
+        ref={parentRef}
+        className="flex-1 overflow-auto dark:[color-scheme:dark]"
+      >
         <div
           className="relative w-full"
           style={{ height: `${rowVirtualizer.getTotalSize()}px` }}

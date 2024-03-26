@@ -7,19 +7,19 @@ import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
 
 export const Route = createFileRoute(
-  "/simulations/$simulationId/configuration"
+  "/simulations/$simulationId/configuration",
 )({
   component: SimulationConfiguration,
   loader: (opts) =>
     opts.context.queryClient.ensureQueryData(
-      simulationConfigurationQueryOptions(opts.params.simulationId)
+      simulationConfigurationQueryOptions(opts.params.simulationId),
     ),
 });
 
 function SimulationConfiguration() {
   const { simulationId } = Route.useParams();
   const { data, isLoading } = useSuspenseQuery(
-    simulationConfigurationQueryOptions(simulationId)
+    simulationConfigurationQueryOptions(simulationId),
   );
 
   if (isLoading) {
@@ -27,7 +27,7 @@ function SimulationConfiguration() {
   }
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-4 overflow-y-auto flex-1">
+    <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8 dark:[color-scheme:dark]">
       <Section header="Status">
         <Box>
           <Box.Header>State</Box.Header>
@@ -37,13 +37,13 @@ function SimulationConfiguration() {
         </Box>
         <Box>
           <Box.Header>Progress</Box.Header>
-          <div className="relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-200 group">
+          <div className="group relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-200">
             <div
-              className={`absolute top-0 left-0 bg-blue-500 h-full rounded-full flex items-center justify-end px-4 ${data.progress === 1 && `bg-green-500`}`}
+              className={`absolute left-0 top-0 flex h-full items-center justify-end rounded-full bg-blue-500 px-4 ${data.progress === 1 && `bg-green-500`}`}
               style={{ width: `${data.progress * 100}%` }}
             />
             <span
-              className={`text-white dark:text-neutral-200 absolute right-3 z-10`}
+              className={`absolute right-3 z-10 text-white dark:text-neutral-200`}
             >
               {data.progress === 1
                 ? "Complete"

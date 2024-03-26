@@ -43,7 +43,7 @@ function SimulationCooling() {
   );
 
   return (
-    <div className={`flex-1 overflow-y-auto`}>
+    <div className={`flex-1 overflow-y-auto dark:[color-scheme:dark]`}>
       <TimeStepBar />
       {!data || isLoading ? (
         <LoadingSpinner />

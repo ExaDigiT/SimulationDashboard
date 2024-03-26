@@ -34,7 +34,7 @@ kc.init({
   },
   () => {
     console.error("Authenticated Failed");
-  }
+  },
 );
 
 export interface RouterContext {
@@ -81,9 +81,9 @@ function App() {
       (!("theme" in localStorage) &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
-      document.documentElement.classList.add("dark");
+      onThemeSwitch("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      onThemeSwitch("light");
     }
   }, []);
 
