@@ -7,7 +7,7 @@ export interface CheckboxProps extends HTMLProps<HTMLInputElement> {
 export function Checkbox(props: CheckboxProps) {
   return (
     <div className="flex flex-col items-center">
-      <label htmlFor={props.label} className="mb-2 text-neutral-200">
+      <label htmlFor={props.label} className="mb-2 dark:text-neutral-200">
         {props.label}
       </label>
       <input type="checkbox" id={props.label} className="py-2" {...props} />

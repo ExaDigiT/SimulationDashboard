@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import Keycloak, { KeycloakConfig } from "keycloak-js";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 import { routeTree } from "./routeTree.gen";
 import { LoadingSpinner } from "./components/shared/loadingSpinner";
@@ -9,7 +9,9 @@ import { LoadingSpinner } from "./components/shared/loadingSpinner";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-tooltip/dist/react-tooltip.css";
 
-const basepath = import.meta.env.VITE_BASE_PATH ? new URL(import.meta.env.VITE_BASE_PATH).pathname : "/"
+const basepath = import.meta.env.VITE_BASE_PATH
+  ? new URL(import.meta.env.VITE_BASE_PATH).pathname
+  : "/";
 
 const initOptions: KeycloakConfig = {
   url: "https://obsidian.ccs.ornl.gov/auth/",
@@ -55,19 +57,42 @@ declare module "@tanstack/react-router" {
 export const AppContext = createContext<{
   AuthToken?: string;
   theme: string | null;
-  setTheme: (value: string) => void;
+  setTheme: (value: "dark" | "light") => void;
 }>({ AuthToken: kc.token, theme: null, setTheme: () => {} });
 
 function App() {
-  const theme = localStorage.getItem("graph-theme");
+  const theme = localStorage.getItem("theme");
   const [_theme, setTheme] = useState(theme);
+
+  const onThemeSwitch = (theme: "dark" | "light") => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    localStorage.setItem("theme", theme);
+    setTheme(theme);
+  };
+
+  useEffect(() => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
 
   return (
     <AppContext.Provider
-      value={{ AuthToken: kc.token, theme: _theme, setTheme: setTheme }}
+      value={{ AuthToken: kc.token, theme: _theme, setTheme: onThemeSwitch }}
     >
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} basepath={basepath}/>
+        <RouterProvider router={router} basepath={basepath} />
       </QueryClientProvider>
     </AppContext.Provider>
   );

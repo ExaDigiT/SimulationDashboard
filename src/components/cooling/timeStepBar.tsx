@@ -1,13 +1,10 @@
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { Select } from "../shared/dropdown";
-import { BaseSyntheticEvent, useCallback, useContext, useState } from "react";
+import { BaseSyntheticEvent, useCallback, useState } from "react";
 import { NumberInput } from "../shared/number";
 import { Route as SimulationCoolingRoute } from "../../routes/simulations.$simulationId.cooling";
 import { debounce } from "lodash";
-import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
-import { AppContext } from "../../App";
 import { Input } from "../shared/input";
-import { Tooltip } from "react-tooltip";
 
 const defaultResolution = 10;
 const defaultGranularity = 1.0;
@@ -22,7 +19,6 @@ export function TimeStepBar() {
     resolution,
     granularity,
   });
-  const { setTheme, theme } = useContext(AppContext);
 
   const onChange = ({ g, r }: { g?: number; r?: number }) => {
     setTimestepValue({ granularity: g, resolution: r });
@@ -42,12 +38,12 @@ export function TimeStepBar() {
         }),
       });
     }, 500),
-    []
+    [],
   );
 
   return (
-    <div className="px-6 flex items-center my-4">
-      <span className="text-neutral-200 mr-2">Timestep Type:</span>
+    <div className="my-4 flex items-center px-6">
+      <span className="mr-2 dark:text-neutral-200">Timestep Type:</span>
       <Select
         value={timestepType}
         choices={[
@@ -99,29 +95,6 @@ export function TimeStepBar() {
           />
         )}
       </div>
-      <button
-        className="ml-auto"
-        onClick={(e) => {
-          e.preventDefault();
-          if (!theme || theme === "dark") {
-            localStorage.setItem("graph-theme", "light");
-            setTheme("light");
-          } else {
-            localStorage.setItem("graph-theme", "dark");
-            setTheme("dark");
-          }
-        }}
-        data-tooltip-id="dark-light-mode-tooltip"
-        data-tooltip-content="Toggle Light/Dark Mode for Graphs"
-        data-tooltip-delay-show={750}
-      >
-        {!theme || theme === "dark" ? (
-          <MoonIcon className="h-6 w-6 text-neutral-200" />
-        ) : (
-          <SunIcon className="h-6 w-6 text-neutral-200" />
-        )}
-      </button>
-      <Tooltip id="dark-light-mode-tooltip" />
     </div>
   );
 }

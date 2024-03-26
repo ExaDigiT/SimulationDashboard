@@ -69,7 +69,7 @@ function SimulationJobs() {
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center justify-end py-4 px-4 gap-4">
         <button
-          className="hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 text-neutral-200"
+          className="hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 dark:text-neutral-200"
           data-tooltip-id="download-tooltip"
           data-tooltip-content={"Export to CSV"}
           data-tooltip-delay-show={500}

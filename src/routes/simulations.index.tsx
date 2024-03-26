@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "../util/apis";
 import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
-import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export const Route = createFileRoute("/simulations/")({
@@ -76,15 +75,12 @@ function SimulationList() {
         setColumns={setColumns}
         totalRows={data?.total_results ?? 0}
       />
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <SimulationsDataGrid
-          columns={columns}
-          onSort={onSort}
-          rows={data?.results ?? []}
-        />
-      )}
+      <SimulationsDataGrid
+        isLoading={isLoading}
+        columns={columns}
+        onSort={onSort}
+        rows={data?.results ?? []}
+      />
     </div>
   );
 }

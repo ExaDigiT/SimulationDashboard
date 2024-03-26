@@ -9,13 +9,19 @@ const Box = ({
 };
 
 const Header = ({ children }: { children: string }) => {
-  return <p className="text-md text-neutral-400">{children}:</p>;
+  return (
+    <p className="text-md text-neutral-700 dark:text-neutral-400">
+      {children}:
+    </p>
+  );
 };
 
 Box.Header = Header;
 
 const Value = ({ children }: { children: ReactNode }) => {
-  return <p className="text-lg text-neutral-300">{children}</p>;
+  return (
+    <p className="text-lg text-neutral-800 dark:text-neutral-300">{children}</p>
+  );
 };
 
 Box.Value = Value;

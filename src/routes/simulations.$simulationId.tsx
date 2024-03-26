@@ -13,9 +13,12 @@ export const Route = createFileRoute("/simulations/$simulationId")({
 function TabLink(props: LinkProps) {
   return (
     <Link
-      className="px-4 py-4 border-b-2 flex-1 flex justify-center items-center hover:border-b-blue-300 transition-all duration-500 hover:opacity-80 text-neutral-200"
+      className="px-4 py-4 border-b-2 flex-1 flex justify-center items-center hover:border-b-blue-300 transition-all duration-500 hover:opacity-80 dark:text-neutral-200"
       activeProps={{
         className: "border-blue-500 font-medium hover:border-b-blue-500",
+      }}
+      inactiveProps={{
+        className: "border-neutral-400",
       }}
       {...props}
     >
@@ -30,7 +33,7 @@ function Simulation() {
 
   return (
     <div className="flex justify-center flex-col m-6 flex-1 overflow-hidden">
-      <div className="flex items-center gap-12 text-neutral-200">
+      <div className="flex items-center gap-12 dark:text-neutral-200">
         <Link
           to="/simulations/"
           className="flex gap-2 items-center self-start hover:opacity-75 transition-opacity duration-500"
@@ -40,7 +43,7 @@ function Simulation() {
         </Link>
         <span className="text-medium">Simulation ID: {simulationId}</span>
       </div>
-      <div className="flex-1 rounded-md shadow-xl mt-4 flex flex-col overflow-y-hidden bg-neutral-800">
+      <div className="flex-1 rounded-md shadow-xl mt-4 flex flex-col overflow-y-hidden bg-neutral-200 dark:bg-neutral-800">
         <div className="flex items-center">
           <TabLink
             to="/simulations/$simulationId/configuration"

@@ -37,12 +37,14 @@ function SimulationConfiguration() {
         </Box>
         <Box>
           <Box.Header>Progress</Box.Header>
-          <div className="relative h-8 w-full rounded-full border-2 border-neutral-200 group">
+          <div className="relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-200 group">
             <div
               className={`absolute top-0 left-0 bg-blue-500 h-full rounded-full flex items-center justify-end px-4 ${data.progress === 1 && `bg-green-500`}`}
               style={{ width: `${data.progress * 100}%` }}
             />
-            <span className={`text-neutral-200 absolute right-3 z-10`}>
+            <span
+              className={`text-white dark:text-neutral-200 absolute right-3 z-10`}
+            >
               {data.progress === 1
                 ? "Complete"
                 : `${(data.progress * 100).toFixed(1)}%`}

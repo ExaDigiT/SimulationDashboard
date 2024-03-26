@@ -24,7 +24,7 @@ export function Section({
   return (
     <div className="mt-4">
       <button
-        className="w-full border-b-2 pb-2 border-neutral-200 text-neutral-200 group flex items-center justify-between"
+        className="w-full border-b-2 pb-2 border-neutral-400 dark:border-neutral-200 dark:text-neutral-200 group flex items-center justify-between"
         onClick={(e) => {
           e.preventDefault();
           setIsOpen((isOpen) => !isOpen);

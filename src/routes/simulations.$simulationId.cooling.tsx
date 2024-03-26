@@ -6,7 +6,6 @@ import { LineGraph } from "../components/shared/plots/lineGraph";
 import { TimeStepBar } from "../components/cooling/timeStepBar";
 import { useContext } from "react";
 import { AppContext } from "../App";
-import colors from "tailwindcss/colors";
 
 type CoolingSearch = {
   start: string;
@@ -40,7 +39,7 @@ function SimulationCooling() {
       end: end,
       resolution: resolution,
       granularity: granularity,
-    })
+    }),
   );
 
   return (
@@ -50,14 +49,14 @@ function SimulationCooling() {
         <LoadingSpinner />
       ) : (
         <div
-          className={`pr-2 ${theme === "light" ? "bg-neutral-50" : "bg-transparent"}`}
+          className={`pr-2 ${theme === "light" ? "bg-white" : "bg-transparent"}`}
         >
           <LineGraph
             data={[
               {
                 x: Object.keys(data.data),
                 y: Object.values(data.data).map((timestamp) =>
-                  timestamp.reduce((prev, curr) => prev + curr.total_power, 0)
+                  timestamp.reduce((prev, curr) => prev + curr.total_power, 0),
                 ),
                 type: "scatter",
                 mode: "lines+markers",
@@ -68,47 +67,17 @@ function SimulationCooling() {
                   smoothing: 1.3,
                 },
               },
-              {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map(
-                  (timestamp) =>
-                    timestamp.reduce(
-                      (prev, curr) => prev + curr.rack_flowrate,
-                      0
-                    ) / 25
-                ),
-                type: "scatter",
-                mode: "lines+markers",
-                line: {
-                  shape: "spline",
-                  smoothing: 1.3,
-                },
-                yaxis: "y2",
-              },
             ]}
             title="Total Power Usage"
             xAxisTitle={{ text: "Time" }}
             yAxisTitle={{ text: "Power (kW)", standoff: 20 }}
-            layout={{
-              yaxis2: {
-                title: "Flowrate (gpm)",
-                side: "right",
-                overlaying: "y",
-                titlefont: { color: colors.neutral[200] },
-                type: "linear",
-                tickformat: ".0f",
-                gridcolor: colors.neutral[400],
-                color: colors.neutral[200],
-                scaleanchor: "y",
-              },
-            }}
           />
           <LineGraph
             data={[
               {
                 x: Object.keys(data.data),
                 y: Object.values(data.data).map((timestamp) =>
-                  timestamp.reduce((prev, curr) => prev + curr.total_loss, 0)
+                  timestamp.reduce((prev, curr) => prev + curr.total_loss, 0),
                 ),
                 type: "scatter",
                 mode: "lines+markers",

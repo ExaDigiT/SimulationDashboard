@@ -47,8 +47,8 @@ const lightModeGraphLayout: Partial<Layout> = {
     gridcolor: colors.neutral[500],
     color: colors.neutral[800],
   },
-  plot_bgcolor: colors.neutral[50],
-  paper_bgcolor: colors.neutral[50],
+  plot_bgcolor: colors.white,
+  paper_bgcolor: colors.white,
   titlefont: { color: colors.neutral[800] },
 };
 

@@ -19,7 +19,7 @@ function JobListColumn({
 }) {
   return (
     <div
-      className={`flex-auto overflow-hidden text-nowrap text-ellipsis text-neutral-200 ${getGridSize(size)} flex items-center justify-center px-1 border-r-2 border-neutral-900 h-full ${noBorder && "border-r-0"}`}
+      className={`flex-auto overflow-hidden text-ellipsis text-nowrap dark:text-neutral-200 ${getGridSize(size)} flex h-full items-center justify-center border-neutral-400 px-1 dark:border-neutral-900 ${noBorder ? "border-r-0" : "border-r-2"}`}
       title={children?.toString()}
     >
       <span className="overflow-hidden text-ellipsis text-nowrap">
@@ -81,7 +81,7 @@ export function JobList({
   ]);
 
   return (
-    <div className="flex-1 flex-col flex overflow-hidden bg-transparent">
+    <div className="flex flex-1 flex-col overflow-hidden bg-transparent">
       <div ref={parentRef} className="flex-1 overflow-auto">
         <div
           className="relative w-full"
@@ -106,7 +106,7 @@ export function JobList({
               return (
                 <div
                   key={virtualItem.key}
-                  className={`absolute top-0 left-0 w-full grid grid-cols-12 items-center hover:opacity-50 transition-opacity duration-500 bg-transparent border-b-2 border-neutral-900`}
+                  className={`absolute left-0 top-0 grid w-full grid-cols-12 items-center border-b-2 border-neutral-400 bg-transparent transition-opacity duration-500 hover:opacity-50 dark:border-neutral-900`}
                   style={{
                     height: `${virtualItem.size}px`,
                     transform: `translateY(${virtualItem.start}px)`,
@@ -134,7 +134,7 @@ export function JobList({
               return (
                 <span
                   key={virtualItem.key}
-                  className="absolute top-0 left-0 w-full flex justify-center items-center gap-4 px-4 py-2 self-center text-neutral-200 hover:opacity-50 transition-opacity duration-500"
+                  className="absolute left-0 top-0 flex w-full items-center justify-center gap-4 self-center px-4 py-2 transition-opacity duration-500 hover:opacity-50 dark:text-neutral-200"
                   style={{
                     height: `${virtualItem.size}px`,
                     transform: `translateY(${virtualItem.start}px)`,
@@ -142,7 +142,7 @@ export function JobList({
                 >
                   <svg
                     aria-hidden="true"
-                    className="w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-blue-500"
+                    className="h-5 w-5 animate-spin fill-blue-500 text-gray-200 dark:text-gray-600"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"

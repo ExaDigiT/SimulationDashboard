@@ -16,7 +16,7 @@ export function JobListFilterModal() {
   return (
     <>
       <button
-        className="hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 text-neutral-200"
+        className="hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 dark:text-neutral-200"
         data-tooltip-id="filter-tooltip"
         data-tooltip-content={"Open Filter Dialog"}
         data-tooltip-delay-show={500}
