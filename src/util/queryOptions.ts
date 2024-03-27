@@ -31,7 +31,7 @@ export const simulationCoolingCDUQueryOptions = (
     end: string;
     granularity?: number;
     resolution?: number;
-  }
+  },
 ) =>
   queryOptions({
     enabled:
@@ -70,8 +70,10 @@ export const simulationCoolingCDUQueryOptions = (
 
 export const simulationSystemLatestStatsQueryOptions = ({
   simulationId,
+  isFinal,
 }: {
   simulationId: string;
+  isFinal: boolean;
 }) =>
   queryOptions({
     queryKey: ["simulation", "system", "statistics", simulationId, "latest"],
@@ -87,5 +89,29 @@ export const simulationSystemLatestStatsQueryOptions = ({
       }
       return null;
     },
-    refetchInterval: 15000,
+    refetchInterval: isFinal ? false : 15000,
+  });
+
+export const simulationSystemStatsQueryOptions = ({
+  simulationId,
+  start,
+  end,
+}: {
+  simulationId: string;
+  start: string;
+  end: string;
+}) =>
+  queryOptions({
+    queryKey: ["simulation", "system", "statistics", simulationId, start, end],
+    queryFn: async () => {
+      const res = await axios.get<{
+        start: string;
+        end: string;
+        granularity: number;
+        data: SimulationStatistic[];
+      }>(`/frontier/simulation/${simulationId}/scheduler/system`, {
+        params: { start: start, end: end, resolution: 10 },
+      });
+      return res.data;
+    },
   });
