@@ -1,9 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { simulationSystemLatestStatsQueryOptions } from "../util/queryOptions";
+import {
+  simulationConfigurationQueryOptions,
+  simulationSystemLatestStatsQueryOptions,
+} from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
+//import { Graph } from "../components/shared/plots/graph";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
   component: SimulationSummary,
@@ -12,7 +16,10 @@ export const Route = createFileRoute("/simulations/$simulationId/summary")({
 function SimulationSummary() {
   const { simulationId } = Route.useParams();
   const { data, isLoading } = useQuery(
-    simulationSystemLatestStatsQueryOptions({ simulationId })
+    simulationSystemLatestStatsQueryOptions({ simulationId }),
+  );
+  const { data: configurationData } = useQuery(
+    simulationConfigurationQueryOptions(simulationId),
   );
 
   if (isLoading || !data) {
@@ -20,8 +27,14 @@ function SimulationSummary() {
   }
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-4 overflow-y-auto flex-1">
-      <Section header="Latest Projections">
+    <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
+      <Section
+        header={
+          configurationData?.progress === 1
+            ? "Final Projections"
+            : "Latest Projections"
+        }
+      >
         <Box>
           <Box.Header>Jobs Pending</Box.Header>
           <Box.Value>{data.jobs_pending}</Box.Value>
@@ -40,15 +53,15 @@ function SimulationSummary() {
         </Box>
         <Box>
           <Box.Header>Average Power Usage</Box.Header>
-          <Box.Value>{data.average_power} MW</Box.Value>
+          <Box.Value>{data.average_power / 1000000} mW</Box.Value>
         </Box>
         <Box>
           <Box.Header>Average Power Loss</Box.Header>
-          <Box.Value>{data.average_loss} MW</Box.Value>
+          <Box.Value>{data.average_loss / 1000000} mW</Box.Value>
         </Box>
         <Box>
           <Box.Header>Total Power Consumption</Box.Header>
-          <Box.Value>{data.total_energy_consumed} MW</Box.Value>
+          <Box.Value>{data.total_energy_consumed} mW</Box.Value>
         </Box>
         <Box>
           <Box.Header>System Power Efficiency</Box.Header>
@@ -68,6 +81,9 @@ function SimulationSummary() {
           </Box.Value>
         </Box>
       </Section>
+      {/* <Section header="Projections over Time">
+        
+      </Section> */}
     </div>
   );
 }
