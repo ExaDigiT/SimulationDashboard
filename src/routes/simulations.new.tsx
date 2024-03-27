@@ -53,14 +53,16 @@ function NewSimultation() {
       <div className="flex items-center justify-between">
         <Link
           to="/simulations/"
-          className="flex gap-2 items-center self-start hover:opacity-75 transition-opacity duration-500 text-neutral-200"
+          className="flex gap-2 items-center self-start hover:opacity-75 transition-opacity duration-500 dark:text-neutral-200"
         >
           <ArrowLeftIcon className="h-6 w-6" />
           <span>Back to List</span>
         </Link>
-        <h1 className="text-neutral-200 font-medium text-xl">New Simulation</h1>
+        <h1 className="dark:text-neutral-200 font-medium text-xl">
+          New Simulation
+        </h1>
       </div>
-      <div className="p-8 shadow-md rounded-lg mt-6 flex-1 flex flex-col bg-neutral-800">
+      <div className="p-8 shadow-md rounded-lg mt-6 flex-1 flex flex-col bg-neutral-200 dark:bg-neutral-800">
         <div className="flex">
           {steps.map((step, index) => (
             <button
@@ -73,10 +75,10 @@ function NewSimultation() {
               key={step.stepName}
             >
               {index !== 0 && (
-                <div className="absolute border-2 border-neutral-600 top-4 w-full right-1/2 pointer-events-none" />
+                <div className="absolute border-2 border-neutral-400 dark:border-neutral-600 top-4 w-full right-1/2 pointer-events-none" />
               )}
               <div
-                className={`z-10 relative rounded-full border-2 w-8 h-8 flex justify-center items-center shadow-md ${index === currentStep && "bg-blue-500 text-white"} ${index !== currentStep && "bg-neutral-200"}`}
+                className={`z-10 relative rounded-full border-2 w-8 h-8 flex justify-center items-center shadow-md ${index === currentStep && "bg-blue-500 text-white"} ${index !== currentStep && "bg-neutral-600 dark:bg-neutral-200 dark:text-black text-white border-neutral-600 dark:border-neutral-200"}`}
               >
                 {index + 1}
               </div>

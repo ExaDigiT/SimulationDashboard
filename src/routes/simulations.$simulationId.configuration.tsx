@@ -2,157 +2,117 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertDateTimeString } from "../util/datetime";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
-import { ReactNode } from "react";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
+import { Section } from "../components/shared/simulation/section";
+import Box from "../components/shared/simulation/box";
 
 export const Route = createFileRoute(
-  "/simulations/$simulationId/configuration"
+  "/simulations/$simulationId/configuration",
 )({
   component: SimulationConfiguration,
   loader: (opts) =>
     opts.context.queryClient.ensureQueryData(
-      simulationConfigurationQueryOptions(opts.params.simulationId)
+      simulationConfigurationQueryOptions(opts.params.simulationId),
     ),
 });
 
-function ConfigurationHeader({ children }: { children: JSX.Element | string }) {
-  return (
-    <span className="font-medium text-lg border-b-2 pb-2 border-neutral-200 text-neutral-200">
-      {children}
-    </span>
-  );
-}
-
-function ConfigurationSection({ children }: { children: ReactNode }) {
-  return (
-    <div className="grid grid-cols-2 items-center gap-y-4">{children}</div>
-  );
-}
-
-function ConfigurationPart({
-  children,
-}: {
-  children: JSX.Element | JSX.Element[] | null;
-}) {
-  return <div className="flex flex-col gap-2">{children}</div>;
-}
-
-function ConfigurationPartHeader({ children }: { children: string }) {
-  return <p className="text-md text-neutral-400">{children}:</p>;
-}
-
-function ConfigurationPartValue({ children }: { children: string }) {
-  return <p className="text-lg text-neutral-300">{children}</p>;
-}
-
 function SimulationConfiguration() {
   const { simulationId } = Route.useParams();
-  const { data, isFetching } = useSuspenseQuery(
-    simulationConfigurationQueryOptions(simulationId)
+  const { data, isLoading } = useSuspenseQuery(
+    simulationConfigurationQueryOptions(simulationId),
   );
 
-  if (isFetching) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-4 overflow-y-auto">
-      <ConfigurationHeader>Status</ConfigurationHeader>
-      <ConfigurationSection>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>State</ConfigurationPartHeader>
-          <ConfigurationPartValue>
+    <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8 dark:[color-scheme:dark]">
+      <Section header="Status">
+        <Box>
+          <Box.Header>State</Box.Header>
+          <Box.Value>
             {data.state.charAt(0).toLocaleUpperCase() + data.state.slice(1)}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Progress</ConfigurationPartHeader>
-          <div className="relative h-8 w-full rounded-full border-2 border-neutral-200">
+          </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Progress</Box.Header>
+          <div className="group relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-200">
             <div
-              className={`absolute top-0 left-0 bg-blue-500 h-full rounded-full flex items-center justify-end px-4 group ${data.progress === 1 && `bg-green-500`}`}
+              className={`absolute left-0 top-0 flex h-full items-center justify-end rounded-full bg-blue-500 px-4 ${data.progress === 1 && `bg-green-500`}`}
               style={{ width: `${data.progress * 100}%` }}
+            />
+            <span
+              className={`absolute right-3 z-10 text-white dark:text-neutral-200`}
             >
-              <span
-                className={`text-neutral-200 group-hover:opacity-100 opacity-0 transition-opacity duration-300 ${data.progress === 1 && "opacity-100"}`}
-              >
-                {data.progress === 1 ? "Complete" : `${data.progress * 100}%`}
-              </span>
-            </div>
+              {data.progress === 1
+                ? "Complete"
+                : `${(data.progress * 100).toFixed(1)}%`}
+            </span>
           </div>
-        </ConfigurationPart>
-      </ConfigurationSection>
-      <ConfigurationHeader>Timing</ConfigurationHeader>
-      <ConfigurationSection>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Logical Start</ConfigurationPartHeader>
-          <ConfigurationPartValue>
-            {convertDateTimeString(data.start)}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Logical End</ConfigurationPartHeader>
-          <ConfigurationPartValue>
-            {convertDateTimeString(data.end)}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Run Start</ConfigurationPartHeader>
-          <ConfigurationPartValue>
-            {convertDateTimeString(data.execution_start)}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Run End</ConfigurationPartHeader>
-          <ConfigurationPartValue>
+        </Box>
+      </Section>
+      <Section header="Timing">
+        <Box>
+          <Box.Header>Logical Start</Box.Header>
+          <Box.Value>{convertDateTimeString(data.start)}</Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Logical End</Box.Header>
+          <Box.Value>{convertDateTimeString(data.end)}</Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Run Start</Box.Header>
+          <Box.Value>{convertDateTimeString(data.execution_start)}</Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Run End</Box.Header>
+          <Box.Value>
             {data.execution_end
               ? convertDateTimeString(data.execution_end)
               : "-"}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-      </ConfigurationSection>
-      <ConfigurationHeader>Scheduler Configuration</ConfigurationHeader>
-      <ConfigurationSection>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Enabled</ConfigurationPartHeader>
-          <ConfigurationPartValue>
+          </Box.Value>
+        </Box>
+      </Section>
+      <Section header="Scheduler Configuration">
+        <Box>
+          <Box.Header>Enabled</Box.Header>
+          <Box.Value>
             {`${data.config.scheduler.enabled}`.toUpperCase()}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Job Mode</ConfigurationPartHeader>
-          <ConfigurationPartValue>
+          </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Job Mode</Box.Header>
+          <Box.Value>
             {data.config.scheduler.jobs_mode.charAt(0).toUpperCase() +
               data.config.scheduler.jobs_mode.slice(1)}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
+          </Box.Value>
+        </Box>
         {data.config.scheduler.jobs_mode === "random" ? (
           <>
-            <ConfigurationPart>
-              <ConfigurationPartHeader>Number of Jobs</ConfigurationPartHeader>
-              <ConfigurationPartValue>
+            <Box>
+              <Box.Header>Number of Jobs</Box.Header>
+              <Box.Value>
                 {data.config.scheduler.num_jobs?.toString() || "-"}
-              </ConfigurationPartValue>
-            </ConfigurationPart>
-            <ConfigurationPart>
-              <ConfigurationPartHeader>
-                Seed for Randomizer
-              </ConfigurationPartHeader>
-              <ConfigurationPartValue>
+              </Box.Value>
+            </Box>
+            <Box>
+              <Box.Header>Seed for Randomizer</Box.Header>
+              <Box.Value>
                 {data.config.scheduler.seed?.toString() || "-"}
-              </ConfigurationPartValue>
-            </ConfigurationPart>
+              </Box.Value>
+            </Box>
           </>
         ) : null}
-      </ConfigurationSection>
-      <ConfigurationHeader>Cooling Configuration</ConfigurationHeader>
-      <ConfigurationSection>
-        <ConfigurationPart>
-          <ConfigurationPartHeader>Enabled</ConfigurationPartHeader>
-          <ConfigurationPartValue>
+      </Section>
+      <Section header="Cooling Configuration">
+        <Box>
+          <Box.Header>Enabled</Box.Header>
+          <Box.Value>
             {`${data.config.cooling.enabled}`.toUpperCase()}
-          </ConfigurationPartValue>
-        </ConfigurationPart>
-      </ConfigurationSection>
+          </Box.Value>
+        </Box>
+      </Section>
     </div>
   );
 }

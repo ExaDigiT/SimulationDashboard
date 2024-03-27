@@ -17,12 +17,12 @@ export const Route = createFileRoute("/simulations/$simulationId/jobs")({
   component: SimulationJobs,
 });
 
-const jobLimit = 10;
+const jobLimit = 15;
 
 function SimulationJobs() {
   const { simulationId } = Route.useParams();
   const [headers, setHeaders] = useState(JobColumns);
-  const { data, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["simulation", "jobs", simulationId, headers],
       queryFn: async ({ pageParam }) => {
@@ -35,12 +35,10 @@ function SimulationJobs() {
         return res.data;
       },
       initialPageParam: 0,
-      getNextPageParam: (lastPage, allPages) => {
-        console.log(allPages.length <= lastPage.total_results / jobLimit);
-        return allPages.length <= lastPage.total_results / jobLimit
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length <= lastPage.total_results / jobLimit
           ? allPages.length
-          : undefined;
-      },
+          : undefined,
       refetchOnWindowFocus: false,
     });
 
@@ -62,7 +60,7 @@ function SimulationJobs() {
     setHeaders(newHeaders);
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
@@ -71,7 +69,7 @@ function SimulationJobs() {
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center justify-end py-4 px-4 gap-4">
         <button
-          className="hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 text-neutral-200"
+          className="hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 dark:text-neutral-200"
           data-tooltip-id="download-tooltip"
           data-tooltip-content={"Export to CSV"}
           data-tooltip-delay-show={500}
