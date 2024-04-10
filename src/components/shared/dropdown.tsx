@@ -9,7 +9,7 @@ export interface SelectProps extends HTMLProps<HTMLSelectElement> {
 
 export function Select(props: SelectProps) {
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${props.label ? "h-20" : "h-11"}`}>
       {props.label && (
         <label className="mb-2 pl-3 dark:text-neutral-200">{props.label}</label>
       )}
@@ -19,7 +19,7 @@ export function Select(props: SelectProps) {
         value={props.value}
         className={
           props.className +
-          " px-2 py-2 dark:text-neutral-200 focus:outline-none bg-transparent border-b-2 border-neutral-400 focus:border-blue-500 transition-colors duration-300 ease-in-out hover:border-blue-500 cursor-pointer"
+          " flex-1 cursor-pointer border-b-2 border-neutral-400 bg-transparent px-2 py-2 transition-colors duration-300 ease-in-out hover:border-blue-500 focus:border-blue-500 focus:outline-none dark:text-neutral-200"
         }
       >
         <option disabled value="">
