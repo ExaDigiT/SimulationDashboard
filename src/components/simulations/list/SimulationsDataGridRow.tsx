@@ -31,10 +31,9 @@ export function SimulationsDataGridRow({
       params={{ simulationId: simulation.id }}
       className="grid grid-cols-7 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
       search={{
-        start: simulation.start,
+        start: simulation.execution_start,
         end: simulation.end,
-        timestepType: "resolution",
-        resolution: 10,
+        currentTimestamp: simulation.end,
       }}
     >
       <SimulationDataGridCell value={simulation.id} index={0} />
