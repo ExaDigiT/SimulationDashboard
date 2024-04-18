@@ -25,7 +25,7 @@ export function SimulationGauges(props: {
         <GraphHeader>Total Power</GraphHeader>
         <Gauge
           minValue={0}
-          maxValue={10000}
+          maxValue={35000}
           value={
             Object.values(props.latestMetrics?.data || [])
               .map((timestamp) =>
@@ -36,7 +36,14 @@ export function SimulationGauges(props: {
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [{ value: 2500 }, { value: 5000 }, { value: 7500 }],
+              ticks: [
+                { value: 5000 },
+                { value: 10000 },
+                { value: 15000 },
+                { value: 20000 },
+                { value: 25000 },
+                { value: 30000 },
+              ],
             },
             valueLabel: {
               formatTextValue: (value) => value + " kW",
@@ -44,7 +51,7 @@ export function SimulationGauges(props: {
           }}
           arc={{
             colorArray: ["#5BE12C"],
-            subArcs: [{ color: "#5BE12C", limit: 10000 }],
+            subArcs: [{ color: "#5BE12C", limit: 35000 }],
           }}
         />
       </GaugeWrapper>
