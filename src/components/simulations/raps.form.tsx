@@ -20,6 +20,7 @@ export function RAPSForm(props: {
             scheduler: { ...props.form.scheduler, enabled: e.target.checked },
           });
         }}
+        disabled
       />
       <Select
         label="Job Mode"
