@@ -128,7 +128,7 @@ function Simulation() {
         </Link>
         <span className="text-medium">Simulation ID: {simulationId}</span>
       </div>
-      <div className="mt-4 flex flex-1 flex-col overflow-y-hidden rounded-md bg-neutral-200 shadow-xl dark:bg-neutral-800">
+      <div className="mt-4 flex flex-1 flex-col overflow-y-hidden rounded-md bg-neutral-200 shadow-md dark:bg-neutral-800">
         <div className="flex items-center">
           <TabLink
             to="/simulations/$simulationId/summary"

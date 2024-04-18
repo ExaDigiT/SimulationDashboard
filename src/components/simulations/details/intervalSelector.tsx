@@ -23,7 +23,7 @@ export function IntervalSelector(props: {
         >
           <Listbox.Options
             className={
-              "absolute bottom-full right-0 z-10 mb-1 flex flex-col gap-1 rounded-md py-2 text-center dark:bg-neutral-700"
+              "absolute bottom-full right-0 z-10 mb-1 flex flex-col gap-1 rounded-md bg-white py-2 text-center dark:bg-neutral-700"
             }
           >
             {intervals.reverse().map((interval) => (
@@ -31,7 +31,7 @@ export function IntervalSelector(props: {
                 key={interval}
                 value={interval}
                 className={({ selected }) =>
-                  `cursor-pointer px-4 transition-colors duration-300 ease-in-out ${selected ? "text-blue-500" : "text-neutral-200 dark:hover:bg-neutral-600"}`
+                  `cursor-pointer px-4 transition-colors duration-300 ease-in-out ${selected ? "text-blue-500" : "hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"}`
                 }
               >
                 {interval}x
