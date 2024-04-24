@@ -4,8 +4,6 @@ import {
   Outlet,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppContext, RouterContext } from "../App";
 import {
   BeakerIcon as BeakerOutlinedIcon,
