@@ -5,7 +5,7 @@ import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { JobList } from "../components/jobs/JobList";
 import { headers as JobColumns } from "../components/jobs/list/JobListColumns";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { sortCombinator } from "../util/filterCombinator";
+import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { Job } from "../models/Job.model";
 import axios from "axios";
 import { useState } from "react";
@@ -21,15 +21,20 @@ const jobLimit = 15;
 
 function SimulationJobs() {
   const { simulationId } = Route.useParams();
-  const [headers, setHeaders] = useState(JobColumns);
+  const [columns, setColumns] = useState(structuredClone(JobColumns));
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["simulation", "jobs", simulationId, headers],
+      queryKey: ["simulation", "jobs", simulationId, columns],
       queryFn: async ({ pageParam }) => {
-        const sortParams = sortCombinator(headers);
-        const params = sortParams ? "&" + sortParams : "";
+        const sortParams = sortCombinator(columns);
+        const filterParams = operatorCombinator(columns);
+        const params =
+          (sortParams ? "&" : "") +
+          sortParams +
+          (filterParams ? "&" : "") +
+          filterParams;
         const res = await axios.get<ListResponse<Job>>(
-          `/frontier/simulation/${simulationId}/scheduler/jobs?limit=${jobLimit}&offset=${pageParam * jobLimit}${params}`
+          `/frontier/simulation/${simulationId}/scheduler/jobs?limit=${jobLimit}&offset=${pageParam * jobLimit}${params}`,
         );
 
         return res.data;
@@ -43,9 +48,9 @@ function SimulationJobs() {
     });
 
   const onSort = (header: ColumnHeader) => {
-    const newHeaders = [...headers];
+    const newHeaders = [...columns];
     const updatedHeader = newHeaders.find(
-      (h) => h.propertyName === header.propertyName
+      (h) => h.propertyName === header.propertyName,
     );
     if (updatedHeader) {
       updatedHeader.sort.sorted =
@@ -57,7 +62,7 @@ function SimulationJobs() {
             ? "asc"
             : "desc";
     }
-    setHeaders(newHeaders);
+    setColumns(newHeaders);
   };
 
   if (isLoading) {
@@ -66,17 +71,17 @@ function SimulationJobs() {
 
   const jobs = data?.pages.map((page) => page.results).flat() ?? [];
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex items-center justify-end py-4 px-4 gap-4">
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex items-center justify-end gap-4 px-4 py-4">
         <button
-          className="hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors duration-500 rounded-full px-2 py-2 dark:text-neutral-200"
+          className="rounded-full px-2 py-2 transition-colors duration-500 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-700"
           data-tooltip-id="download-tooltip"
           data-tooltip-content={"Export to CSV"}
           data-tooltip-delay-show={500}
         >
           <ArrowDownTrayIcon className="h-6 w-6" />
         </button>
-        <JobListFilterModal />
+        <JobListFilterModal columns={columns} setColumns={setColumns} />
         <Tooltip id="download-tooltip" />
       </div>
       <JobList
