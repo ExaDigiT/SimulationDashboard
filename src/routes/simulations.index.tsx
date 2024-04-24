@@ -16,7 +16,7 @@ export const Route = createFileRoute("/simulations/")({
 const pageLimit = 50;
 
 function SimulationList() {
-  const [columns, setColumns] = useState(SimulationColumns);
+  const [columns, setColumns] = useState(structuredClone(SimulationColumns));
   const [currentPage] = useState(0);
 
   const { data, isLoading, isError } = useQuery<{
@@ -35,7 +35,7 @@ function SimulationList() {
         (filterParams ? "&" : "") +
         filterParams;
       const res = await axios.get(
-        `/frontier/simulation/list?limit=${pageLimit}&offset=${currentPage * pageLimit}${params}`
+        `/frontier/simulation/list?limit=${pageLimit}&offset=${currentPage * pageLimit}${params}`,
       );
 
       return res.data;
@@ -45,11 +45,11 @@ function SimulationList() {
   const onSort = (
     columnName: string,
     sorted: boolean,
-    direction: "asc" | "desc"
+    direction: "asc" | "desc",
   ) => {
     const updatedColumns = [...columns];
     const currentColumn = updatedColumns.find(
-      (column) => column.name === columnName
+      (column) => column.name === columnName,
     );
 
     if (currentColumn) {
@@ -63,13 +63,13 @@ function SimulationList() {
   if (isError) {
     return (
       <div>
-        <ExclamationTriangleIcon className="w-8 h-8" />
+        <ExclamationTriangleIcon className="h-8 w-8" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex flex-1 flex-col">
       <SimulationListControls
         columns={columns}
         setColumns={setColumns}

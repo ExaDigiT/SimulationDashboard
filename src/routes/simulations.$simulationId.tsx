@@ -120,7 +120,7 @@ function Simulation() {
     <div className="m-6 flex flex-1 flex-col justify-center overflow-hidden">
       <div className="flex items-center gap-12 dark:text-neutral-200">
         <Link
-          to="/simulations/"
+          to="/simulations"
           className="flex items-center gap-2 self-start transition-opacity duration-500 hover:opacity-75"
         >
           <ArrowLeftIcon className="h-6 w-6" />
