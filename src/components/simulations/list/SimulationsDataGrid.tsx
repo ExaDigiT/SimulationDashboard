@@ -81,7 +81,7 @@ export function SimulationsDataGrid({
       </div>
     );
   }
-  console.log(rowVirtualizer.getVirtualItems());
+
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-transparent">
       <div

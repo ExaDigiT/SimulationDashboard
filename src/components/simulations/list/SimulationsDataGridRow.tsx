@@ -34,7 +34,7 @@ export function SimulationsDataGridRow({
       params={{ simulationId: simulation.id }}
       className="grid w-full grid-cols-7 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
       search={{
-        start: simulation.execution_start,
+        start: simulation.start,
         end: simulation.end,
         currentTimestamp: simulation.end,
       }}
