@@ -1,4 +1,3 @@
-import { Dictionary } from "lodash";
 import { GraphHeader } from "../../shared/plots/graphHeader";
 import { CoolingCDU } from "../../../models/CoolingCDU.model";
 import { Gauge } from "../../shared/plots/gauge";
@@ -11,14 +10,7 @@ function GaugeWrapper(props: { children: React.ReactNode }) {
   );
 }
 
-export function SimulationGauges(props: {
-  latestMetrics?: {
-    data: Dictionary<CoolingCDU[]>;
-    granularity: number;
-    start: string;
-    end: string;
-  };
-}) {
+export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
   return (
     <>
       <GaugeWrapper>
@@ -27,11 +19,7 @@ export function SimulationGauges(props: {
           minValue={0}
           maxValue={35000}
           value={
-            Object.values(props.latestMetrics?.data || [])
-              .map((timestamp) =>
-                timestamp.reduce((prev, curr) => prev + curr.total_power, 0),
-              )
-              .reduce((prev, curr) => prev + curr, 0) || 0
+            metrics?.reduce((prev, curr) => prev + curr.total_power, 0) ?? 0
           }
           labels={{
             tickLabels: {
@@ -61,14 +49,10 @@ export function SimulationGauges(props: {
           minValue={0}
           maxValue={150}
           value={
-            Object.values(props.latestMetrics?.data || [])
-              .map((timestamp) =>
-                timestamp.reduce(
-                  (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
-                  0,
-                ),
-              )
-              .reduce((prev, curr) => prev + curr, 0) || 0
+            metrics?.reduce(
+              (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
+              0,
+            ) ?? 0
           }
           labels={{
             tickLabels: {

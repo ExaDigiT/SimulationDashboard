@@ -14,6 +14,7 @@ import {
 import { BeakerIcon, HomeIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "react-tooltip";
 import { useContext } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: Root,
@@ -87,8 +88,7 @@ function Root() {
       <div className="flex flex-1 overflow-y-auto dark:bg-neutral-900">
         <Outlet />
       </div>
-      {/* <TanStackRouterDevtools />
-      <ReactQueryDevtools /> */}
+      <ReactQueryDevtools buttonPosition="top-right" />
     </div>
   );
 }

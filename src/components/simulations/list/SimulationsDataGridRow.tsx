@@ -37,6 +37,8 @@ export function SimulationsDataGridRow({
         start: simulation.start,
         end: simulation.end,
         currentTimestamp: simulation.end,
+        initialTimestamp: simulation.end,
+        playbackInterval: 15,
       }}
       style={{ ...style }}
     >

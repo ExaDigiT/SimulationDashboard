@@ -1,7 +1,8 @@
 import { addSeconds } from "date-fns";
 import ReactSlider from "react-slider";
 import { Tooltip } from "react-tooltip";
-import { IntervalSelector } from "./intervalSelector";
+import { PlaybackRateSelector } from "./playbackRateSelector";
+import { PlaybackIntervalSelector } from "./playbackIntervalSelector";
 
 export interface TimelineProps {
   /**
@@ -12,7 +13,9 @@ export interface TimelineProps {
   onChange: (value: number, index: number) => void;
   startDate: string;
   interval: number;
+  rate: number;
   onIntervalChange: (newValue: number) => void;
+  onRateChange: (newValue: number) => void;
 }
 
 export function Timeline(props: TimelineProps) {
@@ -38,7 +41,8 @@ export function Timeline(props: TimelineProps) {
           />
         )}
       />
-      <IntervalSelector
+      <PlaybackRateSelector value={props.rate} onChange={props.onRateChange} />
+      <PlaybackIntervalSelector
         value={props.interval}
         onChange={props.onIntervalChange}
       />
