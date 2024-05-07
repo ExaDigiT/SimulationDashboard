@@ -1,4 +1,4 @@
-import { Layout } from "plotly.js";
+import { Data, Layout } from "plotly.js";
 import colors from "tailwindcss/colors";
 
 const baseGraphLayout: Partial<Layout> = {
@@ -55,4 +55,38 @@ export const lightModeGraphLayout: Partial<Layout> = {
   plot_bgcolor: colors.white,
   paper_bgcolor: colors.white,
   titlefont: { color: colors.neutral[800] },
+};
+
+export const darkDataBase: Partial<Data> = {
+  gauge: {
+    axis: {
+      color: colors.neutral[200],
+      tickcolor: colors.neutral[200],
+      tickfont: { color: colors.neutral[200] },
+    },
+    bordercolor: colors.neutral[200],
+    bar: {
+      color: colors.green[600],
+    },
+  },
+  number: {
+    font: { color: colors.neutral[200] },
+  },
+};
+
+export const lightDataBase: Partial<Data> = {
+  gauge: {
+    axis: {
+      color: colors.neutral[800],
+      tickcolor: colors.neutral[800],
+      tickfont: { color: colors.neutral[800] },
+    },
+    bordercolor: colors.neutral[800],
+    bar: {
+      color: colors.green[600],
+    },
+  },
+  number: {
+    font: { color: colors.neutral[800] },
+  },
 };

@@ -10,7 +10,7 @@ export function RAPSForm(props: {
   setForm: (form: SimulationRequest) => void;
 }) {
   return (
-    <form className="grid grid-cols-3 gap-3">
+    <>
       <Checkbox
         label="Enabled"
         checked={props.form.scheduler.enabled}
@@ -20,6 +20,7 @@ export function RAPSForm(props: {
             scheduler: { ...props.form.scheduler, enabled: e.target.checked },
           });
         }}
+        disabled
       />
       <Select
         label="Job Mode"
@@ -79,6 +80,6 @@ export function RAPSForm(props: {
           />
         </>
       )}
-    </form>
+    </>
   );
 }

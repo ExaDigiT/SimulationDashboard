@@ -7,7 +7,7 @@ export function CoolingForm(props: {
   setForm: (form: SimulationRequest) => void;
 }) {
   return (
-    <form className="grid grid-cols-3 gap-3">
+    <>
       <Checkbox
         label="Enabled"
         checked={props.form.cooling.enabled}
@@ -18,6 +18,6 @@ export function CoolingForm(props: {
           });
         }}
       />
-    </form>
+    </>
   );
 }

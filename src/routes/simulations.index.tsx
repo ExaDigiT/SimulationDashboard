@@ -3,30 +3,31 @@ import { useState } from "react";
 import { SimulationListControls } from "../components/simulations/list/SimulationListControls";
 import { SimulationsDataGrid } from "../components/simulations/list/SimulationsDataGrid";
 import { columns as SimulationColumns } from "../components/simulations/list/SimulationsGridColumns";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "../util/apis";
 import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { ListResponse } from "../util/queryOptions";
 
 export const Route = createFileRoute("/simulations/")({
   component: SimulationList,
 });
 
-const pageLimit = 50;
+const pageLimit = 18;
 
 function SimulationList() {
-  const [columns, setColumns] = useState(SimulationColumns);
-  const [currentPage] = useState(0);
+  const [columns, setColumns] = useState(structuredClone(SimulationColumns));
 
-  const { data, isLoading, isError } = useQuery<{
-    limit: number;
-    offset: number;
-    total_results: number;
-    results: Simulation[];
-  }>({
-    queryKey: ["simulation", "list", currentPage, columns],
-    queryFn: async () => {
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["simulation", "list", columns],
+    queryFn: async ({ pageParam }) => {
       const sortParams = sortCombinator(columns);
       const filterParams = operatorCombinator(columns);
       const params =
@@ -34,22 +35,28 @@ function SimulationList() {
         sortParams +
         (filterParams ? "&" : "") +
         filterParams;
-      const res = await axios.get(
-        `/frontier/simulation/list?limit=${pageLimit}&offset=${currentPage * pageLimit}${params}`
+      const res = await axios.get<ListResponse<Simulation>>(
+        `/frontier/simulation/list?limit=${pageLimit}&offset=${pageParam * pageLimit}${params}`,
       );
 
       return res.data;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) =>
+      allPages.length <= lastPage.total_results / pageLimit
+        ? allPages.length
+        : undefined,
+    refetchOnWindowFocus: false,
   });
 
   const onSort = (
     columnName: string,
     sorted: boolean,
-    direction: "asc" | "desc"
+    direction: "asc" | "desc",
   ) => {
     const updatedColumns = [...columns];
     const currentColumn = updatedColumns.find(
-      (column) => column.name === columnName
+      (column) => column.name === columnName,
     );
 
     if (currentColumn) {
@@ -60,26 +67,24 @@ function SimulationList() {
     setColumns(updatedColumns);
   };
 
-  if (isError) {
-    return (
-      <div>
-        <ExclamationTriangleIcon className="w-8 h-8" />
-      </div>
-    );
-  }
-
+  const simulations = data?.pages.map((page) => page.results).flat() ?? [];
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex flex-1 flex-col">
       <SimulationListControls
         columns={columns}
         setColumns={setColumns}
-        totalRows={data?.total_results ?? 0}
+        totalRows={data?.pages[0].total_results ?? 0}
       />
       <SimulationsDataGrid
         isLoading={isLoading}
+        isError={isError}
         columns={columns}
         onSort={onSort}
-        rows={data?.results ?? []}
+        rows={simulations}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        total_results={data?.pages[0].total_results ?? 0}
       />
     </div>
   );

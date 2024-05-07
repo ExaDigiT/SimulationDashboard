@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Simulation } from "../../../models/Simulation.model";
 import { convertDateTimeString } from "../../../util/datetime";
+import { CSSProperties } from "react";
 
 function SimulationDataGridCell({
   value,
@@ -22,20 +23,24 @@ function SimulationDataGridCell({
 
 export function SimulationsDataGridRow({
   simulation,
+  style,
 }: {
   simulation: Simulation;
+  style: CSSProperties;
 }) {
   return (
     <Link
       to="/simulations/$simulationId/summary"
       params={{ simulationId: simulation.id }}
-      className="grid grid-cols-7 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
+      className="grid w-full grid-cols-7 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
       search={{
         start: simulation.start,
         end: simulation.end,
-        timestepType: "resolution",
-        resolution: 10,
+        currentTimestamp: simulation.end,
+        initialTimestamp: simulation.end,
+        playbackInterval: 15,
       }}
+      style={{ ...style }}
     >
       <SimulationDataGridCell value={simulation.id} index={0} />
       <div className="flex w-full flex-nowrap items-center justify-center border-l-2 border-neutral-400 px-2 py-3 dark:border-neutral-700">

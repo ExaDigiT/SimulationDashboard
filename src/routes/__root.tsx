@@ -4,17 +4,17 @@ import {
   Outlet,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppContext, RouterContext } from "../App";
 import {
-  BeakerIcon,
-  HomeIcon,
+  BeakerIcon as BeakerOutlinedIcon,
+  HomeIcon as HomeOutlinedIcon,
   MoonIcon,
   SunIcon,
 } from "@heroicons/react/24/outline";
+import { BeakerIcon, HomeIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "react-tooltip";
 import { useContext } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: Root,
@@ -26,7 +26,7 @@ function Root() {
   return (
     <div className="flex h-screen">
       {/* Todo: Create Better Nav Header */}
-      <div className="bg-neutral-200 dark:bg-neutral-800 px-3 py-6 flex gap-6 shadow-md flex-col">
+      <div className="flex flex-col items-center bg-neutral-200 py-6 shadow-md dark:bg-neutral-800">
         <StyledLink
           to="/"
           params={{}}
@@ -35,7 +35,13 @@ function Root() {
           data-tooltip-content={"Home"}
           data-tooltip-delay-show={500}
         >
-          <HomeIcon className="h-6 w-6" />
+          {({ isActive }) =>
+            isActive ? (
+              <HomeIcon className="h-6 w-6" />
+            ) : (
+              <HomeOutlinedIcon className="h-6 w-6" />
+            )
+          }
         </StyledLink>
         <StyledLink
           to="/simulations"
@@ -45,7 +51,13 @@ function Root() {
           data-tooltip-content={"Simulations List"}
           data-tooltip-delay-show={500}
         >
-          <BeakerIcon className="h-6 w-6" />
+          {({ isActive }) =>
+            isActive ? (
+              <BeakerIcon className="h-6 w-6" />
+            ) : (
+              <BeakerOutlinedIcon className="h-6 w-6" />
+            )
+          }
         </StyledLink>
         <button
           className="mt-auto text-neutral-800 dark:text-neutral-200"
@@ -73,11 +85,10 @@ function Root() {
         <Tooltip id="home-icon-tooltip" />
         <Tooltip id="simulations-icon-tooltip" />
       </div>
-      <div className="flex-1 flex overflow-y-auto dark:bg-neutral-900">
+      <div className="flex flex-1 overflow-y-auto dark:bg-neutral-900">
         <Outlet />
       </div>
-      <TanStackRouterDevtools />
-      <ReactQueryDevtools />
+      <ReactQueryDevtools buttonPosition="top-right" />
     </div>
   );
 }
@@ -87,9 +98,14 @@ function StyledLink(props: LinkProps) {
     <Link
       {...props}
       className={
-        "text-neutral-800 dark:text-neutral-200 dark:hover:text-neutral-300 transition-colors ease-in-out duration-500 " +
+        "px-3 py-3 text-neutral-800 transition-colors duration-500 ease-in-out dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 " +
         props.className
       }
+      activeProps={{
+        className:
+          "text-blue-500 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-500",
+      }}
+      activeOptions={{ exact: false, includeHash: true, includeSearch: true }}
     >
       {props.children}
     </Link>

@@ -21,7 +21,7 @@ export class Scheduler implements IScheduler {
 
   constructor() {
     this.down_nodes = [];
-    this.enabled = false;
+    this.enabled = true;
     this.jobs = [];
     this.jobs_mode = "replay";
     this.num_jobs = null;

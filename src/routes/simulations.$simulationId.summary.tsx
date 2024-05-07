@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { InfiniteData, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   simulationConfigurationQueryOptions,
@@ -7,34 +7,84 @@ import {
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
-//import { Graph } from "../components/shared/plots/graph";
+import { SimulationGauges } from "../components/simulations/details/gauges";
+import { CoolingCDU } from "../models/CoolingCDU.model";
+import { groupBy } from "lodash";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): {
+    start: string;
+    end: string | null;
+    currentTimestamp: string;
+    playbackInterval: number;
+    initialTimestamp: string;
+  } => {
+    return {
+      start: (search.start as string) || new Date().toISOString(),
+      end: (search.end as string) || new Date().toISOString(),
+      currentTimestamp: search.currentTimestamp as string,
+      playbackInterval: (search.playbackInterval as number) || 15,
+      initialTimestamp: search.initialTimestamp as string,
+    };
+  },
   component: SimulationSummary,
 });
 
 function SimulationSummary() {
   const { simulationId } = Route.useParams();
-  const { data, isLoading } = useQuery(
-    simulationSystemLatestStatsQueryOptions({ simulationId }),
-  );
+  const { currentTimestamp, playbackInterval, initialTimestamp } =
+    Route.useSearch();
   const { data: configurationData } = useQuery(
     simulationConfigurationQueryOptions(simulationId),
   );
+  const isFinal = configurationData?.progress === 1;
 
-  if (isLoading || !data) {
+  const { data, isLoading } = useQuery(
+    simulationSystemLatestStatsQueryOptions({ simulationId, isFinal }),
+  );
+
+  const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
+    queryKey: [
+      "simulation",
+      simulationId,
+      "cooling",
+      playbackInterval,
+      initialTimestamp,
+    ],
+    select: (
+      data: InfiniteData<{
+        granularity: number;
+        start: string;
+        end: string;
+        data: CoolingCDU[];
+      }>,
+    ) => {
+      const allData = data.pages.map((page) => page.data).flat();
+      return groupBy(allData, "timestamp");
+    },
+  });
+
+  if (isLoading || !data || !currentTimestamp || !metrics) {
     return <LoadingSpinner />;
+  }
+
+  let currentMetrics = metrics[currentTimestamp];
+  if (!currentMetrics) {
+    currentMetrics = Object.values(metrics)[0];
   }
 
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
-      <Section
-        header={
-          configurationData?.progress === 1
-            ? "Final Projections"
-            : "Latest Projections"
-        }
-      >
+      <Section header="Metrics" sectionProps={{ className: "grid-cols-3" }}>
+        {isLoadingMetrics ? (
+          <LoadingSpinner />
+        ) : (
+          <SimulationGauges metrics={currentMetrics} />
+        )}
+      </Section>
+      <Section header={isFinal ? "Final Projections" : "Latest Projections"}>
         <Box>
           <Box.Header>Jobs Pending</Box.Header>
           <Box.Value>{data.jobs_pending}</Box.Value>
@@ -81,9 +131,6 @@ function SimulationSummary() {
           </Box.Value>
         </Box>
       </Section>
-      {/* <Section header="Projections over Time">
-        
-      </Section> */}
     </div>
   );
 }

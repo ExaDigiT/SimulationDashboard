@@ -12,7 +12,7 @@ export function NumberInput(props: NumberInputProps) {
     <div
       className={
         props.className +
-        ` ${props.labelAlignment === "horizontal" ? "flex flex-row items-center gap-2" : "flex flex-col"} h-10`
+        ` ${props.labelAlignment === "horizontal" ? "flex flex-row items-center gap-2" : "flex flex-col"} ${props.label ? "h-20" : "h-11"}`
       }
     >
       {props.label && (
@@ -23,7 +23,7 @@ export function NumberInput(props: NumberInputProps) {
         type="number"
         className={
           props.inputProps.className +
-          " h-10 border-b-2 border-neutral-400 bg-transparent px-2 transition-all duration-300 ease-in-out hover:border-blue-500 focus:border-blue-500 focus:outline-none dark:text-neutral-200 " +
+          " h-10 flex-1 border-b-2 border-neutral-400 bg-transparent px-2 transition-all duration-300 ease-in-out hover:border-blue-500 focus:border-blue-500 focus:outline-none dark:text-neutral-200 " +
           `${props.error?.error && "border-red-600"}`
         }
       />

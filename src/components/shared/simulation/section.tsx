@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 export function Header({ children }: { children: JSX.Element | string }) {
   return (
-    <span className="font-medium text-lg border-b-2 pb-2 border-neutral-200 text-neutral-200">
+    <span className="border-b-2 border-neutral-200 pb-2 text-lg font-medium text-neutral-200">
       {children}
     </span>
   );
@@ -13,10 +13,16 @@ export function Header({ children }: { children: JSX.Element | string }) {
 export function Section({
   header,
   defaultExpanded = true,
+  flex = false,
+  alwaysOpen = false,
+  sectionProps,
   children,
 }: {
   header: string;
   defaultExpanded?: boolean;
+  flex?: boolean;
+  alwaysOpen?: boolean;
+  sectionProps?: Partial<HTMLDivElement>;
   children: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(defaultExpanded);
@@ -24,16 +30,20 @@ export function Section({
   return (
     <div className="mt-4">
       <button
-        className="w-full border-b-2 pb-2 border-neutral-400 dark:border-neutral-200 dark:text-neutral-200 group flex items-center justify-between"
+        className={`group flex w-full items-center justify-between border-b-2 border-neutral-400 pb-2 dark:border-neutral-200 dark:text-neutral-200 ${alwaysOpen && "cursor-default"}`}
         onClick={(e) => {
           e.preventDefault();
-          setIsOpen((isOpen) => !isOpen);
+          if (!alwaysOpen) {
+            setIsOpen((isOpen) => !isOpen);
+          }
         }}
       >
-        <span className="font-medium text-lg">{header}</span>
-        <ArrowDownIcon
-          className={`h-5 w-5 transition-transform transform duration-500 ${!isOpen && "rotate-180"}`}
-        />
+        <span className="text-lg font-medium">{header}</span>
+        {!alwaysOpen && (
+          <ArrowDownIcon
+            className={`h-5 w-5 transform transition-transform duration-500 ${!isOpen && "rotate-180"}`}
+          />
+        )}
       </button>
       <AnimatePresence initial={false}>
         {isOpen && (
@@ -47,7 +57,7 @@ export function Section({
               collapsed: { opacity: 0, height: 0 },
             }}
             transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
-            className="grid grid-cols-2 items-center gap-y-4 mt-2 overflow-hidden"
+            className={`mt-2 w-full ${flex ? "flex flex-row gap-2" : "grid grid-cols-2 items-center gap-y-4 overflow-hidden"} ${sectionProps?.className}`}
           >
             {children}
           </motion.section>

@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { CoolingCDU } from "../models/CoolingCDU.model";
@@ -27,11 +27,11 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
 export const simulationCoolingCDUQueryOptions = (
   simulationId: string,
   filterParams?: {
-    start: string;
-    end: string;
+    start?: string;
+    end?: string;
     granularity?: number;
     resolution?: number;
-  }
+  },
 ) =>
   queryOptions({
     enabled:
@@ -66,12 +66,17 @@ export const simulationCoolingCDUQueryOptions = (
       }
     },
     refetchInterval: 15000,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 
 export const simulationSystemLatestStatsQueryOptions = ({
   simulationId,
+  isFinal,
 }: {
   simulationId: string;
+  isFinal: boolean;
 }) =>
   queryOptions({
     queryKey: ["simulation", "system", "statistics", simulationId, "latest"],
@@ -87,5 +92,29 @@ export const simulationSystemLatestStatsQueryOptions = ({
       }
       return null;
     },
-    refetchInterval: 15000,
+    refetchInterval: isFinal ? false : 15000,
+  });
+
+export const simulationSystemStatsQueryOptions = ({
+  simulationId,
+  start,
+  end,
+}: {
+  simulationId: string;
+  start: string;
+  end: string;
+}) =>
+  queryOptions({
+    queryKey: ["simulation", "system", "statistics", simulationId, start, end],
+    queryFn: async () => {
+      const res = await axios.get<{
+        start: string;
+        end: string;
+        granularity: number;
+        data: SimulationStatistic[];
+      }>(`/frontier/simulation/${simulationId}/scheduler/system`, {
+        params: { resolution: 10 },
+      });
+      return res.data;
+    },
   });

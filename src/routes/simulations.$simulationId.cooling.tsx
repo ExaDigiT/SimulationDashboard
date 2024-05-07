@@ -6,6 +6,7 @@ import { Graph } from "../components/shared/plots/graph";
 import { TimeStepBar } from "../components/cooling/timeStepBar";
 import { useContext } from "react";
 import { AppContext } from "../App";
+import colors from "tailwindcss/colors";
 
 type CoolingSearch = {
   start: string;
@@ -136,6 +137,7 @@ function SimulationCooling() {
                 mode: "lines+markers",
                 hovertemplate:
                   "%{x}<br />Average Rack Supply Temperature: %{y} °C<extra></extra>",
+                hoverlabel: { font: { color: colors.white } },
                 line: {
                   shape: "spline",
                   smoothing: 1.3,

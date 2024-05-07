@@ -9,7 +9,7 @@ export function BasicSettingsForm({
   setForm: (form: SimulationRequest) => void;
 }) {
   return (
-    <form className="grid grid-cols-3 gap-3">
+    <>
       <SharedDatePicker
         label="Start Date"
         onChange={(newDate) => {
@@ -24,6 +24,6 @@ export function BasicSettingsForm({
         }}
         value={form.end}
       />
-    </form>
+    </>
   );
 }

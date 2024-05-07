@@ -8,7 +8,7 @@ export interface InputProps extends HTMLProps<HTMLInputElement> {
 export function Input(props: InputProps) {
   return (
     <div
-      className={`${props.labelAlignment === "horizontal" ? "flex flex-row items-center" : "flex flex-col"} gap-2`}
+      className={`${props.labelAlignment === "horizontal" ? "flex flex-row items-center" : "flex flex-col"} gap-2 ${props.label ? "h-20" : "h-11"}`}
     >
       {props.label && (
         <label htmlFor="text-input" className="pl-3 dark:text-neutral-200">
@@ -19,7 +19,7 @@ export function Input(props: InputProps) {
         {...props}
         id="text-input"
         type="text"
-        className="border-b-2 px-2 py-2 focus:outline-none border-neutral-400 dark:text-neutral-200 bg-transparent transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+        className="flex-1 border-b-2 border-neutral-400 bg-transparent px-2 py-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500 focus:outline-none dark:text-neutral-200"
         onChange={props.onChange}
         value={props.value}
       />
