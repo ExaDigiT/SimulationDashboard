@@ -99,8 +99,8 @@ export const columns: ColumnHeader[] = [
     inputType: "datetime",
   },
   {
-    name: "Run Start",
-    propertyName: "run_start",
+    name: "Execution Start",
+    propertyName: "execution_start",
     operators: [
       FilterOperators.GreaterThan,
       FilterOperators.GreaterThanOrEqual,
@@ -112,12 +112,12 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sorted: true, direction: "desc" },
     inputType: "datetime",
   },
   {
-    name: "Run End",
-    propertyName: "run_end",
+    name: "Execution End",
+    propertyName: "execution_end",
     operators: [
       FilterOperators.GreaterThan,
       FilterOperators.GreaterThanOrEqual,
