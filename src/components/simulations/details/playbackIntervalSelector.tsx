@@ -21,7 +21,7 @@ export function PlaybackIntervalSelector({
             data-tooltip-content="Playback Interval in Seconds"
             data-tooltip-delay-show={750}
           >
-            {value}
+            {value}s
           </Listbox.Button>
           <Transition
             as={Fragment}
@@ -42,7 +42,7 @@ export function PlaybackIntervalSelector({
                     `cursor-pointer px-4 transition-colors duration-300 ease-in-out ${selected ? "text-blue-500" : "hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"}`
                   }
                 >
-                  {interval}
+                  {interval}s
                 </Listbox.Option>
               ))}
             </Listbox.Options>
