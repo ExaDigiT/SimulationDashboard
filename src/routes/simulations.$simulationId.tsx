@@ -20,6 +20,7 @@ import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { CoolingCDU } from "../models/CoolingCDU.model";
 import axios from "../util/apis";
+import { SimulationStatistic } from "../models/SimulationStatistic.model";
 
 export const Route = createFileRoute("/simulations/$simulationId")({
   component: Simulation,
@@ -75,11 +76,26 @@ function Simulation() {
 
   const [rate, setRate] = useState(1);
 
+  const getNextPageParam = (
+    _lastPage: unknown,
+    _allPages: unknown[],
+    lastPageParam: number,
+  ): null | number => {
+    const currentEndTime = addSeconds(
+      search.start,
+      playbackInterval * 20 + lastPageParam,
+    );
+    if (isBefore(currentEndTime, search.end)) {
+      return lastPageParam + playbackInterval * 20;
+    }
+    return null;
+  };
+
   const {
-    fetchNextPage,
+    fetchNextPage: fetchNextCoolingPage,
     data: coolingData,
-    isFetchingNextPage,
-    hasNextPage,
+    isFetchingNextPage: isFetchingNextCoolingPage,
+    hasNextPage: hasNextCoolingPage,
   } = useInfiniteQuery({
     queryKey: [
       "simulation",
@@ -89,16 +105,7 @@ function Simulation() {
       initialTimestamp,
     ],
     initialPageParam: differenceInSeconds(initialTimestamp, search.start),
-    getNextPageParam: (_lastPage, _allPages, lastPageParam): null | number => {
-      const currentEndTime = addSeconds(
-        search.start,
-        playbackInterval * 20 + lastPageParam,
-      );
-      if (isBefore(currentEndTime, search.end)) {
-        return lastPageParam + playbackInterval * 20;
-      }
-      return null;
-    },
+    getNextPageParam: getNextPageParam,
     queryFn: async ({ pageParam }) => {
       const startTime = addSeconds(search.start, pageParam);
       const currentEndTime = addSeconds(
@@ -127,6 +134,96 @@ function Simulation() {
     refetchOnWindowFocus: false,
   });
 
+  const {
+    fetchNextPage: fetchNextSchedulerPage,
+    isFetchingNextPage: isFetchingNextSchedulerPage,
+    hasNextPage: hasNextSchedulerPage,
+  } = useInfiniteQuery({
+    queryKey: [
+      "simulation",
+      simulationId,
+      "scheduler",
+      playbackInterval,
+      initialTimestamp,
+    ],
+    initialPageParam: differenceInSeconds(initialTimestamp, search.start),
+    getNextPageParam: getNextPageParam,
+    refetchOnWindowFocus: false,
+    queryFn: async ({ pageParam }) => {
+      const startTime = addSeconds(search.start, pageParam);
+      const currentEndTime = addSeconds(
+        search.start,
+        playbackInterval * 20 + pageParam,
+      );
+      const isEnd = differenceInSeconds(currentTimestamp, search.end) === 0;
+      const res = await axios.get<{
+        granularity: number;
+        start: string;
+        end: string;
+        data: SimulationStatistic[];
+      }>(`/frontier/simulation/${simulationId}/scheduler/system`, {
+        params: {
+          start: isBefore(startTime, search.end) ? startTime : undefined,
+          end: isBefore(currentEndTime, search.end)
+            ? currentEndTime
+            : search.end,
+          granularity: isEnd ? undefined : playbackInterval,
+          resolution: isEnd ? 1 : undefined,
+        },
+      });
+
+      return res.data;
+    },
+  });
+
+  const {
+    fetchNextPage: fetchNextJobPage,
+    isFetchingNextPage: isFetchingNextJobPage,
+    hasNextPage: hasNextJobPage,
+  } = useInfiniteQuery({
+    queryKey: [
+      "simulation",
+      simulationId,
+      "jobs",
+      playbackInterval,
+      initialTimestamp,
+    ],
+    getNextPageParam: getNextPageParam,
+    initialPageParam: differenceInSeconds(initialTimestamp, search.start),
+    queryFn: async ({ pageParam }) => {
+      const startTime = addSeconds(search.start, pageParam);
+      const currentEndTime = addSeconds(
+        search.start,
+        playbackInterval * 20 + pageParam,
+      );
+      const res = await axios.get<{
+        granularity: number;
+        start: string;
+        end: string;
+        data: SimulationStatistic[];
+      }>(`/frontier/simulation/${simulationId}/scheduler/jobs`, {
+        params: {
+          start: isBefore(startTime, search.end) ? startTime : undefined,
+          end: isBefore(currentEndTime, search.end)
+            ? currentEndTime
+            : search.end,
+          ...[
+            "fields=job_id",
+            "fields=name",
+            "fields=node_count",
+            "fields=state_current",
+            "fields=time_limit",
+            "fields=time_start",
+            "fields=time_end",
+            "fields=time_submission",
+          ],
+        },
+      });
+
+      return res.data;
+    },
+  });
+
   useEffect(() => {
     const currentSeconds = differenceInSeconds(currentTimestamp, search.start);
     const endSeconds = differenceInSeconds(search.end, search.start);
@@ -148,10 +245,28 @@ function Simulation() {
         if (
           startCurrentDifference >=
             currentLastPageSeconds - playbackInterval * 10 &&
-          !isFetchingNextPage &&
-          hasNextPage
+          !isFetchingNextCoolingPage &&
+          hasNextCoolingPage
         ) {
-          fetchNextPage();
+          fetchNextCoolingPage();
+        }
+
+        if (
+          startCurrentDifference >=
+            currentLastPageSeconds - playbackInterval * 10 &&
+          !isFetchingNextSchedulerPage &&
+          hasNextSchedulerPage
+        ) {
+          fetchNextSchedulerPage();
+        }
+
+        if (
+          startCurrentDifference >=
+            currentLastPageSeconds - playbackInterval * 10 &&
+          !isFetchingNextJobPage &&
+          hasNextJobPage
+        ) {
+          fetchNextJobPage();
         }
 
         setCurrentTimestamp(newTimestamp);
@@ -258,6 +373,13 @@ function Simulation() {
             search={{ ...search, resolution: 10 }}
           >
             Power
+          </TabLink>
+          <TabLink
+            to="/simulations/$simulationId/console"
+            params={{ simulationId: simulationId }}
+            search={{ ...search }}
+          >
+            Console
           </TabLink>
         </div>
         <Outlet />

@@ -19,6 +19,7 @@ import { Route as SimulationsSimulationIdImport } from './routes/simulations.$si
 import { Route as SimulationsSimulationIdSummaryImport } from './routes/simulations.$simulationId.summary'
 import { Route as SimulationsSimulationIdJobsImport } from './routes/simulations.$simulationId.jobs'
 import { Route as SimulationsSimulationIdCoolingImport } from './routes/simulations.$simulationId.cooling'
+import { Route as SimulationsSimulationIdConsoleImport } from './routes/simulations.$simulationId.console'
 import { Route as SimulationsSimulationIdConfigurationImport } from './routes/simulations.$simulationId.configuration'
 
 // Create/Update Routes
@@ -66,6 +67,12 @@ const SimulationsSimulationIdCoolingRoute =
     getParentRoute: () => SimulationsSimulationIdRoute,
   } as any)
 
+const SimulationsSimulationIdConsoleRoute =
+  SimulationsSimulationIdConsoleImport.update({
+    path: '/console',
+    getParentRoute: () => SimulationsSimulationIdRoute,
+  } as any)
+
 const SimulationsSimulationIdConfigurationRoute =
   SimulationsSimulationIdConfigurationImport.update({
     path: '/configuration',
@@ -100,6 +107,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SimulationsSimulationIdConfigurationImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
+    '/simulations/$simulationId/console': {
+      preLoaderRoute: typeof SimulationsSimulationIdConsoleImport
+      parentRoute: typeof SimulationsSimulationIdImport
+    }
     '/simulations/$simulationId/cooling': {
       preLoaderRoute: typeof SimulationsSimulationIdCoolingImport
       parentRoute: typeof SimulationsSimulationIdImport
@@ -122,6 +133,7 @@ export const routeTree = rootRoute.addChildren([
   SimulationsRoute.addChildren([
     SimulationsSimulationIdRoute.addChildren([
       SimulationsSimulationIdConfigurationRoute,
+      SimulationsSimulationIdConsoleRoute,
       SimulationsSimulationIdCoolingRoute,
       SimulationsSimulationIdJobsRoute,
       SimulationsSimulationIdSummaryRoute,
