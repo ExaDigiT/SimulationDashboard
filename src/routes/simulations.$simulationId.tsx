@@ -196,27 +196,18 @@ function Simulation() {
         search.start,
         playbackInterval * 20 + pageParam,
       );
+      const fields = `fields=job_id&fields=name&fields=node_count&fields=state_current&fields=time_limit&fields=time_start&fields=time_end&fields=time_submission`;
       const res = await axios.get<{
         granularity: number;
         start: string;
         end: string;
         data: SimulationStatistic[];
-      }>(`/frontier/simulation/${simulationId}/scheduler/jobs`, {
+      }>(`/frontier/simulation/${simulationId}/scheduler/jobs?${fields}`, {
         params: {
           start: isBefore(startTime, search.end) ? startTime : undefined,
           end: isBefore(currentEndTime, search.end)
             ? currentEndTime
             : search.end,
-          ...[
-            "fields=job_id",
-            "fields=name",
-            "fields=node_count",
-            "fields=state_current",
-            "fields=time_limit",
-            "fields=time_start",
-            "fields=time_end",
-            "fields=time_submission",
-          ],
         },
       });
 

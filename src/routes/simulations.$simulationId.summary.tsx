@@ -1,15 +1,14 @@
 import { InfiniteData, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  simulationConfigurationQueryOptions,
-  simulationSystemLatestStatsQueryOptions,
-} from "../util/queryOptions";
+import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
 import { SimulationGauges } from "../components/simulations/details/gauges";
 import { CoolingCDU } from "../models/CoolingCDU.model";
 import { groupBy } from "lodash";
+import { SimulationStatistic } from "../models/SimulationStatistic.model";
+import { isSameSecond } from "date-fns";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
   validateSearch: (
@@ -41,9 +40,25 @@ function SimulationSummary() {
   );
   const isFinal = configurationData?.progress === 1;
 
-  const { data, isLoading } = useQuery(
-    simulationSystemLatestStatsQueryOptions({ simulationId, isFinal }),
-  );
+  const { data: schedulerStatistics, isLoading } = useQuery({
+    queryKey: [
+      "simulation",
+      simulationId,
+      "scheduler",
+      playbackInterval,
+      initialTimestamp,
+    ],
+    select: (
+      data: InfiniteData<{
+        granularity: number;
+        start: string;
+        end: string;
+        data: SimulationStatistic[];
+      }>,
+    ) => {
+      return data.pages.map((page) => page.data).flat();
+    },
+  });
 
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
     queryKey: [
@@ -66,7 +81,7 @@ function SimulationSummary() {
     },
   });
 
-  if (isLoading || !data || !currentTimestamp || !metrics) {
+  if (isLoading || !schedulerStatistics || !currentTimestamp || !metrics) {
     return <LoadingSpinner />;
   }
 
@@ -74,6 +89,10 @@ function SimulationSummary() {
   if (!currentMetrics) {
     currentMetrics = Object.values(metrics)[0];
   }
+
+  let currentStatistics = schedulerStatistics.find((timestep) =>
+    isSameSecond(timestep.timestamp, currentTimestamp),
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
@@ -87,47 +106,65 @@ function SimulationSummary() {
       <Section header={isFinal ? "Final Projections" : "Latest Projections"}>
         <Box>
           <Box.Header>Jobs Pending</Box.Header>
-          <Box.Value>{data.jobs_pending}</Box.Value>
+          <Box.Value>{currentStatistics?.jobs_pending ?? "-"}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Jobs Running</Box.Header>
-          <Box.Value>{data.jobs_running}</Box.Value>
+          <Box.Value>{currentStatistics?.jobs_running ?? "-"}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Jobs Completed</Box.Header>
-          <Box.Value>{data.jobs_completed}</Box.Value>
+          <Box.Value>{currentStatistics?.jobs_completed ?? "-"}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Job Throughput</Box.Header>
-          <Box.Value>{data.throughput} Jobs/Hr</Box.Value>
+          <Box.Value>{currentStatistics?.throughput ?? "-"} Jobs/Hr</Box.Value>
         </Box>
         <Box>
           <Box.Header>Average Power Usage</Box.Header>
-          <Box.Value>{data.average_power / 1000000} mW</Box.Value>
+          <Box.Value>
+            {currentStatistics?.average_power
+              ? currentStatistics.average_power / 1000000
+              : "-"}{" "}
+            mW
+          </Box.Value>
         </Box>
         <Box>
           <Box.Header>Average Power Loss</Box.Header>
-          <Box.Value>{data.average_loss / 1000000} mW</Box.Value>
+          <Box.Value>
+            {currentStatistics?.average_loss
+              ? currentStatistics.average_loss / 1000000
+              : "-"}{" "}
+            mW
+          </Box.Value>
         </Box>
         <Box>
           <Box.Header>Total Power Consumption</Box.Header>
-          <Box.Value>{data.total_energy_consumed} mW</Box.Value>
+          <Box.Value>
+            {currentStatistics?.total_energy_consumed ?? "-"} mW
+          </Box.Value>
         </Box>
         <Box>
           <Box.Header>System Power Efficiency</Box.Header>
-          <Box.Value>{data.system_power_efficiency}%</Box.Value>
+          <Box.Value>
+            {currentStatistics?.system_power_efficiency ?? "-"}%
+          </Box.Value>
         </Box>
         <Box>
           <Box.Header>Carbon Emissions</Box.Header>
-          <Box.Value>{data.carbon_emissions} Metric Tons of CO2</Box.Value>
+          <Box.Value>
+            {currentStatistics?.carbon_emissions ?? "-"} Metric Tons of CO2
+          </Box.Value>
         </Box>
         <Box>
           <Box.Header>Total Cost</Box.Header>
           <Box.Value>
-            {Intl.NumberFormat("en-US", {
-              currency: "USD",
-              style: "currency",
-            }).format(data.total_cost)}
+            {currentStatistics?.total_cost
+              ? Intl.NumberFormat("en-US", {
+                  currency: "USD",
+                  style: "currency",
+                }).format(currentStatistics.total_cost)
+              : "-"}
           </Box.Value>
         </Box>
       </Section>
