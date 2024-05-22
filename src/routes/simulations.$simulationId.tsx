@@ -400,7 +400,7 @@ function Simulation() {
           )}
         </button>
         <span
-          className="text-nowrap text-neutral-400"
+          className="w-36 text-nowrap text-right text-neutral-400"
           data-tooltip-id="current-timestamp"
           data-tooltip-content={`${currentTimestamp} / ${search.end}`}
           data-tooltip-delay-show={750}
