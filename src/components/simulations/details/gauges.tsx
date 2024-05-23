@@ -44,20 +44,52 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
         />
       </GaugeWrapper>
       <GaugeWrapper>
-        <GraphHeader>HTWS/HTWR CTWS/CTWR Temperature</GraphHeader>
+        <GraphHeader>Total Loss</GraphHeader>
         <Gauge
           minValue={0}
-          maxValue={150}
+          maxValue={35000}
           value={
-            metrics?.reduce(
-              (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
-              0,
-            ) ?? 0
+            metrics?.reduce((prev, curr) => prev + curr.total_loss, 0) ?? 0
           }
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [{ value: 50 }, { value: 100 }],
+              ticks: [
+                { value: 5000 },
+                { value: 10000 },
+                { value: 15000 },
+                { value: 20000 },
+                { value: 25000 },
+                { value: 30000 },
+              ],
+            },
+            valueLabel: {
+              formatTextValue: (value) => value + " kW",
+            },
+          }}
+          arc={{
+            colorArray: ["#5BE12C"],
+            subArcs: [{ color: "#5BE12C", limit: 35000 }],
+          }}
+        />
+      </GaugeWrapper>
+      <GaugeWrapper>
+        <GraphHeader>HTWS/HTWR CTWS/CTWR Temperature</GraphHeader>
+        <Gauge
+          minValue={0}
+          maxValue={100}
+          value={
+            (metrics?.reduce(
+              (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
+              0,
+            ) ?? 0) /
+            (metrics?.filter((metric) => !!metric.htwr_htws_ctwr_ctws_temp)
+              .length ?? 0)
+          }
+          labels={{
+            tickLabels: {
+              type: "outer",
+              ticks: [{ value: 25 }, { value: 50 }, { value: 75 }],
             },
             valueLabel: {
               formatTextValue: (value) => value + " ºC",
@@ -65,7 +97,35 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           }}
           arc={{
             colorArray: ["#5BE12C"],
-            subArcs: [{ color: "#5BE12C", limit: 150 }],
+            subArcs: [{ color: "#5BE12C", limit: 100 }],
+          }}
+        />
+      </GaugeWrapper>
+      <GaugeWrapper>
+        <GraphHeader>HTWS/HTWR CTWS/CTWR Pressure</GraphHeader>
+        <Gauge
+          minValue={0}
+          maxValue={150}
+          value={
+            (metrics?.reduce(
+              (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_pressure,
+              0,
+            ) ?? 0) /
+            (metrics?.filter((metric) => !!metric.htwr_htws_ctwr_ctws_pressure)
+              .length ?? 0)
+          }
+          labels={{
+            tickLabels: {
+              type: "outer",
+              ticks: [{ value: 25 }, { value: 50 }, { value: 75 }],
+            },
+            valueLabel: {
+              formatTextValue: (value) => value + " psi",
+            },
+          }}
+          arc={{
+            colorArray: ["#5BE12C"],
+            subArcs: [{ color: "#5BE12C", limit: 100 }],
           }}
         />
       </GaugeWrapper>
