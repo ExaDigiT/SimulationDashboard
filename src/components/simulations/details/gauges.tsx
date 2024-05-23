@@ -54,7 +54,7 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [{ value: 500 }, { value: 1000 }, { value: 2000 }],
+              ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
             },
             valueLabel: {
               formatTextValue: (value) => value + " kW",
