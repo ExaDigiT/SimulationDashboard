@@ -18,11 +18,11 @@ export function CDUList({ metrics }: { metrics: CoolingCDU[] }) {
   return (
     <div className="col-start-1 col-end-8 row-start-3 row-end-10">
       <ConsoleHeader>Power and Temperature</ConsoleHeader>
-      <div className="border-2 text-sm">
-        <div className="grid grid-cols-10 border-b-2 text-xs dark:text-neutral-200">
-          {columns.map((col) => (
+      <div className="border-2 border-neutral-400 text-sm dark:border-neutral-900">
+        <div className="grid grid-cols-10 border-b-2 border-neutral-400 bg-neutral-300 text-xs dark:border-neutral-900 dark:bg-neutral-700 dark:text-neutral-200">
+          {columns.map((col, index) => (
             <div
-              className="flex items-end justify-center border-r-2 px-2"
+              className={`flex items-end justify-center ${index === columns.length - 1 ? "" : "border-r-2"} border-neutral-400 px-2 dark:border-neutral-900`}
               key={col}
             >
               <span
@@ -39,19 +39,31 @@ export function CDUList({ metrics }: { metrics: CoolingCDU[] }) {
             className="grid grid-cols-10 text-center"
             key={`${cdu.col}-${cdu.row}`}
           >
-            <div className="border-r-2 text-cyan-500">{index + 1}</div>
-            <div className="border-r-2 text-green-500">{cdu.rack_1_power}</div>
-            <div className="border-r-2 text-green-500">{cdu.rack_2_power}</div>
-            <div className="border-r-2 text-green-500">{cdu.rack_3_power}</div>
-            <div className="border-r-2 text-green-500">{cdu.total_power}</div>
-            <div className="border-r-2 text-green-500">{cdu.total_loss}</div>
-            <div className="border-r-2 text-blue-500">
+            <div className="border-r-2 border-neutral-400 text-cyan-500 dark:border-neutral-900">
+              {index + 1}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-green-500 dark:border-neutral-900">
+              {cdu.rack_1_power}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-green-500 dark:border-neutral-900">
+              {cdu.rack_2_power}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-green-500 dark:border-neutral-900">
+              {cdu.rack_3_power}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-green-500 dark:border-neutral-900">
+              {cdu.total_power}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-green-500 dark:border-neutral-900">
+              {cdu.total_loss}
+            </div>
+            <div className="border-r-2 border-neutral-400 text-blue-500 dark:border-neutral-900">
               {cdu.facility_supply_temp.toFixed(1)}
             </div>
-            <div className="border-r-2 text-red-500">
+            <div className="border-r-2 border-neutral-400 text-red-500 dark:border-neutral-900">
               {cdu.facility_return_temp.toFixed(1)}
             </div>
-            <div className="border-r-2 text-blue-500">
+            <div className="border-r-2 border-neutral-400 text-blue-500 dark:border-neutral-900">
               {cdu.rack_supply_temp.toFixed(1)}
             </div>
             <div className=" text-red-500">

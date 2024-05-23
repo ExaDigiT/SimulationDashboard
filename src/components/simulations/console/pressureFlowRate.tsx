@@ -53,10 +53,10 @@ export function PressureFlowRate({ metrics }: { metrics: CoolingCDU[] }) {
   return (
     <div className="col-start-1 col-end-8 row-start-1 row-end-3">
       <ConsoleHeader>Pressure and Flow Rates</ConsoleHeader>
-      <div className="border-2">
-        <div className="flex w-full border-b-2 text-xs">
+      <div className="border-2 border-neutral-400 dark:border-neutral-900">
+        <div className="flex w-full border-b-2 border-neutral-400 bg-neutral-300 text-xs dark:border-neutral-900 dark:bg-neutral-700">
           <span className="flex-1 px-2 dark:text-neutral-200">Output</span>
-          <div className="w-[2px] dark:bg-neutral-300" />
+          <div className="w-[2px] bg-neutral-400 dark:bg-neutral-900" />
           <span className="flex-1 text-center dark:text-neutral-200">
             Average Value
           </span>
@@ -65,7 +65,7 @@ export function PressureFlowRate({ metrics }: { metrics: CoolingCDU[] }) {
           {statistics.map((stat) => (
             <div className="flex text-sm dark:text-neutral-200" key={stat.name}>
               <span className="flex-1 px-2">{stat.name}</span>
-              <div className="w-[2px] dark:bg-neutral-300" />
+              <div className="w-[2px] bg-neutral-400 dark:bg-neutral-900" />
               <span className="flex-1 text-center">
                 {stat.value(metrics).toFixed(1)}
               </span>
