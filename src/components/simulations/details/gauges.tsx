@@ -47,21 +47,14 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
         <GraphHeader>Total Loss</GraphHeader>
         <Gauge
           minValue={0}
-          maxValue={35000}
+          maxValue={2000}
           value={
             metrics?.reduce((prev, curr) => prev + curr.total_loss, 0) ?? 0
           }
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [
-                { value: 5000 },
-                { value: 10000 },
-                { value: 15000 },
-                { value: 20000 },
-                { value: 25000 },
-                { value: 30000 },
-              ],
+              ticks: [{ value: 500 }, { value: 1000 }, { value: 2000 }],
             },
             valueLabel: {
               formatTextValue: (value) => value + " kW",
@@ -69,7 +62,7 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           }}
           arc={{
             colorArray: ["#5BE12C"],
-            subArcs: [{ color: "#5BE12C", limit: 35000 }],
+            subArcs: [{ color: "#5BE12C", limit: 2000 }],
           }}
         />
       </GaugeWrapper>
