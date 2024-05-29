@@ -69,8 +69,8 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
       <GaugeWrapper>
         <GraphHeader>HTWS/HTWR CTWS/CTWR Temperature</GraphHeader>
         <Gauge
-          minValue={0}
-          maxValue={100}
+          minValue={5}
+          maxValue={50}
           value={
             (metrics?.reduce(
               (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
@@ -82,7 +82,7 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [{ value: 25 }, { value: 50 }, { value: 75 }],
+              ticks: [{ value: 20 }, { value: 35 }],
               defaultTickValueConfig: {
                 formatTextValue: (value) => value + " ºC",
               },
@@ -92,16 +92,40 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
             },
           }}
           arc={{
-            colorArray: ["#5BE12C"],
-            subArcs: [{ color: "#5BE12C", limit: 100 }],
+            subArcs: [
+              {
+                limit: 10,
+                color: "#EA4228",
+                showTick: true,
+                tooltip: { text: "Low Temperature" },
+              },
+              {
+                limit: 12,
+                color: "#F5CD19",
+                showTick: true,
+                tooltip: { text: "Approaching Low Temperature" },
+              },
+              { limit: 43, color: "#5BE12C", showTick: true },
+              {
+                limit: 45,
+                color: "#F5CD19",
+                showTick: true,
+                tooltip: { text: "Approaching High Temperature" },
+              },
+              {
+                limit: 50,
+                color: "#EA4228",
+                tooltip: { text: "High Temperature" },
+              },
+            ],
           }}
         />
       </GaugeWrapper>
       <GaugeWrapper>
         <GraphHeader>HTWS/HTWR CTWS/CTWR Pressure</GraphHeader>
         <Gauge
-          minValue={0}
-          maxValue={150}
+          minValue={10}
+          maxValue={90}
           value={
             (metrics?.reduce(
               (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_pressure,
@@ -113,15 +137,39 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           labels={{
             tickLabels: {
               type: "outer",
-              ticks: [{ value: 25 }, { value: 50 }, { value: 75 }],
+              ticks: [{ value: 35 }, { value: 50 }, { value: 65 }],
             },
             valueLabel: {
-              formatTextValue: (value) => value + " psi",
+              formatTextValue: (value) => value + " psig",
             },
           }}
           arc={{
-            colorArray: ["#5BE12C"],
-            subArcs: [{ color: "#5BE12C", limit: 100 }],
+            subArcs: [
+              {
+                limit: 20,
+                color: "#EA4228",
+                tooltip: { text: "Low Pressure" },
+                showTick: true,
+              },
+              {
+                limit: 25,
+                color: "#F5CD19",
+                tooltip: { text: "Approaching Low Pressure" },
+                showTick: true,
+              },
+              { color: "#5BE12C", limit: 75, showTick: true },
+              {
+                limit: 80,
+                color: "#F5CD19",
+                tooltip: { text: "Approaching High Pressure" },
+                showTick: true,
+              },
+              {
+                limit: 90,
+                color: "#EA4228",
+                tooltip: { text: "High Pressure" },
+              },
+            ],
           }}
         />
       </GaugeWrapper>
