@@ -15,6 +15,7 @@ import { BeakerIcon, HomeIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "react-tooltip";
 import { useContext } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import logo from "../assets/smallLogo.png";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: Root,
@@ -26,7 +27,18 @@ function Root() {
   return (
     <div className="flex h-screen">
       {/* Todo: Create Better Nav Header */}
-      <div className="flex flex-col items-center bg-neutral-200 py-6 shadow-md dark:bg-neutral-800">
+      <div className="flex flex-col items-center bg-neutral-200 pb-6 pt-2 shadow-md dark:bg-neutral-800">
+        <StyledLink
+          to="/"
+          params={{}}
+          search={{}}
+          data-tooltip-id="home-icon-tooltip"
+          data-tooltip-content={"ExaDigiT"}
+          data-tooltip-delay-show={500}
+          className="hover:bg-transparent dark:hover:bg-transparent"
+        >
+          <img src={logo} className="h-6 w-6 dark:invert" />
+        </StyledLink>
         <StyledLink
           to="/"
           params={{}}
