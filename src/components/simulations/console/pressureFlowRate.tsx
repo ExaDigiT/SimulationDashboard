@@ -51,7 +51,7 @@ const statistics = [
 
 export function PressureFlowRate({ metrics }: { metrics: CoolingCDU[] }) {
   return (
-    <div className="col-start-1 col-end-8 row-start-1 row-end-3">
+    <div className="col-start-1 col-end-8 row-start-2 row-end-4">
       <ConsoleHeader>Pressure and Flow Rates</ConsoleHeader>
       <div className="border-2 border-neutral-400 dark:border-neutral-900">
         <div className="flex w-full border-b-2 border-neutral-400 bg-neutral-300 text-xs dark:border-neutral-900 dark:bg-neutral-700">

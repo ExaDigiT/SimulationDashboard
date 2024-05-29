@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PressureFlowRate } from "../components/simulations/console/pressureFlowRate";
 import { InfiniteData, useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import { groupBy } from "lodash";
+import { groupBy, uniqBy } from "lodash";
 import { CoolingCDU } from "../models/CoolingCDU.model";
 import { JobQueue } from "../components/simulations/console/jobQueue";
 import { CDUList } from "../components/simulations/console/cduList";
@@ -113,12 +113,14 @@ function SimulationConsoleView() {
     currentStatistics = Object.values(schedulerStatistics)[0];
   }
 
+  const distinctJobs = uniqBy(jobs, "job_id");
+
   return (
     <section className="grid grid-cols-12 gap-2 overflow-auto p-2">
       <PressureFlowRate metrics={currentMetrics} />
       <JobQueue
         jobs={
-          jobs?.filter((job) => {
+          distinctJobs.filter((job) => {
             return (
               isAfter(currentTimestamp, job.time_start) &&
               isBefore(currentTimestamp, job.time_end)
