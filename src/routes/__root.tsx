@@ -93,9 +93,9 @@ function Root() {
             <SunIcon className="h-6 w-6" />
           )}
         </button>
-        <Tooltip id="dark-light-mode-tooltip" />
-        <Tooltip id="home-icon-tooltip" />
-        <Tooltip id="simulations-icon-tooltip" />
+        <Tooltip id="dark-light-mode-tooltip" className="z-50" />
+        <Tooltip id="home-icon-tooltip" className="z-50" />
+        <Tooltip id="simulations-icon-tooltip" className="z-50" />
       </div>
       <div className="flex flex-1 overflow-y-auto dark:bg-neutral-900">
         <Outlet />
