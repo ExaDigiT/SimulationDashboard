@@ -21,6 +21,7 @@ import { Route as SimulationsSimulationIdJobsImport } from './routes/simulations
 import { Route as SimulationsSimulationIdCoolingImport } from './routes/simulations.$simulationId.cooling'
 import { Route as SimulationsSimulationIdConsoleImport } from './routes/simulations.$simulationId.console'
 import { Route as SimulationsSimulationIdConfigurationImport } from './routes/simulations.$simulationId.configuration'
+import { Route as SimulationsSimulationIdJobsJobIdImport } from './routes/simulations.$simulationId.jobs.$jobId'
 
 // Create/Update Routes
 
@@ -79,6 +80,12 @@ const SimulationsSimulationIdConfigurationRoute =
     getParentRoute: () => SimulationsSimulationIdRoute,
   } as any)
 
+const SimulationsSimulationIdJobsJobIdRoute =
+  SimulationsSimulationIdJobsJobIdImport.update({
+    path: '/$jobId',
+    getParentRoute: () => SimulationsSimulationIdJobsRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -123,6 +130,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SimulationsSimulationIdSummaryImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
+    '/simulations/$simulationId/jobs/$jobId': {
+      preLoaderRoute: typeof SimulationsSimulationIdJobsJobIdImport
+      parentRoute: typeof SimulationsSimulationIdJobsImport
+    }
   }
 }
 
@@ -135,7 +146,9 @@ export const routeTree = rootRoute.addChildren([
       SimulationsSimulationIdConfigurationRoute,
       SimulationsSimulationIdConsoleRoute,
       SimulationsSimulationIdCoolingRoute,
-      SimulationsSimulationIdJobsRoute,
+      SimulationsSimulationIdJobsRoute.addChildren([
+        SimulationsSimulationIdJobsJobIdRoute,
+      ]),
       SimulationsSimulationIdSummaryRoute,
     ]),
     SimulationsNewRoute,
