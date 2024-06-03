@@ -16,8 +16,12 @@ export class SimulationRequest implements ISimulationRequest {
   cooling: { enabled: boolean };
 
   constructor() {
-    this.start = new Date().toISOString();
-    this.end = new Date().toISOString();
+    const startDate = new Date();
+    startDate.setMilliseconds(0);
+    this.start = startDate.toISOString();
+    const endDate = new Date();
+    endDate.setMilliseconds(0);
+    this.end = endDate.toISOString();
     this.cooling = { enabled: false };
     this.scheduler = new Scheduler();
   }
