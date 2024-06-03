@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import Keycloak, { KeycloakConfig } from "keycloak-js";
 import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
 import { routeTree } from "./routeTree.gen";
 import { LoadingSpinner } from "./components/shared/loadingSpinner";
@@ -29,6 +30,11 @@ kc.init({
     if (auth) {
       if (kc.token) {
         localStorage.setItem("exadigitAuthToken", kc.token);
+        axios.defaults.baseURL = "https://obsidian.ccs.ornl.gov/exadigit/api";
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common = {
+          Authorization: `Bearer ${kc.token}`,
+        };
       }
     }
   },
@@ -36,6 +42,9 @@ kc.init({
     console.error("Authenticated Failed");
   },
 );
+console.log(kc, kc.token);
+
+export { axios };
 
 export interface RouterContext {
   queryClient: QueryClient;
