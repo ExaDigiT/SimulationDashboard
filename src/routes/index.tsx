@@ -18,12 +18,12 @@ function Home() {
       />
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-8 px-4 dark:text-neutral-200">
         <h1 className="text-lg  text-neutral-200">
-          Welcome to the RAPS dashboard!
+          Welcome to the ExaDigIT dashboard!
         </h1>
         <div className="flex gap-8">
-          {/* <Link to="/about" className={linkClassName}>
-            About
-          </Link> */}
+          <Link to="/about" className={linkClassName}>
+            About ExaDigIT
+          </Link>
           <Link to="/simulations/new" className={linkClassName}>
             New Simulation
           </Link>

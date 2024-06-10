@@ -116,7 +116,7 @@ export function Nav() {
           {({ isActive }) => (
             <>
               {isActive ? (
-                <BookOpenSolidIcon className="h-6 w-6" />
+                <BookOpenSolidIcon className="size-6 min-w-6" />
               ) : (
                 <BookOpenIcon className="size-6 min-w-6" />
               )}
@@ -125,7 +125,7 @@ export function Nav() {
           )}
         </StyledLink>
         <button
-          className="flex gap-4 overflow-hidden whitespace-nowrap p-3"
+          className="flex gap-4 overflow-hidden whitespace-nowrap p-3 transition-colors duration-500 ease-in-out hover:bg-neutral-300 dark:hover:bg-neutral-700"
           onClick={(e) => {
             e.preventDefault();
             if (!theme || theme === "dark") {
@@ -148,7 +148,7 @@ export function Nav() {
           Toggle {theme === "light" ? "Dark" : "Light"} Mode
         </button>
         <button
-          className="flex gap-4 overflow-hidden whitespace-nowrap p-3"
+          className="flex gap-4 overflow-hidden whitespace-nowrap p-3 transition-colors duration-500 ease-in-out hover:bg-neutral-300 dark:hover:bg-neutral-700"
           onClick={(e) => {
             e.preventDefault();
             if (navbarSize === "small") {
