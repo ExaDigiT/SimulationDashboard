@@ -111,7 +111,7 @@ function JobModal() {
               {data.xnames
                 .filter((xname) => (search ? xname.includes(search) : true))
                 .map((xname) => (
-                  <span id={xname}>{xname}</span>
+                  <span key={xname}>{xname}</span>
                 ))}
             </div>
           </Box>
