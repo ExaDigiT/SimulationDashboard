@@ -1,21 +1,19 @@
-import { InfiniteData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
 import { SimulationGauges } from "../components/simulations/details/gauges";
-import { CoolingCDU } from "../models/CoolingCDU.model";
-import { groupBy } from "lodash";
-import { SimulationStatistic } from "../models/SimulationStatistic.model";
 import { isSameSecond } from "date-fns";
+import { useReplayCooling, useReplayScheduler } from "../util/hooks/useReplay";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
   validateSearch: (
     search: Record<string, unknown>,
   ): {
     start: string;
-    end: string | null;
+    end: string;
     currentTimestamp: string;
     playbackInterval: number;
     initialTimestamp: string;
@@ -33,61 +31,38 @@ export const Route = createFileRoute("/simulations/$simulationId/summary")({
 
 function SimulationSummary() {
   const { simulationId } = Route.useParams();
-  const { currentTimestamp, playbackInterval, initialTimestamp } =
+  const { currentTimestamp, playbackInterval, initialTimestamp, end, start } =
     Route.useSearch();
   const { data: configurationData } = useQuery(
     simulationConfigurationQueryOptions(simulationId),
   );
   const isFinal = configurationData?.progress === 1;
 
-  const { data: schedulerStatistics, isLoading } = useQuery({
-    queryKey: [
-      "simulation",
-      simulationId,
-      "scheduler",
-      playbackInterval,
-      initialTimestamp,
-    ],
-    select: (
-      data: InfiniteData<{
-        granularity: number;
-        start: string;
-        end: string;
-        data: SimulationStatistic[];
-      }>,
-    ) => {
-      return data.pages.map((page) => page.data).flat();
-    },
+  const { data: schedulerStatistics, isLoading } = useReplayScheduler({
+    simulationId,
+    currentTimestamp,
+    playbackInterval,
+    initialTimestamp,
+    end,
+    start,
   });
 
-  const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
-    queryKey: [
-      "simulation",
-      simulationId,
-      "cooling",
-      playbackInterval,
-      initialTimestamp,
-    ],
-    select: (
-      data: InfiniteData<{
-        granularity: number;
-        start: string;
-        end: string;
-        data: CoolingCDU[];
-      }>,
-    ) => {
-      const allData = data.pages.map((page) => page.data).flat();
-      return groupBy(allData, "timestamp");
-    },
+  const { data: metrics, isLoading: isLoadingMetrics } = useReplayCooling({
+    currentTimestamp,
+    playbackInterval,
+    start,
+    end,
+    initialTimestamp,
+    simulationId,
   });
 
   if (isLoading || !schedulerStatistics || !currentTimestamp || !metrics) {
     return <LoadingSpinner />;
   }
 
-  let currentMetrics = metrics[currentTimestamp];
+  let currentMetrics = metrics.data[currentTimestamp];
   if (!currentMetrics) {
-    currentMetrics = Object.values(metrics)[0];
+    currentMetrics = Object.values(metrics.data)[0];
   }
 
   let currentStatistics = schedulerStatistics.find((timestep) =>

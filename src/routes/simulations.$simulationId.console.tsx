@@ -1,16 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PressureFlowRate } from "../components/simulations/console/pressureFlowRate";
-import { InfiniteData, useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import { groupBy, uniqBy } from "lodash";
-import { CoolingCDU } from "../models/CoolingCDU.model";
+import { uniqBy } from "lodash";
 import { JobQueue } from "../components/simulations/console/jobQueue";
 import { CDUList } from "../components/simulations/console/cduList";
 import { Power } from "../components/simulations/console/power";
 import { Scheduler } from "../components/simulations/console/scheduler";
-import { SimulationStatistic } from "../models/SimulationStatistic.model";
-import { Job } from "../models/Job.model";
-import { isAfter, isBefore } from "date-fns";
+import { isAfter, isBefore, isSameSecond } from "date-fns";
+import {
+  useReplayCooling,
+  useReplayJobs,
+  useReplayScheduler,
+} from "../util/hooks/useReplay";
 
 export const Route = createFileRoute("/simulations/$simulationId/console")({
   component: SimulationConsoleView,
@@ -27,71 +28,34 @@ export const Route = createFileRoute("/simulations/$simulationId/console")({
 
 function SimulationConsoleView() {
   const { simulationId } = Route.useParams();
-  const { currentTimestamp, playbackInterval, initialTimestamp } =
+  const { currentTimestamp, playbackInterval, initialTimestamp, start, end } =
     Route.useSearch();
 
-  const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
-    queryKey: [
-      "simulation",
-      simulationId,
-      "cooling",
-      playbackInterval,
-      initialTimestamp,
-    ],
-    select: (
-      data: InfiniteData<{
-        granularity: number;
-        start: string;
-        end: string;
-        data: CoolingCDU[];
-      }>,
-    ) => {
-      const allData = data.pages.map((page) => page.data).flat();
-      return groupBy(allData, "timestamp");
-    },
+  const { data: metrics, isLoading: isLoadingMetrics } = useReplayCooling({
+    currentTimestamp,
+    playbackInterval,
+    start,
+    end,
+    initialTimestamp,
+    simulationId,
   });
 
-  const { data: schedulerStatistics, isLoading: isLoadingScheduler } = useQuery(
-    {
-      queryKey: [
-        "simulation",
-        simulationId,
-        "scheduler",
-        playbackInterval,
-        initialTimestamp,
-      ],
-      select: (
-        data: InfiniteData<{
-          granularity: number;
-          start: string;
-          end: string;
-          data: SimulationStatistic[];
-        }>,
-      ) => {
-        const allData = data.pages.map((page) => page.data).flat();
-        return groupBy(allData, "timestamp");
-      },
-    },
-  );
-
-  const { data: jobs } = useQuery({
-    queryKey: [
-      "simulation",
+  const { data: schedulerStatistics, isLoading: isLoadingScheduler } =
+    useReplayScheduler({
       simulationId,
-      "jobs",
+      currentTimestamp,
       playbackInterval,
       initialTimestamp,
-    ],
-    select: (
-      data: InfiniteData<{
-        results: Job[];
-        limit: number;
-        offset: number;
-        total_results: number;
-      }>,
-    ) => {
-      return data.pages.map((page) => page.results).flat();
-    },
+      end,
+      start,
+    });
+
+  const { data: jobs } = useReplayJobs({
+    end,
+    initialTimestamp,
+    playbackInterval,
+    simulationId,
+    start,
   });
 
   if (
@@ -103,15 +67,14 @@ function SimulationConsoleView() {
     return <LoadingSpinner />;
   }
 
-  let currentMetrics = metrics[currentTimestamp];
+  let currentMetrics = metrics.data[currentTimestamp];
   if (!currentMetrics) {
-    currentMetrics = Object.values(metrics)[0];
+    currentMetrics = Object.values(metrics.data)[0];
   }
 
-  let currentStatistics = schedulerStatistics[currentTimestamp];
-  if (!currentStatistics) {
-    currentStatistics = Object.values(schedulerStatistics)[0];
-  }
+  const currentStatistics = schedulerStatistics.filter((stat) =>
+    isSameSecond(stat.timestamp, currentTimestamp),
+  );
 
   const distinctJobs = uniqBy(jobs, "job_id");
 

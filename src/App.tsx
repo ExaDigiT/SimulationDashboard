@@ -42,7 +42,6 @@ kc.init({
     console.error("Authenticated Failed");
   },
 );
-console.log(kc, kc.token);
 
 export { axios };
 
