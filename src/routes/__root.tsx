@@ -26,7 +26,6 @@ function Root() {
 
   return (
     <div className="flex h-screen">
-      {/* Todo: Create Better Nav Header */}
       <div className="flex flex-col items-center bg-neutral-200 pb-6 pt-2 shadow-md dark:bg-neutral-800">
         <StyledLink
           to="/"
@@ -117,7 +116,7 @@ function StyledLink(props: LinkProps) {
         className:
           "text-blue-500 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-500",
       }}
-      activeOptions={{ exact: false, includeHash: true, includeSearch: true }}
+      activeOptions={{ exact: false, includeHash: false, includeSearch: true }}
     >
       {props.children}
     </Link>

@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SimulationsImport } from './routes/simulations'
+import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as SimulationsIndexImport } from './routes/simulations.index'
 import { Route as SimulationsNewImport } from './routes/simulations.new'
@@ -27,6 +28,11 @@ import { Route as SimulationsSimulationIdJobsJobIdImport } from './routes/simula
 
 const SimulationsRoute = SimulationsImport.update({
   path: '/simulations',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AboutRoute = AboutImport.update({
+  path: '/about',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -94,6 +100,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/about': {
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
     '/simulations': {
       preLoaderRoute: typeof SimulationsImport
       parentRoute: typeof rootRoute
@@ -141,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  AboutRoute,
   SimulationsRoute.addChildren([
     SimulationsSimulationIdRoute.addChildren([
       SimulationsSimulationIdConfigurationRoute,
