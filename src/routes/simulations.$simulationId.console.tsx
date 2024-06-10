@@ -6,7 +6,7 @@ import { JobQueue } from "../components/simulations/console/jobQueue";
 import { CDUList } from "../components/simulations/console/cduList";
 import { Power } from "../components/simulations/console/power";
 import { Scheduler } from "../components/simulations/console/scheduler";
-import { isAfter, isBefore, isSameSecond } from "date-fns";
+import { isAfter, isBefore, isEqual, isSameSecond } from "date-fns";
 import {
   useReplayCooling,
   useReplayJobs,
@@ -84,10 +84,17 @@ function SimulationConsoleView() {
       <JobQueue
         jobs={
           distinctJobs.filter((job) => {
-            return (
-              isAfter(currentTimestamp, job.time_start) &&
-              isBefore(currentTimestamp, job.time_end)
-            );
+            if (job.time_start) {
+              return (
+                (isEqual(currentTimestamp, job.time_start) ||
+                  isAfter(currentTimestamp, job.time_start)) &&
+                (!job.time_end ||
+                  isBefore(currentTimestamp, job.time_end) ||
+                  isEqual(currentTimestamp, job.time_end))
+              );
+            } else {
+              return false;
+            }
           }) ?? []
         }
       />

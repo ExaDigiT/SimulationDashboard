@@ -115,7 +115,7 @@ export function JobList({
                 return (
                   <div
                     key={virtualItem.key}
-                    className={`absolute left-0 top-0 grid w-full grid-cols-12 items-center border-b-2 border-neutral-400 bg-transparent transition-opacity duration-500 hover:opacity-50 dark:border-neutral-900`}
+                    className={`absolute left-0 top-0 grid w-full cursor-pointer grid-cols-12 items-center border-b-2 border-neutral-400 bg-transparent transition-opacity duration-500 hover:opacity-50 dark:border-neutral-900`}
                     style={{
                       height: `${virtualItem.size}px`,
                       transform: `translateY(${virtualItem.start}px)`,

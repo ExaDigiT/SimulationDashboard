@@ -211,7 +211,7 @@ export const useReplayJobs = ({
         granularity: number;
         start: string;
         end: string;
-        data: Job[];
+        results: Job[];
       }>(`/frontier/simulation/${simulationId}/scheduler/jobs?${fields}`, {
         params: {
           start: isBefore(startTime, end) ? startTime : undefined,
@@ -227,10 +227,10 @@ export const useReplayJobs = ({
         granularity: number;
         start: string;
         end: string;
-        data: Job[];
+        results: Job[];
       }>,
     ) => {
-      return data.pages.map((page) => page.data).flat();
+      return data.pages.map((page) => page.results).flat();
     },
   });
 };
