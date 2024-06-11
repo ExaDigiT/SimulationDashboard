@@ -79,7 +79,7 @@ function SimulationConsoleView() {
   const distinctJobs = uniqBy(jobs, "job_id");
 
   return (
-    <section className="grid grid-cols-12 gap-2 overflow-auto p-2">
+    <section className="grid min-w-[1024px] grid-cols-12 gap-2 overflow-auto p-2">
       <PressureFlowRate metrics={currentMetrics} />
       <JobQueue
         jobs={

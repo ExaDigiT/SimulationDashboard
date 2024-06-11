@@ -43,19 +43,19 @@ export function CDUList({ metrics }: { metrics: CoolingCDU[] }) {
               {index + 1}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_1_power}
+              {cdu.rack_1_power.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_2_power}
+              {cdu.rack_2_power.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_3_power}
+              {cdu.rack_3_power.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.total_power}
+              {cdu.total_power.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.total_loss}
+              {cdu.total_loss.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-blue-500 dark:border-neutral-900">
               {cdu.facility_supply_temp.toFixed(1)}
