@@ -148,7 +148,7 @@ export const useReplayScheduler = ({
         params: {
           start: isBefore(startTime, end)
             ? startTime
-            : subSeconds(end, playbackInterval).toISOString(),
+            : subSeconds(end, 1).toISOString(),
           end: isBefore(currentEndTime, end) ? currentEndTime : end,
           granularity: isEnd ? undefined : playbackInterval,
           resolution: isEnd ? 1 : undefined,

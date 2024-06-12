@@ -69,7 +69,7 @@ function SimulationSummary() {
     isEqual(
       timestep.timestamp,
       isEqual(currentTimestamp, end)
-        ? subSeconds(end, playbackInterval).toISOString()
+        ? subSeconds(end, 1).toISOString()
         : currentTimestamp,
     ),
   );
