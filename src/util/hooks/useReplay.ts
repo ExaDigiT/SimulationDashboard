@@ -1,6 +1,11 @@
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { addSeconds, differenceInSeconds, isBefore } from "date-fns";
+import {
+  addSeconds,
+  differenceInSeconds,
+  isBefore,
+  subSeconds,
+} from "date-fns";
 import { CoolingCDU } from "../../models/CoolingCDU.model";
 import { SimulationStatistic } from "../../models/SimulationStatistic.model";
 import { groupBy } from "lodash";
@@ -141,7 +146,9 @@ export const useReplayScheduler = ({
         data: SimulationStatistic[];
       }>(`/frontier/simulation/${simulationId}/scheduler/system`, {
         params: {
-          start: isBefore(startTime, end) ? startTime : undefined,
+          start: isBefore(startTime, end)
+            ? startTime
+            : subSeconds(end, playbackInterval).toISOString(),
           end: isBefore(currentEndTime, end) ? currentEndTime : end,
           granularity: isEnd ? undefined : playbackInterval,
           resolution: isEnd ? 1 : undefined,

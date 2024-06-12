@@ -5,7 +5,7 @@ import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
 import { SimulationGauges } from "../components/simulations/details/gauges";
-import { isSameSecond } from "date-fns";
+import { isEqual, subSeconds } from "date-fns";
 import { useReplayCooling, useReplayScheduler } from "../util/hooks/useReplay";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
@@ -66,7 +66,12 @@ function SimulationSummary() {
   }
 
   let currentStatistics = schedulerStatistics.find((timestep) =>
-    isSameSecond(timestep.timestamp, currentTimestamp),
+    isEqual(
+      timestep.timestamp,
+      isEqual(currentTimestamp, end)
+        ? subSeconds(end, playbackInterval).toISOString()
+        : currentTimestamp,
+    ),
   );
 
   return (
