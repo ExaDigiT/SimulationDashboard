@@ -7,11 +7,21 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ListResponse } from "../util/queryOptions";
-import { Job } from "../models/Job.model";
+import { Job, JobPower } from "../models/Job.model";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { useState } from "react";
 import Box from "../components/shared/simulation/box";
 import { convertDateTimeString } from "../util/datetime";
+//import { Graph } from "../components/shared/plots/graph";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export const Route = createFileRoute("/simulations/$simulationId/jobs/$jobId")({
   component: JobModal,
@@ -35,6 +45,21 @@ function JobModal() {
       if (data.results.length > 0) {
         return data.results[0];
       }
+    },
+  });
+
+  const { data: jobPower, isLoading: isLoadingPowerHistory } = useQuery({
+    queryKey: ["simulation", "jobs", simulationId, "job", jobId, "power"],
+    queryFn: async () => {
+      const res = await axios.get<{
+        granularity: number;
+        start: string;
+        end: string;
+        data: JobPower[];
+      }>(
+        `/frontier/simulation/${simulationId}/scheduler/jobs/${jobId}/power-history`,
+      );
+      return res;
     },
   });
 
@@ -115,6 +140,46 @@ function JobModal() {
                 ))}
             </div>
           </Box>
+          <div className="flex-1">
+            {isLoadingPowerHistory ? (
+              <LoadingSpinner />
+            ) : (
+              // <Graph
+              //   key="Power Usage Graph"
+              //   data={[
+              //     {
+              //       x: jobPower?.data.data.map((result) => result.timestamp),
+              //       y: jobPower?.data.data.map((result) => result.power),
+              //       type: "scatter",
+              //       mode: "lines+markers",
+              //       hovertemplate: "%{x}<br />Power: %{y} kW<extra></extra>",
+              //       yaxis: "y",
+              //       line: {
+              //         shape: "linear",
+              //         smoothing: 1.3,
+              //       },
+              //     },
+              //   ]}
+              //   layout={{
+              //     title: "Power Usage",
+              //     xaxis: { title: { text: "Time" }, type: "date" },
+              //     yaxis: {
+              //       title: { text: "Power (kW)", standoff: 20 },
+              //       type: "linear",
+              //     },
+              //   }}
+              // />
+              <ResponsiveContainer>
+                <LineChart data={jobPower?.data.data ?? []}>
+                  <CartesianGrid strokeDasharray={"3 3"} />
+                  <XAxis dataKey={"timestamp"} />
+                  <YAxis />
+                  <Tooltip />
+                  <Line dataKey={"power"} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </section>
       )}
     </Modal>
