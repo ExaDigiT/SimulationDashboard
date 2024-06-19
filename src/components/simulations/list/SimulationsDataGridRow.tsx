@@ -32,7 +32,7 @@ export function SimulationsDataGridRow({
     <Link
       to="/simulations/$simulationId/summary"
       params={{ simulationId: simulation.id }}
-      className="grid w-full grid-cols-7 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
+      className="grid w-full grid-cols-8 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
       search={{
         start: simulation.start,
         end: simulation.end,
@@ -51,6 +51,7 @@ export function SimulationsDataGridRow({
         </div>
       </div>
       <SimulationDataGridCell value={simulation.user} />
+      <SimulationDataGridCell value={simulation.config.scheduler.jobs_mode} />
       <SimulationDataGridCell value={convertDateTimeString(simulation.start)} />
       <SimulationDataGridCell value={convertDateTimeString(simulation.end)} />
       <SimulationDataGridCell

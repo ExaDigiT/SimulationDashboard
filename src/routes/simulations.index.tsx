@@ -30,7 +30,9 @@ function SimulationList() {
     queryFn: async ({ pageParam }) => {
       const sortParams = sortCombinator(columns);
       const filterParams = operatorCombinator(columns);
+      const fields = `&fields=all`;
       const params =
+        fields +
         (sortParams ? "&" : "") +
         sortParams +
         (filterParams ? "&" : "") +

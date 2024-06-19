@@ -18,7 +18,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "text",
   },
   {
@@ -37,7 +37,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "select",
     selectOptions: [
       { label: "Running", value: "running" },
@@ -61,8 +61,17 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "text",
+  },
+  {
+    name: "Jobs Mode",
+    propertyName: "jobs_mode",
+    operators: [],
+    activeFilters: [],
+    inputType: "text",
+    sort: { sortable: false, sorted: false, direction: null },
+    filterable: false,
   },
   {
     name: "Logical Start",
@@ -78,7 +87,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
   {
@@ -95,7 +104,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
   {
@@ -112,7 +121,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: true, direction: "desc" },
+    sort: { sortable: true, sorted: true, direction: "desc" },
     inputType: "datetime",
   },
   {
@@ -129,7 +138,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
 ] as const;
