@@ -65,7 +65,7 @@ function SimulationCooling() {
                 hovertemplate: "%{x}<br />Power: %{y} kW<extra></extra>",
                 yaxis: "y",
                 line: {
-                  shape: "spline",
+                  shape: "linear",
                   smoothing: 1.3,
                 },
               },
@@ -91,7 +91,7 @@ function SimulationCooling() {
                 mode: "lines+markers",
                 hovertemplate: "%{x}<br />Power: %{y} kW<extra></extra>",
                 line: {
-                  shape: "spline",
+                  shape: "linear",
                   smoothing: 1.3,
                 },
               },
@@ -119,7 +119,7 @@ function SimulationCooling() {
                 hovertemplate:
                   "%{x}<br />Average Rack Supply Temperature: %{y} °C<extra></extra>",
                 line: {
-                  shape: "spline",
+                  shape: "linear",
                   smoothing: 1.3,
                 },
                 name: "Return Temperature",
@@ -139,7 +139,7 @@ function SimulationCooling() {
                   "%{x}<br />Average Rack Supply Temperature: %{y} °C<extra></extra>",
                 hoverlabel: { font: { color: colors.white } },
                 line: {
-                  shape: "spline",
+                  shape: "linear",
                   smoothing: 1.3,
                 },
                 name: "Supply Temperature",
@@ -168,7 +168,7 @@ function SimulationCooling() {
                 hovertemplate:
                   "%{x}<br />Average Rack Flowrate: %{y} gpm<extra></extra>",
                 line: {
-                  shape: "spline",
+                  shape: "linear",
                   smoothing: 1.3,
                 },
               },
