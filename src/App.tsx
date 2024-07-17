@@ -15,7 +15,7 @@ const basepath = import.meta.env.VITE_BASE_PATH
   : "/";
 
 const initOptions: KeycloakConfig = {
-  url: "https://obsidian.ccs.ornl.gov/auth/",
+  url: import.meta.env.VITE_AUTH_URL,
   realm: "obsidian",
   clientId: "obsidian-public",
 };
@@ -30,7 +30,7 @@ kc.init({
     if (auth) {
       if (kc.token) {
         localStorage.setItem("exadigitAuthToken", kc.token);
-        axios.defaults.baseURL = "https://obsidian.ccs.ornl.gov/exadigit/api";
+        axios.defaults.baseURL = import.meta.env.BASE_URL;
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common = {
           Authorization: `Bearer ${kc.token}`,

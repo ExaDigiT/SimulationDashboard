@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm ci
 COPY . /app/
-ENV VITE_BASE_PATH="https://obsidian.ccs.ornl.gov/exadigit/dashboard"
+ENV VITE_BASE_PATH=${VITE_BASE_PATH}
 RUN npm run build
 
 FROM bitnami/nginx:1.25.4
