@@ -30,7 +30,7 @@ kc.init({
     if (auth) {
       if (kc.token) {
         localStorage.setItem("exadigitAuthToken", kc.token);
-        axios.defaults.baseURL = import.meta.env.BASE_URL;
+        axios.defaults.baseURL = import.meta.env.VITE_BASE_PATH;
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common = {
           Authorization: `Bearer ${kc.token}`,

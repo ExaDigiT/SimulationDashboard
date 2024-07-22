@@ -7,7 +7,7 @@ import { CoolingForm } from "../components/simulations/cooling.form";
 import { SimulationRequest } from "../models/SimulationRequest.model";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
-import axios from "../util/apis";
+import axios from "axios";
 import { Section } from "../components/shared/simulation/section";
 
 export const Route = createFileRoute("/simulations/new")({
