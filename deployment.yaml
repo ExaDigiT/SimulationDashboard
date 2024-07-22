@@ -17,16 +17,16 @@ spec:
         app: exadigit-simulation-dashboard
     spec:
       containers:
-      - image: registry.apps.marble.ccs.ornl.gov/stf218-app/exadigit-simulation-dashboard:latest
-        name: main
-        imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 250Mi
+        - image: ${DASHBOARD_IMAGE}
+          name: main
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 250Mi
 ---
 kind: Service
 apiVersion: v1
@@ -45,3 +45,4 @@ spec:
   selector:
     app: exadigit-simulation-dashboard
 ---
+

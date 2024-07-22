@@ -11,4 +11,4 @@ docker push $DOCKER_REGISTRY &&
 # Scale down so pod gets recreated and uses new image
 oc --namespace stf218-app scale deploy -l app=exadigit-simulation-dashboard --replicas=0
 
-oc apply -f deployment.yaml
+oc process -f ./deployment.yaml -o yaml --param=DASHBOARD_IMAGE="$DOCKER_REGISTRY" | oc apply -f -
