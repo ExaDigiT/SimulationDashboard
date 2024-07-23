@@ -1,14 +1,16 @@
 #!/bin/bash
+set -e
+
 SCRIPT_DIR=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 cd "$SCRIPT_DIR"
 
 set -o allexport
-source deploy.env
+source .env.prod
 set +o allexport
 
-docker build -t $DOCKER_REGISTRY --build-arg VITE_BASE_PATH=$VITE_BASE_PATH . &&
-docker push $DOCKER_REGISTRY &&
-# Scale down so pod gets recreated and uses new image
-oc --namespace stf218-app scale deploy -l app=exadigit-simulation-dashboard --replicas=0
+docker build -t $DOCKER_REGISTRY:latest .
+# Get fully qualified image name
+DOCKER_IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' $DOCKER_REGISTRY:latest)
+docker push $DOCKER_REGISTRY:latest
 
-oc process -f ./deployment.yaml -o yaml --param=DASHBOARD_IMAGE="$DOCKER_REGISTRY" | oc apply -f -
+oc process -f ./deployment.yaml -o yaml --param=IMAGE="$DOCKER_IMAGE" --param=NAMESPACE="$K8S_NAMESPACE" | oc apply -f -

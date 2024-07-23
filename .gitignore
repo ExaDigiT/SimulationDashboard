@@ -1,4 +1,5 @@
 node_modules/
+dist
 
 .env
-deploy.env
+.env.prod
