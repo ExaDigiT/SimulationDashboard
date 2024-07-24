@@ -7,7 +7,7 @@ import { CoolingForm } from "../components/simulations/cooling.form";
 import { SimulationRequest } from "../models/SimulationRequest.model";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
-import axios from "../util/apis";
+import axios from "axios";
 import { Section } from "../components/shared/simulation/section";
 
 export const Route = createFileRoute("/simulations/new")({
@@ -28,7 +28,7 @@ function NewSimultation() {
     <div className="m-6 flex flex-1 flex-col justify-center">
       <div className="flex items-center justify-between">
         <Link
-          to="/simulations/"
+          to="/simulations"
           className="flex items-center gap-2 self-start transition-opacity duration-500 hover:opacity-75 dark:text-neutral-200"
         >
           <ArrowLeftIcon className="h-6 w-6" />

@@ -19,7 +19,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     propertyName: "job_id",
-    sort: { sorted: true, direction: "asc" },
+    sort: { sortable: true, sorted: true, direction: "asc" },
     size: "small",
   },
   {
@@ -27,7 +27,7 @@ export const headers: ColumnHeader[] = [
     inputType: "text",
     name: "Name",
     propertyName: "name",
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     operators: [
       FilterOperators.Contains,
       FilterOperators.DoesNotContain,
@@ -59,7 +59,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     propertyName: "state_current",
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "small",
   },
   {
@@ -77,7 +77,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "small",
   },
   {
@@ -95,7 +95,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "large",
   },
   {
@@ -113,7 +113,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "small",
   },
   {
@@ -131,7 +131,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "medium",
   },
   {
@@ -149,7 +149,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     size: "medium",
   },
 ];

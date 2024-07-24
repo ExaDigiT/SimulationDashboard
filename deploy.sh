@@ -1,10 +1,16 @@
 #!/bin/bash
+set -e
+
 SCRIPT_DIR=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 cd "$SCRIPT_DIR"
 
-docker build -t registry.apps.marble.ccs.ornl.gov/stf218-app/exadigit-simulation-dashboard:latest . &&
-docker push registry.apps.marble.ccs.ornl.gov/stf218-app/exadigit-simulation-dashboard:latest &&
-# Scale down so pod gets recreated and uses new image
-oc --namespace stf218-app scale deploy -l app=exadigit-simulation-dashboard --replicas=0
+set -o allexport
+source .env.prod
+set +o allexport
 
-oc apply -f deployment.yaml
+docker build -t $DOCKER_REGISTRY:latest .
+# Get fully qualified image name
+DOCKER_IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' $DOCKER_REGISTRY:latest)
+docker push $DOCKER_REGISTRY:latest
+
+oc process -f ./deployment.yaml -o yaml --param=IMAGE="$DOCKER_IMAGE" --param=NAMESPACE="$K8S_NAMESPACE" | oc apply -f -

@@ -36,3 +36,8 @@ export interface Job {
   node_ranges: string;
   xnames: string[];
 }
+
+export interface JobPower {
+  timestamp: string;
+  power: number;
+}

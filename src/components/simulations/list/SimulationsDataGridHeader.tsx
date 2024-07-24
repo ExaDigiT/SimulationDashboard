@@ -20,18 +20,22 @@ function SimulationsDataGridHeaderCell({
       className={`group flex w-full items-center justify-center gap-3 place-self-center py-3 ${index !== 0 && "border-l-2"} relative border-neutral-400 dark:border-neutral-700 dark:text-neutral-200`}
       onClick={(e) => {
         e.preventDefault();
-        const direction = column.sort.sorted
-          ? column.sort.direction === "asc"
-            ? "desc"
-            : "asc"
-          : "asc";
-        onSort(column.name, column.sort.direction !== "desc", direction);
+        if (column.sort.sortable) {
+          const direction = column.sort.sorted
+            ? column.sort.direction === "asc"
+              ? "desc"
+              : "asc"
+            : "asc";
+          onSort(column.name, column.sort.direction !== "desc", direction);
+        }
       }}
     >
       <span>{column.name}</span>
-      <ArrowLongDownIcon
-        className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
-      />
+      {column.sort.sortable && (
+        <ArrowLongDownIcon
+          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort?.sorted && column.sort?.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort?.sorted && "opacity-0"}`}
+        />
+      )}
     </button>
   );
 }
@@ -51,7 +55,7 @@ export function SimulationsDataGridHeader({
 }) {
   return (
     <div
-      className="grid grid-cols-7 border-b-2 border-neutral-400 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
+      className="grid grid-cols-8 border-b-2 border-neutral-400 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
       style={{ ...style }}
     >
       {columns.map((column, index) => (

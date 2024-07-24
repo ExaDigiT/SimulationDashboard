@@ -25,6 +25,7 @@ export function SharedDatePicker(props: DatePickerProps) {
         selected={date}
         onChange={(newDate, e) => {
           e?.preventDefault();
+          newDate?.setMilliseconds(0);
           setDate(newDate);
           props.onChange(newDate?.toISOString() || null);
         }}

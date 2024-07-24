@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-prod": "tsc && vite build --mode=prod",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -31,6 +32,7 @@
     "react-plotly.js": "^2.6.0",
     "react-slider": "^2.0.6",
     "react-tooltip": "^5.26.3",
+    "recharts": "^2.12.7",
     "use-debounce": "^10.0.0"
   },
   "devDependencies": {

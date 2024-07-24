@@ -14,12 +14,15 @@ import {
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { Timeline } from "../components/simulations/details/timeline";
-import { addSeconds, differenceInSeconds, isBefore, isEqual } from "date-fns";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { addSeconds, differenceInSeconds, isEqual } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import { CoolingCDU } from "../models/CoolingCDU.model";
-import axios from "../util/apis";
+import {
+  useReplayCooling,
+  useReplayJobs,
+  useReplayScheduler,
+} from "../util/hooks/useReplay";
 
 export const Route = createFileRoute("/simulations/$simulationId")({
   component: Simulation,
@@ -76,55 +79,42 @@ function Simulation() {
   const [rate, setRate] = useState(1);
 
   const {
-    fetchNextPage,
+    fetchNextPage: fetchNextCoolingPage,
     data: coolingData,
-    isFetchingNextPage,
-    hasNextPage,
-  } = useInfiniteQuery({
-    queryKey: [
-      "simulation",
-      simulationId,
-      "cooling",
-      playbackInterval,
-      initialTimestamp,
-    ],
-    initialPageParam: differenceInSeconds(initialTimestamp, search.start),
-    getNextPageParam: (_lastPage, _allPages, lastPageParam): null | number => {
-      const currentEndTime = addSeconds(
-        search.start,
-        playbackInterval * 20 + lastPageParam,
-      );
-      if (isBefore(currentEndTime, search.end)) {
-        return lastPageParam + playbackInterval * 20;
-      }
-      return null;
-    },
-    queryFn: async ({ pageParam }) => {
-      const startTime = addSeconds(search.start, pageParam);
-      const currentEndTime = addSeconds(
-        search.start,
-        playbackInterval * 20 + pageParam,
-      );
-      const isEnd = differenceInSeconds(currentTimestamp, search.end) === 0;
-      const res = await axios.get<{
-        granularity: number;
-        start: string;
-        end: string;
-        data: CoolingCDU[];
-      }>(`/frontier/simulation/${simulationId}/cooling/cdu`, {
-        params: {
-          start: isBefore(startTime, search.end) ? startTime : undefined,
-          end: isBefore(currentEndTime, search.end)
-            ? currentEndTime
-            : search.end,
-          granularity: isEnd ? undefined : playbackInterval,
-          resolution: isEnd ? 1 : undefined,
-        },
-      });
+    isFetchingNextPage: isFetchingNextCoolingPage,
+    hasNextPage: hasNextCoolingPage,
+  } = useReplayCooling({
+    end: search.end,
+    start: search.start,
+    simulationId,
+    currentTimestamp,
+    initialTimestamp,
+    playbackInterval,
+  });
 
-      return res.data;
-    },
-    refetchOnWindowFocus: false,
+  const {
+    fetchNextPage: fetchNextSchedulerPage,
+    isFetchingNextPage: isFetchingNextSchedulerPage,
+    hasNextPage: hasNextSchedulerPage,
+  } = useReplayScheduler({
+    end: search.end,
+    start: search.start,
+    simulationId,
+    currentTimestamp,
+    initialTimestamp,
+    playbackInterval,
+  });
+
+  const {
+    fetchNextPage: fetchNextJobPage,
+    isFetchingNextPage: isFetchingNextJobPage,
+    hasNextPage: hasNextJobPage,
+  } = useReplayJobs({
+    end: search.end,
+    start: search.start,
+    simulationId,
+    initialTimestamp,
+    playbackInterval,
   });
 
   useEffect(() => {
@@ -148,10 +138,28 @@ function Simulation() {
         if (
           startCurrentDifference >=
             currentLastPageSeconds - playbackInterval * 10 &&
-          !isFetchingNextPage &&
-          hasNextPage
+          !isFetchingNextCoolingPage &&
+          hasNextCoolingPage
         ) {
-          fetchNextPage();
+          fetchNextCoolingPage();
+        }
+
+        if (
+          startCurrentDifference >=
+            currentLastPageSeconds - playbackInterval * 10 &&
+          !isFetchingNextSchedulerPage &&
+          hasNextSchedulerPage
+        ) {
+          fetchNextSchedulerPage();
+        }
+
+        if (
+          startCurrentDifference >=
+            currentLastPageSeconds - playbackInterval * 10 &&
+          !isFetchingNextJobPage &&
+          hasNextJobPage
+        ) {
+          fetchNextJobPage();
         }
 
         setCurrentTimestamp(newTimestamp);
@@ -202,7 +210,8 @@ function Simulation() {
     } else {
       snappedValue = value - leftOver;
     }
-    const newTimestamp = addSeconds(search.start, snappedValue).toISOString();
+    const newTimestamp =
+      addSeconds(search.start, snappedValue).toISOString().split(".")[0] + "Z";
 
     setCurrentTimestamp(newTimestamp);
     setInitialTimestamp(newTimestamp);
@@ -259,6 +268,13 @@ function Simulation() {
           >
             Power
           </TabLink>
+          <TabLink
+            to="/simulations/$simulationId/console"
+            params={{ simulationId: simulationId }}
+            search={{ ...search }}
+          >
+            Console
+          </TabLink>
         </div>
         <Outlet />
       </div>
@@ -287,7 +303,7 @@ function Simulation() {
           )}
         </button>
         <span
-          className="text-nowrap text-neutral-400"
+          className="w-36 text-nowrap text-right text-neutral-400"
           data-tooltip-id="current-timestamp"
           data-tooltip-content={`${currentTimestamp} / ${search.end}`}
           data-tooltip-delay-show={750}

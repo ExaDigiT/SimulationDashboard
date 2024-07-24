@@ -4,7 +4,7 @@ import { SimulationListControls } from "../components/simulations/list/Simulatio
 import { SimulationsDataGrid } from "../components/simulations/list/SimulationsDataGrid";
 import { columns as SimulationColumns } from "../components/simulations/list/SimulationsGridColumns";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "../util/apis";
+import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { ListResponse } from "../util/queryOptions";
@@ -30,7 +30,9 @@ function SimulationList() {
     queryFn: async ({ pageParam }) => {
       const sortParams = sortCombinator(columns);
       const filterParams = operatorCombinator(columns);
+      const fields = `&fields=all`;
       const params =
+        fields +
         (sortParams ? "&" : "") +
         sortParams +
         (filterParams ? "&" : "") +

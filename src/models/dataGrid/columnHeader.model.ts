@@ -9,6 +9,7 @@ export type ColumnHeader = {
   activeFilters: { operator: FilterOperators; value: string }[];
   sort: SortDetails;
   size?: GridSizes;
+  filterable?: boolean;
 } & (
   | { inputType: "text" }
   | { inputType: "select"; selectOptions: { label: string; value: string }[] }

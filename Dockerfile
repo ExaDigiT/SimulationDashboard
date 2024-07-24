@@ -1,10 +1,9 @@
-FROM node:20.11.1 as build
+FROM node:20.11.1 AS build
 WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm ci
 COPY . /app/
-ENV VITE_BASE_PATH="https://obsidian.ccs.ornl.gov/exadigit/dashboard"
-RUN npm run build
+RUN npm run build-prod
 
 FROM bitnami/nginx:1.25.4
 EXPOSE 8080

@@ -1,4 +1,4 @@
-export type SortDetails =
+export type SortDetails = { sortable: boolean } & (
   | {
       sorted: true;
       direction: "asc" | "desc";
@@ -6,4 +6,5 @@ export type SortDetails =
   | {
       sorted: false;
       direction: null;
-    };
+    }
+);

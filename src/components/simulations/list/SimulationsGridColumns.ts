@@ -18,7 +18,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "text",
   },
   {
@@ -37,7 +37,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "select",
     selectOptions: [
       { label: "Running", value: "running" },
@@ -61,8 +61,17 @@ export const columns: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "text",
+  },
+  {
+    name: "Jobs Mode",
+    propertyName: "jobs_mode",
+    operators: [],
+    activeFilters: [],
+    inputType: "text",
+    sort: { sortable: false, sorted: false, direction: null },
+    filterable: false,
   },
   {
     name: "Logical Start",
@@ -78,7 +87,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
   {
@@ -95,12 +104,12 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
   {
-    name: "Run Start",
-    propertyName: "run_start",
+    name: "Execution Start",
+    propertyName: "execution_start",
     operators: [
       FilterOperators.GreaterThan,
       FilterOperators.GreaterThanOrEqual,
@@ -112,12 +121,12 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: true, direction: "desc" },
     inputType: "datetime",
   },
   {
-    name: "Run End",
-    propertyName: "run_end",
+    name: "Execution End",
+    propertyName: "execution_end",
     operators: [
       FilterOperators.GreaterThan,
       FilterOperators.GreaterThanOrEqual,
@@ -129,7 +138,7 @@ export const columns: ColumnHeader[] = [
       FilterOperators.NotOneOf,
     ],
     activeFilters: [],
-    sort: { sorted: false, direction: null },
+    sort: { sortable: true, sorted: false, direction: null },
     inputType: "datetime",
   },
 ] as const;

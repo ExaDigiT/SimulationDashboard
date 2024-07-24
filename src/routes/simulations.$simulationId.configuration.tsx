@@ -37,7 +37,7 @@ function SimulationConfiguration() {
         </Box>
         <Box>
           <Box.Header>Progress</Box.Header>
-          <div className="group relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-200">
+          <div className="group relative h-8 w-full rounded-full border-2 border-neutral-400 dark:border-neutral-900">
             <div
               className={`absolute left-0 top-0 flex h-full items-center justify-end rounded-full bg-blue-500 px-4 ${data.progress === 1 && `bg-green-500`}`}
               style={{ width: `${data.progress * 100}%` }}

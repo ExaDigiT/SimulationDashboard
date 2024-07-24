@@ -28,7 +28,9 @@ function SimulationJobs() {
       queryFn: async ({ pageParam }) => {
         const sortParams = sortCombinator(columns);
         const filterParams = operatorCombinator(columns);
+        const fields = `&fields=job_id&fields=name&fields=node_count&fields=state_current&fields=time_limit&fields=time_start&fields=time_end&fields=time_submission`;
         const params =
+          fields +
           (sortParams ? "&" : "") +
           sortParams +
           (filterParams ? "&" : "") +

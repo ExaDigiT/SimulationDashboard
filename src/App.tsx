@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import Keycloak, { KeycloakConfig } from "keycloak-js";
 import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
 import { routeTree } from "./routeTree.gen";
 import { LoadingSpinner } from "./components/shared/loadingSpinner";
@@ -14,7 +15,7 @@ const basepath = import.meta.env.VITE_BASE_PATH
   : "/";
 
 const initOptions: KeycloakConfig = {
-  url: "https://obsidian.ccs.ornl.gov/auth/",
+  url: import.meta.env.VITE_AUTH_URL,
   realm: "obsidian",
   clientId: "obsidian-public",
 };
@@ -29,6 +30,11 @@ kc.init({
     if (auth) {
       if (kc.token) {
         localStorage.setItem("exadigitAuthToken", kc.token);
+        axios.defaults.baseURL = import.meta.env.VITE_BASE_PATH;
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common = {
+          Authorization: `Bearer ${kc.token}`,
+        };
       }
     }
   },
@@ -36,6 +42,8 @@ kc.init({
     console.error("Authenticated Failed");
   },
 );
+
+export { axios };
 
 export interface RouterContext {
   queryClient: QueryClient;
