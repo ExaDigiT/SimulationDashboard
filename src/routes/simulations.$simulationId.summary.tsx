@@ -80,7 +80,10 @@ function SimulationSummary() {
         {isLoadingMetrics ? (
           <LoadingSpinner />
         ) : (
-          <SimulationGauges metrics={currentMetrics} />
+          <SimulationGauges
+            metrics={currentMetrics}
+            statistics={currentStatistics}
+          />
         )}
       </Section>
       <Section header={isFinal ? "Final Projections" : "Latest Projections"}>

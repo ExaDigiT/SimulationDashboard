@@ -30,11 +30,11 @@ kc.init({
     if (auth) {
       if (kc.token) {
         localStorage.setItem("exadigitAuthToken", kc.token);
-        axios.defaults.baseURL = import.meta.env.VITE_BASE_PATH;
-        axios.defaults.withCredentials = true;
         axios.defaults.headers.common = {
           Authorization: `Bearer ${kc.token}`,
         };
+        axios.defaults.baseURL = import.meta.env.VITE_BASE_PATH;
+        axios.defaults.withCredentials = true;
       }
     }
   },
@@ -69,6 +69,7 @@ export const AppContext = createContext<{
 }>({ AuthToken: kc.token, theme: null, setTheme: () => {} });
 
 function App() {
+  const authToken = localStorage.getItem("exadigitAuthToken") || undefined;
   const theme = localStorage.getItem("theme");
   const [_theme, setTheme] = useState(theme);
 
@@ -97,7 +98,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ AuthToken: kc.token, theme: _theme, setTheme: onThemeSwitch }}
+      value={{ AuthToken: authToken, theme: _theme, setTheme: onThemeSwitch }}
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} basepath={basepath} />

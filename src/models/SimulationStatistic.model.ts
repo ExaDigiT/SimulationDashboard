@@ -12,4 +12,6 @@ export interface SimulationStatistic {
   total_energy_consumed: number;
   carbon_emissions: number;
   total_cost: number;
+  p_flops: number;
+  g_flops_w: number;
 }

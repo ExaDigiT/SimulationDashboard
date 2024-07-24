@@ -10,6 +10,7 @@ import {
   LabelList,
 } from "recharts";
 import colors from "tailwindcss/colors";
+import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
   return (
@@ -32,7 +33,13 @@ const pieChartFills = [
   colors.purple[500],
 ];
 
-export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
+export function SimulationGauges({
+  metrics,
+  statistics,
+}: {
+  metrics?: CoolingCDU[];
+  statistics?: SimulationStatistic;
+}) {
   return (
     <>
       <div className="flex flex-col">
@@ -90,22 +97,49 @@ export function SimulationGauges({ metrics }: { metrics?: CoolingCDU[] }) {
           />
         </GaugeWrapper>
       </div>
-      <div className="flex h-full w-full items-center justify-center">
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie data={tempData} dataKey="value" valueKey="name">
-              <LabelList dataKey={"name"} />
-              {tempData.map((d, i) => (
-                <Cell
-                  style={{ outline: "none" }}
-                  key={d.name}
-                  fill={pieChartFills[i]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+      <div className="flex flex-col">
+        <GaugeWrapper>
+          <GraphHeader>P Flops</GraphHeader>
+          <Gauge
+            minValue={0}
+            maxValue={2000}
+            value={statistics?.p_flops}
+            labels={{
+              tickLabels: {
+                type: "outer",
+                ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
+              },
+              valueLabel: {
+                formatTextValue: (value) => value,
+              },
+            }}
+            arc={{
+              colorArray: ["#5BE12C"],
+              subArcs: [{ color: "#5BE12C", limit: 2000 }],
+            }}
+          />
+        </GaugeWrapper>
+        <GaugeWrapper>
+          <GraphHeader>G Flops</GraphHeader>
+          <Gauge
+            minValue={0}
+            maxValue={2000}
+            value={statistics?.g_flops_w}
+            labels={{
+              tickLabels: {
+                type: "outer",
+                ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
+              },
+              valueLabel: {
+                formatTextValue: (value) => value,
+              },
+            }}
+            arc={{
+              colorArray: ["#5BE12C"],
+              subArcs: [{ color: "#5BE12C", limit: 2000 }],
+            }}
+          />
+        </GaugeWrapper>
       </div>
       <div className="flex flex-col">
         <GaugeWrapper>
