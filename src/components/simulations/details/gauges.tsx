@@ -1,15 +1,6 @@
 import { GraphHeader } from "../../shared/plots/graphHeader";
 import { CoolingCDU } from "../../../models/CoolingCDU.model";
 import { Gauge } from "../../shared/plots/gauge";
-import {
-  PieChart,
-  Pie,
-  ResponsiveContainer,
-  Tooltip,
-  Cell,
-  LabelList,
-} from "recharts";
-import colors from "tailwindcss/colors";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
@@ -19,19 +10,6 @@ function GaugeWrapper(props: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const tempData = [
-  { value: 12.5, name: "CPU" },
-  { value: 50, name: "GPU" },
-  { value: 37.5, name: "Cooling" },
-];
-
-const pieChartFills = [
-  colors.orange[500],
-  colors.blue[500],
-  "#5BE12C",
-  colors.purple[500],
-];
 
 export function SimulationGauges({
   metrics,
