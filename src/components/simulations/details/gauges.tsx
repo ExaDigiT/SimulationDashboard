@@ -77,18 +77,18 @@ export function SimulationGauges({
       </div>
       <div className="flex flex-col">
         <GaugeWrapper>
-          <GraphHeader>P Flops</GraphHeader>
+          <GraphHeader>Performance</GraphHeader>
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={statistics?.p_flops}
+            value={statistics?.p_flops ?? 0}
             labels={{
               tickLabels: {
                 type: "outer",
                 ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
               },
               valueLabel: {
-                formatTextValue: (value) => value,
+                formatTextValue: (value) => value + " PFlop/s",
               },
             }}
             arc={{
@@ -98,18 +98,18 @@ export function SimulationGauges({
           />
         </GaugeWrapper>
         <GaugeWrapper>
-          <GraphHeader>G Flops</GraphHeader>
+          <GraphHeader>Efficency</GraphHeader>
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={statistics?.g_flops_w}
+            value={statistics?.g_flops_w ?? 0}
             labels={{
               tickLabels: {
                 type: "outer",
                 ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
               },
               valueLabel: {
-                formatTextValue: (value) => value,
+                formatTextValue: (value) => value + " GFlops/watts",
               },
             }}
             arc={{

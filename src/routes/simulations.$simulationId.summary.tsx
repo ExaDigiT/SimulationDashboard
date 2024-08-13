@@ -7,6 +7,7 @@ import Box from "../components/shared/simulation/box";
 import { SimulationGauges } from "../components/simulations/details/gauges";
 import { isEqual, subSeconds } from "date-fns";
 import { useReplayCooling, useReplayScheduler } from "../util/hooks/useReplay";
+import { CoolingCDU } from "../models/CoolingCDU.model";
 
 export const Route = createFileRoute("/simulations/$simulationId/summary")({
   validateSearch: (
@@ -60,19 +61,25 @@ function SimulationSummary() {
     return <LoadingSpinner />;
   }
 
-  let currentMetrics = metrics.data[currentTimestamp];
-  if (!currentMetrics) {
-    currentMetrics = Object.values(metrics.data)[0];
+  let currentMetrics: CoolingCDU[] | undefined = undefined;
+  if (Object.values(metrics.data).length > 0 && !!metrics.data[0]) {
+    currentMetrics = metrics.data[currentTimestamp];
+    if (!currentMetrics) {
+      currentMetrics = Object.values(metrics.data)[0];
+    }
   }
 
-  let currentStatistics = schedulerStatistics.find((timestep) =>
-    isEqual(
-      timestep.timestamp,
-      isEqual(currentTimestamp, end)
-        ? subSeconds(end, 1).toISOString()
-        : currentTimestamp,
-    ),
-  );
+  let currentStatistics = schedulerStatistics.find((timestep) => {
+    if (timestep) {
+      return isEqual(
+        timestep.timestamp,
+        isEqual(currentTimestamp, end)
+          ? subSeconds(end, 1).toISOString()
+          : currentTimestamp,
+      );
+    }
+    return false;
+  });
 
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
