@@ -1,3 +1,4 @@
+import { addHours } from "date-fns";
 import { Scheduler } from "./Scheduler.model";
 
 export interface ISimulationRequest {
@@ -21,7 +22,7 @@ export class SimulationRequest implements ISimulationRequest {
     this.start = startDate.toISOString();
     const endDate = new Date();
     endDate.setMilliseconds(0);
-    this.end = endDate.toISOString();
+    this.end = addHours(endDate, 1).toISOString();
     this.cooling = { enabled: false };
     this.scheduler = new Scheduler();
   }
