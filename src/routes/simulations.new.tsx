@@ -69,8 +69,9 @@ function NewSimultation() {
               await onSubmit.mutateAsync({ form });
               navigate({ to: "/simulations/" });
             }}
+            disabled={onSubmit.isPending}
           >
-            Submit
+            {onSubmit.isPending ? "Submitting..." : "Submit"}
           </Button>
         </footer>
       </div>
