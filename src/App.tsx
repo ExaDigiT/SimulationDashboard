@@ -22,6 +22,8 @@ const initOptions: KeycloakConfig = {
 
 const kc = new Keycloak(initOptions);
 
+axios.defaults.baseURL = import.meta.env.VITE_API_PATH;
+
 kc.init({
   onLoad: "login-required",
   redirectUri: window.location.toString(),
@@ -33,7 +35,7 @@ kc.init({
         axios.defaults.headers.common = {
           Authorization: `Bearer ${kc.token}`,
         };
-        axios.defaults.baseURL = import.meta.env.VITE_API_PATH;
+        console.log(import.meta.env.VITE_API_PATH);
         axios.defaults.withCredentials = true;
       }
     }
@@ -95,6 +97,10 @@ function App() {
       onThemeSwitch("light");
     }
   }, []);
+
+  if (!authToken || axios.defaults.baseURL?.includes("localhost")) {
+    return <h1>Please Authenticate</h1>;
+  }
 
   return (
     <AppContext.Provider

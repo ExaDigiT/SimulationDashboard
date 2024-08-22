@@ -62,7 +62,10 @@ function SimulationSummary() {
   }
 
   let currentMetrics: CoolingCDU[] | undefined = undefined;
-  if (Object.values(metrics.data).length > 0 && !!metrics.data[0]) {
+  if (
+    Object.values(metrics.data).length > 0 &&
+    !!Object.values(metrics.data)[0]
+  ) {
     currentMetrics = metrics.data[currentTimestamp];
     if (!currentMetrics) {
       currentMetrics = Object.values(metrics.data)[0];

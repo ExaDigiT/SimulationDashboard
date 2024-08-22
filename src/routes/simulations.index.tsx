@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { SimulationListControls } from "../components/simulations/list/SimulationListControls";
 import { SimulationsDataGrid } from "../components/simulations/list/SimulationsDataGrid";
 import { columns as SimulationColumns } from "../components/simulations/list/SimulationsGridColumns";
@@ -8,7 +8,6 @@ import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { ListResponse } from "../util/queryOptions";
-import { AppContext } from "../App";
 
 export const Route = createFileRoute("/simulations/")({
   component: SimulationList,
@@ -18,7 +17,6 @@ const pageLimit = 18;
 
 function SimulationList() {
   const [columns, setColumns] = useState(structuredClone(SimulationColumns));
-  const { AuthToken } = useContext(AppContext);
 
   const {
     data,
@@ -51,7 +49,6 @@ function SimulationList() {
         ? allPages.length
         : undefined,
     refetchOnWindowFocus: false,
-    enabled: !!AuthToken,
   });
 
   const onSort = (

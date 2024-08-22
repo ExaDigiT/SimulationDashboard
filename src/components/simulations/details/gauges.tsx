@@ -89,7 +89,11 @@ export function SimulationGauges({
             labels={{
               tickLabels: {
                 type: "outer",
-                ticks: [{ value: data?.peak_flops ?? 0 }],
+                ticks: [
+                  {
+                    value: 2000,
+                  },
+                ],
               },
               valueLabel: {
                 formatTextValue: (value) => value + " PFlop/s",
@@ -97,7 +101,12 @@ export function SimulationGauges({
             }}
             arc={{
               colorArray: ["#5BE12C"],
-              subArcs: [{ color: "#5BE12C", limit: 2000 }],
+              subArcs: [
+                {
+                  color: "#5BE12C",
+                  limit: 2000,
+                },
+              ],
             }}
           />
         </GaugeWrapper>
@@ -105,7 +114,7 @@ export function SimulationGauges({
           <GraphHeader>Efficency</GraphHeader>
           <Gauge
             minValue={0}
-            maxValue={2000}
+            maxValue={data?.g_flops_w_peak ?? 2}
             value={statistics?.g_flops_w ?? 0}
             labels={{
               tickLabels: {
@@ -118,7 +127,7 @@ export function SimulationGauges({
             }}
             arc={{
               colorArray: ["#5BE12C"],
-              subArcs: [{ color: "#5BE12C", limit: 2000 }],
+              subArcs: [{ color: "#5BE12C", limit: data?.g_flops_w_peak ?? 2 }],
             }}
           />
         </GaugeWrapper>
