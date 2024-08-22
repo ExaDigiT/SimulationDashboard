@@ -118,3 +118,16 @@ export const simulationSystemStatsQueryOptions = ({
       return res.data;
     },
   });
+
+export const getFrontierSystemInformation = () =>
+  queryOptions({
+    queryKey: ["frontier", "system-info"],
+    queryFn: async () => {
+      const res = await axios.get<{
+        peak_flops: number;
+        peak_power: number;
+        g_flops_w_peak: number;
+      }>(`frontier/system-info`);
+      return res.data;
+    },
+  });

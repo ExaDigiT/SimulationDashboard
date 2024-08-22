@@ -2,6 +2,8 @@ import { GraphHeader } from "../../shared/plots/graphHeader";
 import { CoolingCDU } from "../../../models/CoolingCDU.model";
 import { Gauge } from "../../shared/plots/gauge";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
+import { useQuery } from "@tanstack/react-query";
+import { getFrontierSystemInformation } from "../../../util/queryOptions";
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
   return (
@@ -18,6 +20,8 @@ export function SimulationGauges({
   metrics?: CoolingCDU[];
   statistics?: SimulationStatistic;
 }) {
+  const { data } = useQuery(getFrontierSystemInformation());
+
   return (
     <>
       <div className="flex flex-col">
@@ -85,7 +89,7 @@ export function SimulationGauges({
             labels={{
               tickLabels: {
                 type: "outer",
-                ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
+                ticks: [{ value: data?.peak_flops ?? 0 }],
               },
               valueLabel: {
                 formatTextValue: (value) => value + " PFlop/s",
@@ -106,7 +110,7 @@ export function SimulationGauges({
             labels={{
               tickLabels: {
                 type: "outer",
-                ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
+                ticks: [{ value: data?.g_flops_w_peak ?? 0 }],
               },
               valueLabel: {
                 formatTextValue: (value) => value + " GFlops/watts",

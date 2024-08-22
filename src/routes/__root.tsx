@@ -2,12 +2,16 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { RouterContext } from "../App";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Nav } from "../components/shared/nav";
+import { useQuery } from "@tanstack/react-query";
+import { getFrontierSystemInformation } from "../util/queryOptions";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: Root,
 });
 
 function Root() {
+  useQuery(getFrontierSystemInformation());
+
   return (
     <div className="flex h-screen">
       <Nav />
