@@ -4,14 +4,12 @@ import {
   BeakerIcon as BeakerOutlinedIcon,
   BookOpenIcon,
   ChevronDoubleRightIcon,
-  HomeIcon as HomeOutlinedIcon,
   MoonIcon,
   PlusIcon,
   SunIcon,
 } from "@heroicons/react/24/outline";
 import {
   BeakerIcon,
-  HomeIcon,
   BookOpenIcon as BookOpenSolidIcon,
 } from "@heroicons/react/24/solid";
 import { Tooltip } from "react-tooltip";
@@ -51,26 +49,6 @@ export function Nav() {
           />
         </div>
       </Link>
-      <StyledLink
-        to="/"
-        params={{}}
-        search={{}}
-        data-tooltip-id="home-icon-tooltip"
-        data-tooltip-content={"Home"}
-        data-tooltip-delay-show={500}
-        data-tooltip-hidden={navbar === "large"}
-      >
-        {({ isActive }) => (
-          <>
-            {isActive ? (
-              <HomeIcon className="size-6 min-w-6" />
-            ) : (
-              <HomeOutlinedIcon className="size-6 min-w-6" />
-            )}
-            Home
-          </>
-        )}
-      </StyledLink>
       <StyledLink
         to="/simulations"
         params={{}}
