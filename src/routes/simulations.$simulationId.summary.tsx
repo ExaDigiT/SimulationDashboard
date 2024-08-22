@@ -117,18 +117,18 @@ function SimulationSummary() {
           <Box.Header>Average Power Usage</Box.Header>
           <Box.Value>
             {currentStatistics?.average_power
-              ? currentStatistics.average_power / 1000000
+              ? currentStatistics.average_power / 1000
               : "-"}{" "}
-            mW
+            kW
           </Box.Value>
         </Box>
         <Box>
           <Box.Header>Average Power Loss</Box.Header>
           <Box.Value>
             {currentStatistics?.average_loss
-              ? currentStatistics.average_loss / 1000000
+              ? currentStatistics.average_loss / 1000
               : "-"}{" "}
-            mW
+            kW
           </Box.Value>
         </Box>
         <Box>
