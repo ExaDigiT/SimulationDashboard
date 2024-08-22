@@ -78,7 +78,7 @@ function Simulation() {
     search.playbackInterval,
   );
 
-  const [rate, setRate] = useState(1);
+  const [rate, setRate] = useState(20);
 
   const {
     fetchNextPage: fetchNextCoolingPage,
