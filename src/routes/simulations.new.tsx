@@ -82,7 +82,6 @@ function NewSimultation() {
             onClick={async (e) => {
               e.preventDefault();
               await onSubmit.mutateAsync({ form });
-              navigate({ to: "/simulations/" });
             }}
             disabled={onSubmit.isPending}
           >
