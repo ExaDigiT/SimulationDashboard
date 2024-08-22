@@ -9,6 +9,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Section } from "../components/shared/simulation/section";
+import { Simulation } from "../models/Simulation.model";
 
 export const Route = createFileRoute("/simulations/new")({
   component: NewSimultation,
@@ -20,7 +21,21 @@ function NewSimultation() {
 
   const onSubmit = useMutation({
     mutationFn: async ({ form }: { form: SimulationRequest }) => {
-      await axios.post("/frontier/simulation/run", form);
+      const sim = await axios.post<Simulation>(
+        "/frontier/simulation/run",
+        form,
+      );
+      navigate({
+        to: `/simulations/$simulationId/summary`,
+        params: { simulationId: sim.data.id },
+        search: {
+          start: sim.data.start,
+          end: sim.data.end,
+          currentTimestamp: sim.data.start,
+          initialTimestamp: sim.data.start,
+          playbackInterval: 15,
+        },
+      });
     },
   });
 

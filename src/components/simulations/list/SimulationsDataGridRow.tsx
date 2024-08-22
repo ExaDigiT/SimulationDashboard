@@ -42,7 +42,11 @@ export function SimulationsDataGridRow({
           simulation.progress *
             differenceInSeconds(simulation.end, simulation.start),
         ).toISOString(),
-        initialTimestamp: simulation.end,
+        initialTimestamp: addSeconds(
+          simulation.start,
+          simulation.progress *
+            differenceInSeconds(simulation.end, simulation.start),
+        ).toISOString(),
         playbackInterval: 15,
       }}
       style={{ ...style }}
