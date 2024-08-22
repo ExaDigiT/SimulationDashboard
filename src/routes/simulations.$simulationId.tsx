@@ -137,29 +137,19 @@ function Simulation() {
         const currentLastPageSeconds = playbackInterval * 20 + lastPage;
         if (
           startCurrentDifference >=
-            currentLastPageSeconds - playbackInterval * 10 &&
-          !isFetchingNextCoolingPage &&
-          hasNextCoolingPage
+          currentLastPageSeconds - playbackInterval * 10
         ) {
-          fetchNextCoolingPage();
-        }
+          if (!isFetchingNextCoolingPage && hasNextCoolingPage) {
+            fetchNextCoolingPage();
+          }
 
-        if (
-          startCurrentDifference >=
-            currentLastPageSeconds - playbackInterval * 10 &&
-          !isFetchingNextSchedulerPage &&
-          hasNextSchedulerPage
-        ) {
-          fetchNextSchedulerPage();
-        }
+          if (!isFetchingNextSchedulerPage && hasNextSchedulerPage) {
+            fetchNextSchedulerPage();
+          }
 
-        if (
-          startCurrentDifference >=
-            currentLastPageSeconds - playbackInterval * 10 &&
-          !isFetchingNextJobPage &&
-          hasNextJobPage
-        ) {
-          fetchNextJobPage();
+          if (!isFetchingNextJobPage && hasNextJobPage) {
+            fetchNextJobPage();
+          }
         }
 
         setCurrentTimestamp(newTimestamp);
