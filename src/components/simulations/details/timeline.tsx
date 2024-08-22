@@ -10,6 +10,7 @@ export interface TimelineProps {
    */
   value: number;
   maxValue?: number;
+  maxTimelineValue: number;
   onChange: (value: number, index: number) => void;
   startDate: string;
   interval: number;
@@ -27,7 +28,7 @@ export function Timeline(props: TimelineProps) {
         trackClassName="bg-neutral-200 dark:bg-neutral-700 cursor-pointer h-2 rounded-full top-1 [&.track-0]:bg-blue-500 track"
         thumbClassName="bg-blue-500 h-4 w-4 rounded-full cursor-pointer shadow-xl"
         min={0}
-        max={props.maxValue}
+        max={props.maxTimelineValue}
         value={props.value || 0}
         onAfterChange={props.onChange}
         renderThumb={(thumbProps, state) => (

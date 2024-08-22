@@ -61,6 +61,8 @@ function Simulation() {
   const { data, isLoading } = useQuery(
     simulationConfigurationQueryOptions(simulationId),
   );
+  const maxTimestamp =
+    (data?.progress ?? 0) * differenceInSeconds(search.end, search.start);
 
   const [replayStatus, setReplayStatus] = useState<"play" | "pause" | "stop">(
     "stop",
@@ -160,7 +162,10 @@ function Simulation() {
           }),
         });
 
-        if (isEqual(newTimestamp, search.end)) {
+        if (
+          isEqual(newTimestamp, search.end) ||
+          isEqual(newTimestamp, addSeconds(search.start, maxTimestamp))
+        ) {
           setReplayStatus("stop");
         }
       }, 15000 / rate);
@@ -192,26 +197,28 @@ function Simulation() {
 
   const onTimelineChange = (value: number) => {
     setReplayStatus("pause");
+    if (data && value <= maxTimestamp) {
+      const leftOver = value % playbackInterval;
+      let snappedValue = value;
+      if (leftOver > playbackInterval / 2) {
+        snappedValue = value + (playbackInterval - leftOver);
+      } else {
+        snappedValue = value - leftOver;
+      }
+      const newTimestamp =
+        addSeconds(search.start, snappedValue).toISOString().split(".")[0] +
+        "Z";
 
-    const leftOver = value % playbackInterval;
-    let snappedValue = value;
-    if (leftOver > playbackInterval / 2) {
-      snappedValue = value + (playbackInterval - leftOver);
-    } else {
-      snappedValue = value - leftOver;
+      setCurrentTimestamp(newTimestamp);
+      setInitialTimestamp(newTimestamp);
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          currentTimestamp: newTimestamp,
+          initialTimestamp: newTimestamp,
+        }),
+      });
     }
-    const newTimestamp =
-      addSeconds(search.start, snappedValue).toISOString().split(".")[0] + "Z";
-
-    setCurrentTimestamp(newTimestamp);
-    setInitialTimestamp(newTimestamp);
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        currentTimestamp: newTimestamp,
-        initialTimestamp: newTimestamp,
-      }),
-    });
   };
 
   if (isLoading || !data) return <LoadingSpinner />;
@@ -304,7 +311,8 @@ function Simulation() {
         <Timeline
           value={differenceInSeconds(currentTimestamp, search.start)}
           onChange={onTimelineChange}
-          maxValue={differenceInSeconds(search.end, search.start)}
+          maxValue={maxTimestamp}
+          maxTimelineValue={differenceInSeconds(search.end, search.start)}
           startDate={search.start}
           interval={search.playbackInterval}
           onIntervalChange={(newInterval: number) => {

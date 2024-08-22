@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Simulation } from "../../../models/Simulation.model";
 import { convertDateTimeString } from "../../../util/datetime";
 import { CSSProperties } from "react";
+import { addSeconds, differenceInSeconds } from "date-fns";
 
 function SimulationDataGridCell({
   value,
@@ -36,7 +37,11 @@ export function SimulationsDataGridRow({
       search={{
         start: simulation.start,
         end: simulation.end,
-        currentTimestamp: simulation.end,
+        currentTimestamp: addSeconds(
+          simulation.start,
+          simulation.progress *
+            differenceInSeconds(simulation.end, simulation.start),
+        ).toISOString(),
         initialTimestamp: simulation.end,
         playbackInterval: 15,
       }}
