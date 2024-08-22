@@ -287,7 +287,13 @@ function Simulation() {
             data-tooltip-delay-show={750}
           />
         </button>
-        <button onClick={onReplayUpdate}>
+        <button
+          onClick={onReplayUpdate}
+          disabled={
+            (replayStatus === "pause" || replayStatus === "stop") &&
+            maxTimestamp === 0
+          }
+        >
           {replayStatus === "stop" || replayStatus === "pause" ? (
             <PlayIcon
               data-tooltip-id="play-button"
