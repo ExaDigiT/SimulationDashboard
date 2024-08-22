@@ -6,9 +6,9 @@ export const Route = createFileRoute("/about")({
 
 function About() {
   return (
-    <section className="flex w-full justify-center">
+    <section className="flex w-full justify-center overflow-hidden">
       <div className="flex max-w-lg flex-col justify-center gap-16">
-        <div className="flex flex-col gap-8 dark:text-neutral-200">
+        <div className="flex flex-col gap-8 overflow-auto px-4 py-4 dark:text-neutral-200">
           <p>
             In December 2023, we have embarked upon an ambitious initiative to
             develop a comprehensive digital twin of the Frontier supercomputer.
