@@ -4,6 +4,7 @@ import {
   addSeconds,
   differenceInSeconds,
   isBefore,
+  isEqual,
   subSeconds,
 } from "date-fns";
 import { CoolingCDU } from "../../models/CoolingCDU.model";
@@ -148,7 +149,9 @@ export const useReplayScheduler = ({
         params: {
           start: isBefore(startTime, end)
             ? startTime
-            : subSeconds(end, 1).toISOString(),
+            : isEqual(startTime, end)
+              ? subSeconds(end, 1).toISOString()
+              : undefined,
           end: isBefore(currentEndTime, end) ? currentEndTime : end,
           granularity: isEnd ? undefined : playbackInterval,
           resolution: isEnd ? 1 : undefined,
