@@ -30,9 +30,11 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={35000}
-            value={
-              metrics?.reduce((prev, curr) => prev + curr.total_power, 0) ?? 0
-            }
+            value={Number(
+              metrics
+                ?.reduce((prev, curr) => prev + curr.total_power, 0)
+                .toFixed(2) ?? 0,
+            )}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -60,9 +62,11 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={
-              metrics?.reduce((prev, curr) => prev + curr.total_loss, 0) ?? 0
-            }
+            value={Number(
+              metrics
+                ?.reduce((prev, curr) => prev + curr.total_loss, 0)
+                .toFixed(2) ?? 0,
+            )}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -85,7 +89,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={statistics?.p_flops ?? 0}
+            value={Number(statistics?.p_flops.toFixed(2) ?? 0)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -119,7 +123,9 @@ export function SimulationGauges({
             labels={{
               tickLabels: {
                 type: "outer",
-                ticks: [{ value: data?.g_flops_w_peak ?? 0 }],
+                ticks: [
+                  { value: Number(data?.g_flops_w_peak.toFixed(2) ?? 0) },
+                ],
               },
               valueLabel: {
                 formatTextValue: (value) => value + " GFlops/watts",
@@ -138,14 +144,16 @@ export function SimulationGauges({
           <Gauge
             minValue={5}
             maxValue={50}
-            value={
-              (metrics?.reduce(
-                (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
-                0,
-              ) ?? 0) /
-              (metrics?.filter((metric) => !!metric.htwr_htws_ctwr_ctws_temp)
-                .length ?? 0)
-            }
+            value={Number(
+              (
+                (metrics?.reduce(
+                  (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
+                  0,
+                ) ?? 0) /
+                (metrics?.filter((metric) => !!metric.htwr_htws_ctwr_ctws_temp)
+                  .length ?? 0)
+              ).toFixed(2),
+            )}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -193,15 +201,17 @@ export function SimulationGauges({
           <Gauge
             minValue={10}
             maxValue={90}
-            value={
-              (metrics?.reduce(
-                (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_pressure,
-                0,
-              ) ?? 0) /
-              (metrics?.filter(
-                (metric) => !!metric.htwr_htws_ctwr_ctws_pressure,
-              ).length ?? 0)
-            }
+            value={Number(
+              (
+                (metrics?.reduce(
+                  (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_pressure,
+                  0,
+                ) ?? 0) /
+                (metrics?.filter(
+                  (metric) => !!metric.htwr_htws_ctwr_ctws_pressure,
+                ).length ?? 0)
+              ).toFixed(2),
+            )}
             labels={{
               tickLabels: {
                 type: "outer",
