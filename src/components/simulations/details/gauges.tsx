@@ -140,7 +140,7 @@ export function SimulationGauges({
       </div>
       <div className="flex flex-col">
         <GaugeWrapper>
-          <GraphHeader>HTWS/HTWR CTWS/CTWR Temperature</GraphHeader>
+          <GraphHeader>Temperature</GraphHeader>
           <Gauge
             minValue={5}
             maxValue={50}
@@ -197,7 +197,7 @@ export function SimulationGauges({
           />
         </GaugeWrapper>
         <GaugeWrapper>
-          <GraphHeader>HTWS/HTWR CTWS/CTWR Pressure</GraphHeader>
+          <GraphHeader>Pressure</GraphHeader>
           <Gauge
             minValue={10}
             maxValue={90}
