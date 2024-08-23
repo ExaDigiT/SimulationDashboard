@@ -163,7 +163,7 @@ export function SimulationGauges({
                 },
               },
               valueLabel: {
-                formatTextValue: (value) => value + " ºC",
+                formatTextValue: (value) => (value ? value : "-") + " ºC",
               },
             }}
             arc={{
@@ -218,7 +218,7 @@ export function SimulationGauges({
                 ticks: [{ value: 35 }, { value: 50 }, { value: 65 }],
               },
               valueLabel: {
-                formatTextValue: (value) => value + " psig",
+                formatTextValue: (value) => (value ? value : "-") + " psig",
               },
             }}
             arc={{
