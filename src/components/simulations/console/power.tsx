@@ -20,15 +20,15 @@ export function Power({ metrics }: { metrics: CoolingCDU[] }) {
         </span>
         <span className="border-2 border-t-0 border-neutral-400 dark:border-neutral-900">
           {(
-            metrics.reduce((prev, curr) => prev + curr.total_power, 0) / 10000
-          ).toFixed(3)}{" "}
-          mW
+            metrics.reduce((prev, curr) => prev + curr.total_power, 0) / 10
+          ).toFixed(2)}{" "}
+          kW
         </span>
         <span className="border-2 border-l-0 border-t-0 border-neutral-400 dark:border-neutral-900">
           {(
-            metrics.reduce((prev, curr) => prev + curr.total_loss, 0) / 10000
-          ).toFixed(3)}{" "}
-          mW
+            metrics.reduce((prev, curr) => prev + curr.total_loss, 0) / 10
+          ).toFixed(2)}{" "}
+          kW
         </span>
         <span className="border-2 border-l-0 border-t-0 border-neutral-400 dark:border-neutral-900">
           {(
