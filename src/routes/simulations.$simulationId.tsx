@@ -261,7 +261,7 @@ function Simulation() {
           <TabLink
             to="/simulations/$simulationId/cooling"
             params={{ simulationId: simulationId }}
-            search={{ ...search, resolution: 10 }}
+            search={{ ...search, granularity: 900 }}
           >
             Plots
           </TabLink>
