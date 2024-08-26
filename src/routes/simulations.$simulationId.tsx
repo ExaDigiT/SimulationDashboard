@@ -263,7 +263,7 @@ function Simulation() {
             params={{ simulationId: simulationId }}
             search={{ ...search, resolution: 10 }}
           >
-            Power
+            Plots
           </TabLink>
           <TabLink
             to="/simulations/$simulationId/console"
