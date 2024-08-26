@@ -9,6 +9,7 @@ import { GridSizes, getGridSize } from "../../util/gridSizing";
 import { FetchNextPageOptions } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Route as JobsRoute } from "../../routes/simulations.$simulationId.jobs";
+import { isBefore } from "date-fns";
 
 function JobListColumn({
   size,
@@ -44,10 +45,11 @@ export function JobList({
   fetchNextPage: (options?: FetchNextPageOptions | undefined) => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
-  onSort: (column: ColumnHeader) => void;
+  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
 }) {
   const navigate = useNavigate({ from: JobsRoute.fullPath });
   const { simulationId } = JobsRoute.useParams();
+  const { currentTimestamp } = JobsRoute.useSearch();
   const rows: (ColumnHeader[] | Job)[] = [headers, ...jobs];
 
   const parentRef = useRef(null);
@@ -83,6 +85,18 @@ export function JobList({
     isFetchingNextPage,
     rowVirtualizer.getVirtualItems(),
   ]);
+
+  const computeJobState = (job: Job) => {
+    if (job.time_end) {
+      return "Completed";
+    }
+
+    if (isBefore(currentTimestamp, job.time_start)) {
+      return "Pending";
+    }
+
+    return "Running";
+  };
 
   return (
     <>
@@ -135,7 +149,7 @@ export function JobList({
                     <JobListColumn size="small">{job.job_id}</JobListColumn>
                     <JobListColumn size="small">{job.name}</JobListColumn>
                     <JobListColumn size="small">
-                      {job.state_current}
+                      {computeJobState(job)}
                     </JobListColumn>
                     <JobListColumn size="small">{job.node_count}</JobListColumn>
                     <JobListColumn size="large">

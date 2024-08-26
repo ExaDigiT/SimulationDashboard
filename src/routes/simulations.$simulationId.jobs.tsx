@@ -9,7 +9,6 @@ import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { Job } from "../models/Job.model";
 import axios from "axios";
 import { useState } from "react";
-import { ColumnHeader } from "../models/dataGrid/columnHeader.model";
 import { Tooltip } from "react-tooltip";
 import { JobListFilterModal } from "../components/jobs/list/JobListFilterModal";
 
@@ -35,6 +34,7 @@ function SimulationJobs() {
           sortParams +
           (filterParams ? "&" : "") +
           filterParams;
+        console.log(sortParams, params);
         const res = await axios.get<ListResponse<Job>>(
           `/frontier/simulation/${simulationId}/scheduler/jobs?limit=${jobLimit}&offset=${pageParam * jobLimit}${params}`,
         );
@@ -49,22 +49,22 @@ function SimulationJobs() {
       refetchOnWindowFocus: false,
     });
 
-  const onSort = (header: ColumnHeader) => {
-    const newHeaders = [...columns];
-    const updatedHeader = newHeaders.find(
-      (h) => h.propertyName === header.propertyName,
+  const onSort = (
+    header: string,
+    sorted: boolean,
+    direction: "asc" | "desc",
+  ) => {
+    const updatedColumns = [...columns];
+    const currentColumn = updatedColumns.find(
+      (column) => column.name === header,
     );
-    if (updatedHeader) {
-      updatedHeader.sort.sorted =
-        !updatedHeader.sort.sorted || updatedHeader.sort.direction === "asc";
-      updatedHeader.sort.direction =
-        updatedHeader.sort.direction === "desc"
-          ? null
-          : !updatedHeader.sort.direction
-            ? "asc"
-            : "desc";
+
+    if (currentColumn) {
+      currentColumn.sort.sorted = sorted;
+      currentColumn.sort.direction = direction;
     }
-    setColumns(newHeaders);
+
+    setColumns(updatedColumns);
   };
 
   if (isLoading) {

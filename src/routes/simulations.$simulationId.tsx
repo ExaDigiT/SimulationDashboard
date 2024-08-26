@@ -1,6 +1,6 @@
 import {
   ArrowLeftIcon,
-  ArrowPathIcon,
+  ChevronDoubleLeftIcon,
   PauseIcon,
   PlayIcon,
 } from "@heroicons/react/24/outline";
@@ -280,7 +280,7 @@ function Simulation() {
           onClick={onRestart}
           disabled={differenceInSeconds(currentTimestamp, search.start) === 0}
         >
-          <ArrowPathIcon
+          <ChevronDoubleLeftIcon
             className={`h-6 w-6 text-neutral-400`}
             data-tooltip-id="restart-button"
             data-tooltip-content="Restart Simulation"

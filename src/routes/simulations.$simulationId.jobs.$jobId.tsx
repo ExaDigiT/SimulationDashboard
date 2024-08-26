@@ -25,6 +25,15 @@ import {
 
 export const Route = createFileRoute("/simulations/$simulationId/jobs/$jobId")({
   component: JobModal,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      start: (search.start as string) || new Date().toISOString(),
+      end: (search.end as string) || new Date().toISOString(),
+      currentTimestamp: search.currentTimestamp as string,
+      playbackInterval: (search.playbackInterval as number) || 15,
+      initialTimestamp: search.initialTimestamp as string,
+    };
+  },
 });
 
 function JobModal() {

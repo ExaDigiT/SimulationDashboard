@@ -13,7 +13,7 @@ function JobListHeaderCell({
   size: GridSizes;
   children: ReactNode;
   lastIndex: boolean;
-  onSort: (column: ColumnHeader) => void;
+  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
   column: ColumnHeader;
 }) {
   return (
@@ -21,13 +21,22 @@ function JobListHeaderCell({
       className={`${getGridSize(size)} h-full border-neutral-400 dark:border-neutral-900 dark:text-neutral-200 ${lastIndex ? "border-r-0" : "border-r-2"} relative flex items-center justify-center`}
       onClick={(e) => {
         e.preventDefault();
-        onSort(column);
+        if (column.sort.sortable) {
+          const direction = column.sort.sorted
+            ? column.sort.direction === "asc"
+              ? "desc"
+              : "asc"
+            : "asc";
+          onSort(column.name, column.sort.direction !== "desc", direction);
+        }
       }}
     >
       {children}
-      <ArrowLongDownIcon
-        className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-700 ${column.sort.sorted && column.sort.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort.sorted && "opacity-0"}`}
-      />
+      {column.sort.sortable && (
+        <ArrowLongDownIcon
+          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort?.sorted && column.sort?.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort?.sorted && "opacity-0"}`}
+        />
+      )}
     </button>
   );
 }
@@ -35,7 +44,7 @@ function JobListHeaderCell({
 interface JobListHeaderProps {
   headers: ColumnHeader[];
   style: CSSProperties;
-  onSort: (column: ColumnHeader) => void;
+  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
 }
 
 export function JobListHeader({ headers, style, onSort }: JobListHeaderProps) {
