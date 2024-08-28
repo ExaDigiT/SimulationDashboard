@@ -9,7 +9,7 @@ import { GridSizes, getGridSize } from "../../util/gridSizing";
 import { FetchNextPageOptions } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Route as JobsRoute } from "../../routes/simulations.$simulationId.jobs";
-import { isBefore } from "date-fns";
+import { isAfter, isBefore } from "date-fns";
 
 function JobListColumn({
   size,
@@ -87,15 +87,18 @@ export function JobList({
   ]);
 
   const computeJobState = (job: Job) => {
+    if (!job.time_start || isBefore(currentTimestamp, job.time_start)) {
+      return "Pending";
+    }
+    if (
+      isAfter(currentTimestamp, job.time_start) &&
+      (!job.time_end || isBefore(currentTimestamp, job.time_end))
+    ) {
+      return "Running";
+    }
     if (job.time_end) {
       return "Completed";
     }
-
-    if (isBefore(currentTimestamp, job.time_start)) {
-      return "Pending";
-    }
-
-    return "Running";
   };
 
   return (
