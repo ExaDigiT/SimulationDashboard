@@ -117,7 +117,7 @@ function SimulationCooling() {
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
-                  "%{x}<br />Average Rack Supply Temperature: %{y} °C<extra></extra>",
+                  "%{x}<br />Average Rack Return Temperature: %{y} °C<extra></extra>",
                 line: {
                   shape: "linear",
                   smoothing: 1.3,
