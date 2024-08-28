@@ -1,6 +1,6 @@
 import {
   ArrowLeftIcon,
-  ChevronDoubleLeftIcon,
+  ArrowPathIcon,
   PauseIcon,
   PlayIcon,
 } from "@heroicons/react/24/outline";
@@ -193,6 +193,7 @@ function Simulation() {
         initialTimestamp: search.start,
       }),
     });
+    setReplayStatus("play");
   };
 
   const onTimelineChange = (value: number) => {
@@ -280,7 +281,7 @@ function Simulation() {
           onClick={onRestart}
           disabled={differenceInSeconds(currentTimestamp, search.start) === 0}
         >
-          <ChevronDoubleLeftIcon
+          <ArrowPathIcon
             className={`h-6 w-6 text-neutral-400`}
             data-tooltip-id="restart-button"
             data-tooltip-content="Restart Simulation"
