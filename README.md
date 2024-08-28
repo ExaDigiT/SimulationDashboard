@@ -16,6 +16,6 @@ User Interface for the ExaDigiT project that allows for running simulations and 
 
 ## Getting Started
 
-To get the project up and running locally, you will want to start by cloning the project and running `npm install` in the projects directory.
+To get the project up and running locally, you will want to start by cloning the project and running `npm install` in the projects directory. Then run `npm run dev`.
 
 After doing so you can navigate to `localhost:8080` to login to the application.
