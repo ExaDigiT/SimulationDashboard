@@ -132,9 +132,9 @@ function SimulationSummary() {
           </Box.Value>
         </Box>
         <Box>
-          <Box.Header>Total Power Consumption</Box.Header>
+          <Box.Header>Total Energy Consumed</Box.Header>
           <Box.Value>
-            {currentStatistics?.total_energy_consumed ?? "-"} mW
+            {currentStatistics?.total_energy_consumed ?? "-"} MW-hr
           </Box.Value>
         </Box>
         <Box>
