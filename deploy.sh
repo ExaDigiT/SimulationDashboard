@@ -5,7 +5,7 @@ SCRIPT_DIR=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 cd "$SCRIPT_DIR"
 
 set -o allexport
-source .env.prod
+source .env.production
 set +o allexport
 
 docker build -t $DOCKER_REGISTRY:latest .

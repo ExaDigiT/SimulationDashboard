@@ -5,7 +5,7 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = {...process.env, ...loadEnv(mode, process.cwd())};
-  console.log(env)
+  // console.log(env)
   return {
     base: env.VITE_BASE_PATH,
     plugins: [react(), TanStackRouterVite()],
