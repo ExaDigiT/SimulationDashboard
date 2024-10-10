@@ -14,7 +14,7 @@ function Root() {
       <div className="flex flex-1 overflow-y-auto dark:bg-neutral-900">
         <Outlet />
       </div>
-      <ReactQueryDevtools buttonPosition="top-right" />
+      <ReactQueryDevtools buttonPosition="bottom-right" />
     </div>
   );
 }
