@@ -35,7 +35,6 @@ kc.init({
         axios.defaults.headers.common = {
           Authorization: `Bearer ${kc.token}`,
         };
-        console.log(import.meta.env.VITE_API_PATH);
         axios.defaults.withCredentials = true;
       }
     }
