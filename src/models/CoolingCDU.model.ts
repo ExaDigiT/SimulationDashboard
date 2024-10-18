@@ -11,28 +11,16 @@ export interface CoolingCDU {
   rack_2_loss: number;
   rack_3_loss: number;
   total_loss: number;
+
   work_done_by_cdup: number;
   rack_return_temp: number;
   rack_supply_temp: number;
   rack_supply_pressure: number;
   rack_return_pressure: number;
   rack_flowrate: number;
-  htw_ctw_flowrate: number;
-  htwr_htws_ctwr_ctws_pressure: number;
-  htwr_htws_ctwr_ctws_temp: number;
-  power_consumption_htwps: number;
-  power_consumption_ctwps: number;
-  power_consumption_fan: number;
-  htwp_speed: number;
-  nctwps_staged: number;
-  nhtwps_staged: number;
-  pue_output: number;
-  nehxs_staged: number;
-  ncts_staged: number;
   facility_return_temp: number;
   facility_supply_temp: number;
   facility_supply_pressure: number;
   facility_return_pressure: number;
-  cdu_loop_bypass_flowrate: number;
   facility_flowrate: number;
 }

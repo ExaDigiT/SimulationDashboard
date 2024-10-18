@@ -141,7 +141,7 @@ export function SimulationGauges({
       <div className="flex flex-col">
         <GaugeWrapper>
           <GraphHeader>Temperature</GraphHeader>
-          <Gauge
+          {/* <Gauge TODO:
             minValue={5}
             maxValue={50}
             value={Number(
@@ -194,11 +194,11 @@ export function SimulationGauges({
                 },
               ],
             }}
-          />
+          />  */}
         </GaugeWrapper>
         <GaugeWrapper>
           <GraphHeader>Pressure</GraphHeader>
-          <Gauge
+          {/* <Gauge TODO:
             minValue={10}
             maxValue={90}
             value={Number(
@@ -249,7 +249,7 @@ export function SimulationGauges({
                 },
               ],
             }}
-          />
+          /> */}
         </GaugeWrapper>
       </div>
     </>
