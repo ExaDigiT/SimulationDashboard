@@ -12,6 +12,16 @@ export interface ListResponse<T> {
   results: T[];
 }
 
+export interface TimeSeriesPoint {
+  timestamp: string;
+}
+export interface TimeSeriesResponse<T extends TimeSeriesPoint> {
+  granularity: number;
+  start: string;
+  end: string;
+  data: T[];
+}
+
 export const simulationConfigurationQueryOptions = (simulationId: string) =>
   queryOptions({
     queryKey: ["simulation", "configuration", simulationId],
@@ -40,12 +50,9 @@ export const simulationCoolingCDUQueryOptions = (
     queryKey: ["simulation", "cooling", "cdu", simulationId, filterParams],
     queryFn: async () => {
       if (filterParams) {
-        const res = await axios.get<{
-          granularity: number;
-          start: string;
-          end: string;
-          data: CoolingCDU[];
-        }>(`/frontier/simulation/${simulationId}/cooling/cdu`, {
+        const res = await axios.get<
+          TimeSeriesResponse<CoolingCDU>
+        >(`/frontier/simulation/${simulationId}/cooling/cdu`, {
           params: {
             start: filterParams.start,
             end: filterParams.end,
@@ -81,12 +88,9 @@ export const simulationSystemLatestStatsQueryOptions = ({
   queryOptions({
     queryKey: ["simulation", "system", "statistics", simulationId, "latest"],
     queryFn: async () => {
-      const res = await axios.get<{
-        start: string;
-        end: string;
-        granularity: number;
-        data: SimulationStatistic[];
-      }>(`/frontier/simulation/${simulationId}/scheduler/system`);
+      const res = await axios.get<
+        TimeSeriesResponse<SimulationStatistic>
+      >(`/frontier/simulation/${simulationId}/scheduler/system`);
       if (res.data.data.length > 0) {
         return res.data.data[0];
       }
@@ -107,12 +111,9 @@ export const simulationSystemStatsQueryOptions = ({
   queryOptions({
     queryKey: ["simulation", "system", "statistics", simulationId, start, end],
     queryFn: async () => {
-      const res = await axios.get<{
-        start: string;
-        end: string;
-        granularity: number;
-        data: SimulationStatistic[];
-      }>(`/frontier/simulation/${simulationId}/scheduler/system`, {
+      const res = await axios.get<
+        TimeSeriesResponse<SimulationStatistic>
+      >(`/frontier/simulation/${simulationId}/scheduler/system`, {
         params: { resolution: 10 },
       });
       return res.data;
