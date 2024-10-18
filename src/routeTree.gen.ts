@@ -97,50 +97,86 @@ const SimulationsSimulationIdJobsJobIdRoute =
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
     '/simulations': {
+      id: '/simulations'
+      path: '/simulations'
+      fullPath: '/simulations'
       preLoaderRoute: typeof SimulationsImport
       parentRoute: typeof rootRoute
     }
     '/simulations/$simulationId': {
+      id: '/simulations/$simulationId'
+      path: '/$simulationId'
+      fullPath: '/simulations/$simulationId'
       preLoaderRoute: typeof SimulationsSimulationIdImport
       parentRoute: typeof SimulationsImport
     }
     '/simulations/new': {
+      id: '/simulations/new'
+      path: '/new'
+      fullPath: '/simulations/new'
       preLoaderRoute: typeof SimulationsNewImport
       parentRoute: typeof SimulationsImport
     }
     '/simulations/': {
+      id: '/simulations/'
+      path: '/'
+      fullPath: '/simulations/'
       preLoaderRoute: typeof SimulationsIndexImport
       parentRoute: typeof SimulationsImport
     }
     '/simulations/$simulationId/configuration': {
+      id: '/simulations/$simulationId/configuration'
+      path: '/configuration'
+      fullPath: '/simulations/$simulationId/configuration'
       preLoaderRoute: typeof SimulationsSimulationIdConfigurationImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
     '/simulations/$simulationId/console': {
+      id: '/simulations/$simulationId/console'
+      path: '/console'
+      fullPath: '/simulations/$simulationId/console'
       preLoaderRoute: typeof SimulationsSimulationIdConsoleImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
     '/simulations/$simulationId/cooling': {
+      id: '/simulations/$simulationId/cooling'
+      path: '/cooling'
+      fullPath: '/simulations/$simulationId/cooling'
       preLoaderRoute: typeof SimulationsSimulationIdCoolingImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
     '/simulations/$simulationId/jobs': {
+      id: '/simulations/$simulationId/jobs'
+      path: '/jobs'
+      fullPath: '/simulations/$simulationId/jobs'
       preLoaderRoute: typeof SimulationsSimulationIdJobsImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
     '/simulations/$simulationId/summary': {
+      id: '/simulations/$simulationId/summary'
+      path: '/summary'
+      fullPath: '/simulations/$simulationId/summary'
       preLoaderRoute: typeof SimulationsSimulationIdSummaryImport
       parentRoute: typeof SimulationsSimulationIdImport
     }
     '/simulations/$simulationId/jobs/$jobId': {
+      id: '/simulations/$simulationId/jobs/$jobId'
+      path: '/$jobId'
+      fullPath: '/simulations/$simulationId/jobs/$jobId'
       preLoaderRoute: typeof SimulationsSimulationIdJobsJobIdImport
       parentRoute: typeof SimulationsSimulationIdJobsImport
     }
@@ -149,22 +185,240 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
-  IndexRoute,
-  AboutRoute,
-  SimulationsRoute.addChildren([
-    SimulationsSimulationIdRoute.addChildren([
+interface SimulationsSimulationIdJobsRouteChildren {
+  SimulationsSimulationIdJobsJobIdRoute: typeof SimulationsSimulationIdJobsJobIdRoute
+}
+
+const SimulationsSimulationIdJobsRouteChildren: SimulationsSimulationIdJobsRouteChildren =
+  {
+    SimulationsSimulationIdJobsJobIdRoute:
+      SimulationsSimulationIdJobsJobIdRoute,
+  }
+
+const SimulationsSimulationIdJobsRouteWithChildren =
+  SimulationsSimulationIdJobsRoute._addFileChildren(
+    SimulationsSimulationIdJobsRouteChildren,
+  )
+
+interface SimulationsSimulationIdRouteChildren {
+  SimulationsSimulationIdConfigurationRoute: typeof SimulationsSimulationIdConfigurationRoute
+  SimulationsSimulationIdConsoleRoute: typeof SimulationsSimulationIdConsoleRoute
+  SimulationsSimulationIdCoolingRoute: typeof SimulationsSimulationIdCoolingRoute
+  SimulationsSimulationIdJobsRoute: typeof SimulationsSimulationIdJobsRouteWithChildren
+  SimulationsSimulationIdSummaryRoute: typeof SimulationsSimulationIdSummaryRoute
+}
+
+const SimulationsSimulationIdRouteChildren: SimulationsSimulationIdRouteChildren =
+  {
+    SimulationsSimulationIdConfigurationRoute:
       SimulationsSimulationIdConfigurationRoute,
-      SimulationsSimulationIdConsoleRoute,
-      SimulationsSimulationIdCoolingRoute,
-      SimulationsSimulationIdJobsRoute.addChildren([
-        SimulationsSimulationIdJobsJobIdRoute,
-      ]),
-      SimulationsSimulationIdSummaryRoute,
-    ]),
-    SimulationsNewRoute,
-    SimulationsIndexRoute,
-  ]),
-])
+    SimulationsSimulationIdConsoleRoute: SimulationsSimulationIdConsoleRoute,
+    SimulationsSimulationIdCoolingRoute: SimulationsSimulationIdCoolingRoute,
+    SimulationsSimulationIdJobsRoute:
+      SimulationsSimulationIdJobsRouteWithChildren,
+    SimulationsSimulationIdSummaryRoute: SimulationsSimulationIdSummaryRoute,
+  }
+
+const SimulationsSimulationIdRouteWithChildren =
+  SimulationsSimulationIdRoute._addFileChildren(
+    SimulationsSimulationIdRouteChildren,
+  )
+
+interface SimulationsRouteChildren {
+  SimulationsSimulationIdRoute: typeof SimulationsSimulationIdRouteWithChildren
+  SimulationsNewRoute: typeof SimulationsNewRoute
+  SimulationsIndexRoute: typeof SimulationsIndexRoute
+}
+
+const SimulationsRouteChildren: SimulationsRouteChildren = {
+  SimulationsSimulationIdRoute: SimulationsSimulationIdRouteWithChildren,
+  SimulationsNewRoute: SimulationsNewRoute,
+  SimulationsIndexRoute: SimulationsIndexRoute,
+}
+
+const SimulationsRouteWithChildren = SimulationsRoute._addFileChildren(
+  SimulationsRouteChildren,
+)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/simulations': typeof SimulationsRouteWithChildren
+  '/simulations/$simulationId': typeof SimulationsSimulationIdRouteWithChildren
+  '/simulations/new': typeof SimulationsNewRoute
+  '/simulations/': typeof SimulationsIndexRoute
+  '/simulations/$simulationId/configuration': typeof SimulationsSimulationIdConfigurationRoute
+  '/simulations/$simulationId/console': typeof SimulationsSimulationIdConsoleRoute
+  '/simulations/$simulationId/cooling': typeof SimulationsSimulationIdCoolingRoute
+  '/simulations/$simulationId/jobs': typeof SimulationsSimulationIdJobsRouteWithChildren
+  '/simulations/$simulationId/summary': typeof SimulationsSimulationIdSummaryRoute
+  '/simulations/$simulationId/jobs/$jobId': typeof SimulationsSimulationIdJobsJobIdRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/simulations/$simulationId': typeof SimulationsSimulationIdRouteWithChildren
+  '/simulations/new': typeof SimulationsNewRoute
+  '/simulations': typeof SimulationsIndexRoute
+  '/simulations/$simulationId/configuration': typeof SimulationsSimulationIdConfigurationRoute
+  '/simulations/$simulationId/console': typeof SimulationsSimulationIdConsoleRoute
+  '/simulations/$simulationId/cooling': typeof SimulationsSimulationIdCoolingRoute
+  '/simulations/$simulationId/jobs': typeof SimulationsSimulationIdJobsRouteWithChildren
+  '/simulations/$simulationId/summary': typeof SimulationsSimulationIdSummaryRoute
+  '/simulations/$simulationId/jobs/$jobId': typeof SimulationsSimulationIdJobsJobIdRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/simulations': typeof SimulationsRouteWithChildren
+  '/simulations/$simulationId': typeof SimulationsSimulationIdRouteWithChildren
+  '/simulations/new': typeof SimulationsNewRoute
+  '/simulations/': typeof SimulationsIndexRoute
+  '/simulations/$simulationId/configuration': typeof SimulationsSimulationIdConfigurationRoute
+  '/simulations/$simulationId/console': typeof SimulationsSimulationIdConsoleRoute
+  '/simulations/$simulationId/cooling': typeof SimulationsSimulationIdCoolingRoute
+  '/simulations/$simulationId/jobs': typeof SimulationsSimulationIdJobsRouteWithChildren
+  '/simulations/$simulationId/summary': typeof SimulationsSimulationIdSummaryRoute
+  '/simulations/$simulationId/jobs/$jobId': typeof SimulationsSimulationIdJobsJobIdRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/simulations'
+    | '/simulations/$simulationId'
+    | '/simulations/new'
+    | '/simulations/'
+    | '/simulations/$simulationId/configuration'
+    | '/simulations/$simulationId/console'
+    | '/simulations/$simulationId/cooling'
+    | '/simulations/$simulationId/jobs'
+    | '/simulations/$simulationId/summary'
+    | '/simulations/$simulationId/jobs/$jobId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/about'
+    | '/simulations/$simulationId'
+    | '/simulations/new'
+    | '/simulations'
+    | '/simulations/$simulationId/configuration'
+    | '/simulations/$simulationId/console'
+    | '/simulations/$simulationId/cooling'
+    | '/simulations/$simulationId/jobs'
+    | '/simulations/$simulationId/summary'
+    | '/simulations/$simulationId/jobs/$jobId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/simulations'
+    | '/simulations/$simulationId'
+    | '/simulations/new'
+    | '/simulations/'
+    | '/simulations/$simulationId/configuration'
+    | '/simulations/$simulationId/console'
+    | '/simulations/$simulationId/cooling'
+    | '/simulations/$simulationId/jobs'
+    | '/simulations/$simulationId/summary'
+    | '/simulations/$simulationId/jobs/$jobId'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  SimulationsRoute: typeof SimulationsRouteWithChildren
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  SimulationsRoute: SimulationsRouteWithChildren,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/about",
+        "/simulations"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/about": {
+      "filePath": "about.tsx"
+    },
+    "/simulations": {
+      "filePath": "simulations.tsx",
+      "children": [
+        "/simulations/$simulationId",
+        "/simulations/new",
+        "/simulations/"
+      ]
+    },
+    "/simulations/$simulationId": {
+      "filePath": "simulations.$simulationId.tsx",
+      "parent": "/simulations",
+      "children": [
+        "/simulations/$simulationId/configuration",
+        "/simulations/$simulationId/console",
+        "/simulations/$simulationId/cooling",
+        "/simulations/$simulationId/jobs",
+        "/simulations/$simulationId/summary"
+      ]
+    },
+    "/simulations/new": {
+      "filePath": "simulations.new.tsx",
+      "parent": "/simulations"
+    },
+    "/simulations/": {
+      "filePath": "simulations.index.tsx",
+      "parent": "/simulations"
+    },
+    "/simulations/$simulationId/configuration": {
+      "filePath": "simulations.$simulationId.configuration.tsx",
+      "parent": "/simulations/$simulationId"
+    },
+    "/simulations/$simulationId/console": {
+      "filePath": "simulations.$simulationId.console.tsx",
+      "parent": "/simulations/$simulationId"
+    },
+    "/simulations/$simulationId/cooling": {
+      "filePath": "simulations.$simulationId.cooling.tsx",
+      "parent": "/simulations/$simulationId"
+    },
+    "/simulations/$simulationId/jobs": {
+      "filePath": "simulations.$simulationId.jobs.tsx",
+      "parent": "/simulations/$simulationId",
+      "children": [
+        "/simulations/$simulationId/jobs/$jobId"
+      ]
+    },
+    "/simulations/$simulationId/summary": {
+      "filePath": "simulations.$simulationId.summary.tsx",
+      "parent": "/simulations/$simulationId"
+    },
+    "/simulations/$simulationId/jobs/$jobId": {
+      "filePath": "simulations.$simulationId.jobs.$jobId.tsx",
+      "parent": "/simulations/$simulationId/jobs"
+    }
+  }
+}
+ROUTE_MANIFEST_END */

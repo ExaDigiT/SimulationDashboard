@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import * as React from "react";
+import { useContext, useState } from "react" 
 import { AppContext } from "../../App";
 import {
   BeakerIcon as BeakerOutlinedIcon,
@@ -14,7 +15,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Tooltip } from "react-tooltip";
 import logo from "../../assets/smallLogo.png";
-import { Link, LinkProps } from "@tanstack/react-router";
+import { Link, createLink } from "@tanstack/react-router";
 import logoText from "../../assets/logoText.png";
 
 export function Nav() {
@@ -153,20 +154,21 @@ export function Nav() {
   );
 }
 
-function StyledLink(props: LinkProps) {
-  return (
-    <Link
-      {...props}
-      className={
-        "flex flex-nowrap gap-4 whitespace-nowrap px-3 py-3 text-neutral-800 transition-colors duration-500 ease-in-out hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 " +
-        props.className
-      }
-      activeProps={{
-        className: `dark:bg-neutral-600 bg-neutral-300`,
-      }}
-      activeOptions={{ exact: true, includeHash: false, includeSearch: true }}
-    >
-      {props.children}
-    </Link>
-  );
-}
+
+export const StyledLink = createLink(
+  React.forwardRef((props, ref: React.ForwardedRef<HTMLAnchorElement>) => {
+    return (
+      <Link
+        {...props}
+        ref={ref}
+        className={
+          `flex flex-nowrap gap-4 whitespace-nowrap px-3 py-3 text-neutral-800 transition-colors duration-500 ease-in-out hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 ${(props as any).className ?? ''}`
+        }
+        activeProps={{
+          className: `dark:bg-neutral-600 bg-neutral-300`,
+        }}
+        activeOptions={{ exact: true, includeHash: false, includeSearch: true }}
+    />
+    )
+  }),
+)
