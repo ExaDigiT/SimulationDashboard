@@ -2,7 +2,7 @@ import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { CoolingCDU } from "../models/CoolingCDU.model";
-import { groupBy } from "lodash";
+import { groupBy, sortBy } from "lodash";
 import { SimulationStatistic } from "../models/SimulationStatistic.model";
 
 export interface ListResponse<T> {
@@ -67,7 +67,10 @@ export const simulationCoolingCDUQueryOptions = (
     },
     select: (data) => {
       if (data) {
-        const groupedTimeData = groupBy(data.data, "timestamp");
+        let groupedTimeData =
+          Object.entries(groupBy(data.data, "timestamp"))
+            .map(([k, v]) => ({timestamp: k, cdus: v}));
+        groupedTimeData = sortBy(groupedTimeData, "timestamp")
 
         return { ...data, data: groupedTimeData };
       }

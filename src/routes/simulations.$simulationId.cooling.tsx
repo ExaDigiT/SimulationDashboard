@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { sumBy } from "lodash";
 import { simulationCoolingCDUQueryOptions } from "../util/queryOptions";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
@@ -56,10 +57,8 @@ function SimulationCooling() {
             key="Total Power Usage Graph"
             data={[
               {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map((timestamp) =>
-                  timestamp.reduce((prev, curr) => prev + curr.total_power, 0),
-                ),
+                x: data.data.map(d => d.timestamp),
+                y: data.data.map(d => sumBy(d.cdus, d => d.total_power)),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate: "%{x}<br />Power: %{y} kW<extra></extra>",
@@ -83,10 +82,8 @@ function SimulationCooling() {
             key="Total Power Loss Graph"
             data={[
               {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map((timestamp) =>
-                  timestamp.reduce((prev, curr) => prev + curr.total_loss, 0),
-                ),
+                x: data.data.map(d => d.timestamp),
+                y: data.data.map(d => sumBy(d.cdus, d => d.total_loss)),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate: "%{x}<br />Power: %{y} kW<extra></extra>",
@@ -106,14 +103,8 @@ function SimulationCooling() {
             key="Average Rack Temp Graph"
             data={[
               {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map(
-                  (timestamp) =>
-                    timestamp.reduce(
-                      (prev, curr) => prev + curr.rack_return_temp,
-                      0,
-                    ) / 25,
-                ),
+                x: data.data.map(d => d.timestamp),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_return_temp) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
@@ -125,14 +116,8 @@ function SimulationCooling() {
                 name: "Return Temperature",
               },
               {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map(
-                  (timestamp) =>
-                    timestamp.reduce(
-                      (prev, curr) => prev + curr.rack_supply_temp,
-                      0,
-                    ) / 25,
-                ),
+                x: data.data.map(d => d.timestamp),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_supply_temp) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
@@ -155,14 +140,8 @@ function SimulationCooling() {
             key="Average Flowrate Graph"
             data={[
               {
-                x: Object.keys(data.data),
-                y: Object.values(data.data).map(
-                  (timestamp) =>
-                    timestamp.reduce(
-                      (prev, curr) => prev + curr.rack_flowrate,
-                      0,
-                    ) / 25,
-                ),
+                x: data.data.map(d => d.timestamp),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_flowrate) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
