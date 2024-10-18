@@ -15,7 +15,7 @@ export interface ListResponse<T> {
 export interface TimeSeriesPoint {
   timestamp: string;
 }
-export interface TimeSeriesResponse<T extends TimeSeriesPoint> {
+export interface TimeSeriesResponse<T extends TimeSeriesPoint = TimeSeriesPoint> {
   granularity: number;
   start: string;
   end: string;
