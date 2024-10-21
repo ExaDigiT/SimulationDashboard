@@ -9,5 +9,6 @@ export interface Simulation {
   execution_start: string;
   execution_end: string | null;
   progress: number;
+  progress_date: string;
   config: SimulationRequest;
 }
