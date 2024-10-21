@@ -77,7 +77,6 @@ export const simulationCoolingCDUQueryOptions = (
     },
     refetchInterval: 15000,
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
     placeholderData: keepPreviousData,
   });
 
