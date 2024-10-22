@@ -3,7 +3,7 @@ import ReactSlider from "react-slider";
 import { Tooltip } from "react-tooltip";
 import { PlaybackRateSelector } from "./playbackRateSelector";
 import { PlaybackIntervalSelector } from "./playbackIntervalSelector";
-import { DateLike } from "../../../util/datetime";
+import { DateLike, formatDate } from "../../../util/datetime";
 
 export interface TimelineProps {
   value: DateLike;
@@ -17,6 +17,13 @@ export interface TimelineProps {
 }
 
 export function Timeline(props: TimelineProps) {
+  let max = differenceInSeconds(props.end, props.start)
+  if (max % props.interval == 0) {
+    max = max - props.interval
+  } else {
+    max = max - (max % props.interval)
+  }
+
   return (
     <div className="flex w-full items-center gap-4">
       <ReactSlider
@@ -25,7 +32,8 @@ export function Timeline(props: TimelineProps) {
         trackClassName="bg-neutral-200 dark:bg-neutral-700 cursor-pointer h-2 rounded-full top-1 [&.track-0]:bg-blue-500 track"
         thumbClassName="bg-blue-500 h-4 w-4 rounded-full cursor-pointer shadow-xl"
         min={0}
-        max={differenceInSeconds(props.end, props.start)}
+        max={max}
+        step={props.interval}
         value={differenceInSeconds(props.value, props.start)}
         onAfterChange={(value) => {
           props.onChange(addSeconds(props.start, value))
@@ -34,7 +42,7 @@ export function Timeline(props: TimelineProps) {
           <div
             {...thumbProps}
             data-tooltip-id="timeline-thumb"
-            data-tooltip-content={addSeconds(props.start, state.value).toISOString()}
+            data-tooltip-content={formatDate(addSeconds(props.start, state.value))}
           />
         )}
       />
