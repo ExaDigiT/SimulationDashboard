@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { convertDateTimeString } from "../util/datetime";
+import { formatDate } from "../util/datetime";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
@@ -55,21 +55,21 @@ function SimulationConfiguration() {
       <Section header="Timing">
         <Box>
           <Box.Header>Logical Start</Box.Header>
-          <Box.Value>{convertDateTimeString(data.start)}</Box.Value>
+          <Box.Value>{formatDate(data.start)}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Logical End</Box.Header>
-          <Box.Value>{convertDateTimeString(data.end)}</Box.Value>
+          <Box.Value>{formatDate(data.end)}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Run Start</Box.Header>
-          <Box.Value>{convertDateTimeString(data.execution_start)}</Box.Value>
+          <Box.Value>{formatDate(data.execution_start)}</Box.Value>
         </Box>
         <Box>
           <Box.Header>Run End</Box.Header>
           <Box.Value>
             {data.execution_end
-              ? convertDateTimeString(data.execution_end)
+              ? formatDate(data.execution_end)
               : "-"}
           </Box.Value>
         </Box>

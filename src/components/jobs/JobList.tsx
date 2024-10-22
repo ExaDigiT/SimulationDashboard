@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { defaultRangeExtractor, useVirtualizer } from "@tanstack/react-virtual";
 import { Job } from "../../models/Job.model";
-import { convertDateTimeString } from "../../util/datetime";
+import { formatDate } from "../../util/datetime";
 import { JobListHeader } from "./list/JobListHeader";
 import { ColumnHeader } from "../../models/dataGrid/columnHeader.model";
 import { headers } from "./list/JobListColumns";
@@ -156,14 +156,14 @@ export function JobList({
                     </JobListColumn>
                     <JobListColumn size="small">{job.node_count}</JobListColumn>
                     <JobListColumn size="large">
-                      {convertDateTimeString(job.time_submission)}
+                      {formatDate(job.time_submission)}
                     </JobListColumn>
                     <JobListColumn size="small">{job.time_limit}</JobListColumn>
                     <JobListColumn size="medium">
-                      {convertDateTimeString(job.time_start)}
+                      {formatDate(job.time_start)}
                     </JobListColumn>
                     <JobListColumn size="medium" noBorder>
-                      {convertDateTimeString(job.time_end)}
+                      {formatDate(job.time_end)}
                     </JobListColumn>
                   </div>
                 );

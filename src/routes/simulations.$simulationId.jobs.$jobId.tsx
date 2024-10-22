@@ -11,7 +11,7 @@ import { Job, JobPower } from "../models/Job.model";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { useState } from "react";
 import Box from "../components/shared/simulation/box";
-import { convertDateTimeString } from "../util/datetime";
+import { formatDate } from "../util/datetime";
 //import { Graph } from "../components/shared/plots/graph";
 import {
   CartesianGrid,
@@ -111,14 +111,14 @@ function JobModal() {
           </Box>
           <Box>
             <Box.Header>Time Submitted</Box.Header>
-            <Box.Value>{convertDateTimeString(data.time_submission)}</Box.Value>
+            <Box.Value>{formatDate(data.time_submission)}</Box.Value>
           </Box>
           <Box>
             <Box.Header>Time Range</Box.Header>
             <Box.Value>
-              {convertDateTimeString(data.time_start)} -{" "}
+              {formatDate(data.time_start)} -{" "}
               {data.time_end
-                ? convertDateTimeString(data.time_end)
+                ? formatDate(data.time_end)
                 : "Unfinished"}
             </Box.Value>
           </Box>

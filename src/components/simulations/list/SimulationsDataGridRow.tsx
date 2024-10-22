@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Simulation } from "../../../models/Simulation.model";
-import { convertDateTimeString } from "../../../util/datetime";
+import { formatDate } from "../../../util/datetime";
 import { CSSProperties } from "react";
 import { addSeconds, differenceInSeconds } from "date-fns";
 
@@ -61,13 +61,13 @@ export function SimulationsDataGridRow({
       </div>
       <SimulationDataGridCell value={simulation.user} />
       <SimulationDataGridCell value={simulation.config.scheduler.jobs_mode} />
-      <SimulationDataGridCell value={convertDateTimeString(simulation.start)} />
-      <SimulationDataGridCell value={convertDateTimeString(simulation.end)} />
+      <SimulationDataGridCell value={formatDate(simulation.start)} />
+      <SimulationDataGridCell value={formatDate(simulation.end)} />
       <SimulationDataGridCell
-        value={convertDateTimeString(simulation.execution_start)}
+        value={formatDate(simulation.execution_start)}
       />
       <SimulationDataGridCell
-        value={convertDateTimeString(simulation.execution_end)}
+        value={formatDate(simulation.execution_end)}
       />
     </Link>
   );
