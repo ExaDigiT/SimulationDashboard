@@ -1,6 +1,6 @@
 import { format, addSeconds, differenceInSeconds, } from "date-fns";
 
-type DateLike = Date|number|string
+export type DateLike = Date|number|string
 
 
 export function convertDateTimeString(datetime: string | null) {
@@ -24,17 +24,20 @@ export const ceilDate = (d: DateLike, interval: number, origin: DateLike) => {
   return addSeconds(origin, secs)
 }
 
+/**
+ * Rounds a date to interval, also clamping it within the range (start, end]
+ */
 export const snapDate = (d: DateLike, start: DateLike, end: DateLike, interval: number) => {
-  const secsEnd = differenceInSeconds(end, start)
-  let secs = differenceInSeconds(d, start)
-  secs = Math.min(Math.max(0, secs), secsEnd) // clamp to range
+  const secsEnd = differenceInSeconds(end, start);
+  let secs = differenceInSeconds(d, start);
+  secs = Math.min(Math.max(0, secs), secsEnd - 1); // clamp to range
 
-  const remainder = secs % interval
+  const remainder = secs % interval;
   if (remainder < interval / 2 || secs + interval >= secsEnd) {
-    secs = secs - remainder
+    secs = secs - remainder;
   } else {
-    secs = secs + (interval - remainder)
+    secs = secs + (interval - remainder);
   }
 
-  return addSeconds(start, secs)
+  return addSeconds(start, secs);
 }
