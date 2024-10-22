@@ -31,7 +31,7 @@ export function PlaybackRateSelector(props: {
                 "absolute bottom-full right-0 z-10 mb-1 flex flex-col gap-1 rounded-md bg-white py-2 text-center dark:bg-neutral-700"
               }
             >
-              {rates.reverse().map((rate) => (
+              {[...rates].reverse().map((rate) => (
                 <Listbox.Option
                   key={rate}
                   value={rate}
