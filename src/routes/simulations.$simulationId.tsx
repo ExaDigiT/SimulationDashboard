@@ -196,15 +196,16 @@ function Simulation() {
     setReplayStatus("play");
   };
 
-  const onTimelineChange = (value: number) => {
+  const onTimelineChange = (value: Date) => {
     setReplayStatus("pause");
-    if (data && value <= maxTimestamp) {
-      const leftOver = value % playbackInterval;
-      let snappedValue = value;
+    const valueSecs = differenceInSeconds(value, search.start)
+    if (data && valueSecs <= maxTimestamp) {
+      const leftOver = valueSecs % playbackInterval;
+      let snappedValue = valueSecs;
       if (leftOver > playbackInterval / 2) {
-        snappedValue = value + (playbackInterval - leftOver);
+        snappedValue = valueSecs + (playbackInterval - leftOver);
       } else {
-        snappedValue = value - leftOver;
+        snappedValue = valueSecs - leftOver;
       }
       const newTimestamp =
         addSeconds(search.start, snappedValue).toISOString().split(".")[0] +
@@ -316,11 +317,9 @@ function Simulation() {
           {differenceInSeconds(search.end, search.start)}
         </span>
         <Timeline
-          value={differenceInSeconds(currentTimestamp, search.start)}
+          value={currentTimestamp}
+          start={search.start} end={search.end}
           onChange={onTimelineChange}
-          maxValue={maxTimestamp}
-          maxTimelineValue={differenceInSeconds(search.end, search.start)}
-          startDate={search.start}
           interval={search.playbackInterval}
           onIntervalChange={(newInterval: number) => {
             setPlaybackInterval(newInterval);
