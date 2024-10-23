@@ -46,29 +46,19 @@ export const simulationCoolingCDUQueryOptions = (
   params?: TimeSeriesParams,
 ) =>
   queryOptions({
-    enabled:
-      !!params &&
-      (!!params.resolution || !!params.granularity),
     queryKey: ["simulation", "cooling", "cdu", simulationId, params],
     queryFn: async () => {
-      if (params) {
-        const res = await axios.get<
-          TimeSeriesResponse<CoolingCDU>
-        >(`/frontier/simulation/${simulationId}/cooling/cdu`, { params: params });
-
-        return res.data;
-      }
-      return null;
+      const res = await axios.get<
+        TimeSeriesResponse<CoolingCDU>
+      >(`/frontier/simulation/${simulationId}/cooling/cdu`, { params: params });
+      return res.data;
     },
     select: (data) => {
-      if (data) {
-        let groupedTimeData =
-          Object.entries(groupBy(data.data, "timestamp"))
-            .map(([k, v]) => ({timestamp: k, cdus: v}));
-        groupedTimeData = sortBy(groupedTimeData, "timestamp")
-
-        return { ...data, data: groupedTimeData };
-      }
+      let groupedTimeData =
+        Object.entries(groupBy(data.data, "timestamp"))
+          .map(([k, v]) => ({timestamp: k, cdus: v}));
+      groupedTimeData = sortBy(groupedTimeData, "timestamp")
+      return { ...data, data: groupedTimeData };
     },
     refetchInterval: 15000,
     refetchOnWindowFocus: false,
