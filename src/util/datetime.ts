@@ -7,7 +7,7 @@ export function formatDate(datetime: DateLike|null|undefined) {
   if (!datetime) {
     return "-"
   } else {
-    return format(datetime, "MM/dd/yyyy, HH:mm:ss z");
+    return format(datetime, "yyyy-MM-dd HH:mm:ss z");
   }
 }
 
