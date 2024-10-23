@@ -22,6 +22,13 @@ export interface TimeSeriesResponse<T extends TimeSeriesPoint = TimeSeriesPoint>
   data: T[];
 }
 
+export interface TimeSeriesParams {
+  start?: string;
+  end?: string;
+  granularity?: number;
+  resolution?: number;
+}
+
 export const simulationConfigurationQueryOptions = (simulationId: string) =>
   queryOptions({
     queryKey: ["simulation", "configuration", simulationId],
@@ -31,17 +38,12 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
       return res.data;
     },
     refetchOnWindowFocus: false,
-    refetchInterval: 15000,
+    refetchInterval: (query) => query.state.data?.execution_end ? false : 5000,
   });
 
 export const simulationCoolingCDUQueryOptions = (
   simulationId: string,
-  filterParams?: {
-    start?: string;
-    end?: string;
-    granularity?: number;
-    resolution?: number;
-  },
+  filterParams?: TimeSeriesParams,
 ) =>
   queryOptions({
     enabled:
@@ -80,44 +82,15 @@ export const simulationCoolingCDUQueryOptions = (
     placeholderData: keepPreviousData,
   });
 
-export const simulationSystemLatestStatsQueryOptions = ({
-  simulationId,
-  isFinal,
-}: {
-  simulationId: string;
-  isFinal: boolean;
-}) =>
-  queryOptions({
-    queryKey: ["simulation", "system", "statistics", simulationId, "latest"],
+export const simulationSystemStatsQueryOptions = (
+  simulationId: string,
+  params: TimeSeriesParams = {},
+) => queryOptions({
+    queryKey: ["simulation", "system", "statistics", simulationId, params],
     queryFn: async () => {
       const res = await axios.get<
         TimeSeriesResponse<SimulationStatistic>
-      >(`/frontier/simulation/${simulationId}/scheduler/system`);
-      if (res.data.data.length > 0) {
-        return res.data.data[0];
-      }
-      return null;
-    },
-    refetchInterval: isFinal ? false : 15000,
-  });
-
-export const simulationSystemStatsQueryOptions = ({
-  simulationId,
-  start,
-  end,
-}: {
-  simulationId: string;
-  start: string;
-  end: string;
-}) =>
-  queryOptions({
-    queryKey: ["simulation", "system", "statistics", simulationId, start, end],
-    queryFn: async () => {
-      const res = await axios.get<
-        TimeSeriesResponse<SimulationStatistic>
-      >(`/frontier/simulation/${simulationId}/scheduler/system`, {
-        params: { resolution: 10 },
-      });
+      >(`/frontier/simulation/${simulationId}/scheduler/system`, { params: params });
       return res.data;
     },
   });
