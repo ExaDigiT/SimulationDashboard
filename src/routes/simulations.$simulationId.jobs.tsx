@@ -34,7 +34,6 @@ function SimulationJobs() {
           sortParams +
           (filterParams ? "&" : "") +
           filterParams;
-        console.log(sortParams, params);
         const res = await axios.get<ListResponse<Job>>(
           `/frontier/simulation/${simulationId}/scheduler/jobs?limit=${jobLimit}&offset=${pageParam * jobLimit}${params}`,
         );

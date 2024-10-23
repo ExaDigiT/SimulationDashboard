@@ -1,109 +1,90 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PressureFlowRate } from "../components/simulations/console/pressureFlowRate";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import { uniqBy } from "lodash";
 import { JobQueue } from "../components/simulations/console/jobQueue";
 import { CDUList } from "../components/simulations/console/cduList";
 import { Power } from "../components/simulations/console/power";
 import { Scheduler } from "../components/simulations/console/scheduler";
-import { isAfter, isBefore, isEqual, isSameSecond } from "date-fns";
+import { toDate } from "date-fns";
 import {
-  useReplayCooling,
-  useReplayJobs,
-  useReplayScheduler,
-} from "../util/hooks/useReplay";
+  simulationConfigurationQueryOptions, simulationSystemStatsQueryOptions,
+  simulationCoolingCDUQueryOptions, simulationCoolingCEPQueryOptions,
+  simulationSchedulerJobs,
+} from "../util/queryOptions";
+import { computeJobState } from "../util/jobs";
+import { useReplay } from "../util/hooks/useReplay";
+import { Job } from "../models/Job.model";
+
 
 export const Route = createFileRoute("/simulations/$simulationId/console")({
   component: SimulationConsoleView,
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      start: (search.start as string) || new Date().toISOString(),
-      end: (search.end as string) || new Date().toISOString(),
-      currentTimestamp: search.currentTimestamp as string,
-      playbackInterval: (search.playbackInterval as number) || 15,
-      initialTimestamp: search.initialTimestamp as string,
-    };
-  },
 });
 
 function SimulationConsoleView() {
   const { simulationId } = Route.useParams();
-  const { currentTimestamp, playbackInterval, initialTimestamp, start, end } =
-    Route.useSearch();
+  const search = Route.useSearch();
+  const currentTimestamp = search.currentTimestamp ? toDate(search.currentTimestamp) : undefined;
 
-  const { data: metrics, isLoading: isLoadingMetrics } = useReplayCooling({
-    currentTimestamp,
-    playbackInterval,
-    start,
-    end,
-    initialTimestamp,
-    simulationId,
+  const { data: sim } = useQuery(simulationConfigurationQueryOptions(simulationId))
+
+  const { data: schedulerStatistics } = useReplay({
+    sim: sim,
+    query: (params) => simulationSystemStatsQueryOptions(simulationId, params),
+    timestamp: currentTimestamp,
+    stepInterval: search.playbackInterval,
+    summarize: !currentTimestamp,
+  })
+  
+  const { data: cdus } = useReplay({
+    sim: sim,
+    query: (params) => simulationCoolingCDUQueryOptions(simulationId, params),
+    timestamp: currentTimestamp,
+    stepInterval: search.playbackInterval,
+    summarize: !currentTimestamp,
+  })
+  
+  const { data: cep } = useReplay({
+    sim: sim,
+    query: (params) => simulationCoolingCEPQueryOptions(simulationId, params),
+    timestamp: currentTimestamp,
+    stepInterval: search.playbackInterval,
+    summarize: !currentTimestamp,
+  })
+
+  const { data: jobs } = useQuery({
+    ...simulationSchedulerJobs(simulationId, {
+      limit: 500,
+      fields: [
+        'job_id', 'name', 'node_count', 'state_current', 'time_limit', 'time_start', 'time_end',
+        'time_submission',
+      ],
+    }),
+    select: (data) => (
+      data
+        .results
+        .map(j => ({...j, state_current: computeJobState(j, currentTimestamp)}))
+        .filter(j => j.state_current != "UNSUBMITTED")
+    ) as Job[]
   });
-
-  const { data: schedulerStatistics, isLoading: isLoadingScheduler } =
-    useReplayScheduler({
-      simulationId,
-      currentTimestamp,
-      playbackInterval,
-      initialTimestamp,
-      end,
-      start,
-    });
-
-  const { data: jobs } = useReplayJobs({
-    end,
-    initialTimestamp,
-    playbackInterval,
-    simulationId,
-    start,
-  });
-
-  if (
-    !currentTimestamp ||
-    !metrics ||
-    isLoadingMetrics ||
-    !schedulerStatistics
-  ) {
-    return <LoadingSpinner />;
-  }
-
-  let currentMetrics = metrics.data[currentTimestamp];
-  if (!currentMetrics) {
-    currentMetrics = Object.values(metrics.data)[0];
-  }
-
-  const currentStatistics = schedulerStatistics.filter((stat) =>
-    isSameSecond(stat.timestamp, currentTimestamp),
-  );
-
-  const distinctJobs = uniqBy(jobs, "job_id");
 
   return (
     <section className="grid min-w-[1024px] grid-cols-12 gap-2 overflow-auto p-2">
-      <PressureFlowRate metrics={currentMetrics} />
-      <JobQueue
-        jobs={
-          distinctJobs.filter((job) => {
-            if (job.time_start) {
-              return (
-                (isEqual(currentTimestamp, job.time_start) ||
-                  isAfter(currentTimestamp, job.time_start)) &&
-                (!job.time_end ||
-                  isBefore(currentTimestamp, job.time_end) ||
-                  isEqual(currentTimestamp, job.time_end))
-              );
-            } else {
-              return false;
-            }
-          }) ?? []
-        }
-      />
-      <CDUList metrics={currentMetrics} />
-      <Power metrics={currentMetrics} />
-      <Scheduler
-        statistics={currentStatistics}
-        isLoading={isLoadingScheduler}
-      />
+      {cdus ? (
+        <PressureFlowRate metrics={cdus.cdus} />
+      ): (<LoadingSpinner/>)}
+      {jobs ? (
+        <JobQueue jobs={jobs} />
+      ) : (<LoadingSpinner/>)}
+      {cdus ? (
+        <CDUList metrics={cdus.cdus} />
+      ) : (<LoadingSpinner/>)}
+      {cdus && cep ? (
+        <Power cdus={cdus.cdus} cep={cep}/>
+      ) : (<LoadingSpinner/>)}
+      {schedulerStatistics ? (
+        <Scheduler statistics={schedulerStatistics} />
+      ) : (<LoadingSpinner/>)}
     </section>
   );
 }

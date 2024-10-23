@@ -1,10 +1,16 @@
 import { GraphHeader } from "../../shared/plots/graphHeader";
 import { CoolingCDU } from "../../../models/CoolingCDU.model";
+import { CoolingCEP } from "../../../models/CoolingCEP.model"
 import { Gauge } from "../../shared/plots/gauge";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
 import { useQuery } from "@tanstack/react-query";
 import { getFrontierSystemInformation } from "../../../util/queryOptions";
 import { LoadingSpinner } from "../../shared/loadingSpinner";
+import { sumBy } from "lodash";
+
+function round(x: number|null|undefined, fractionDigits: number) {
+  return Number(x?.toFixed(fractionDigits) ?? 0)
+}
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
   return (
@@ -15,10 +21,10 @@ function GaugeWrapper(props: { children: React.ReactNode }) {
 }
 
 export function SimulationGauges({
-  metrics,
-  statistics,
+  cdus = [], cep, statistics,
 }: {
-  metrics?: CoolingCDU[];
+  cdus?: CoolingCDU[];
+  cep?: CoolingCEP;
   statistics?: SimulationStatistic;
 }) {
   const { data } = useQuery(getFrontierSystemInformation());
@@ -34,11 +40,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={35000}
-            value={Number(
-              metrics
-                ?.reduce((prev, curr) => prev + curr.total_power, 0)
-                .toFixed(2) ?? 0,
-            )}
+            value={round(sumBy(cdus, c => c.total_power), 2)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -66,11 +68,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={Number(
-              metrics
-                ?.reduce((prev, curr) => prev + curr.total_loss, 0)
-                .toFixed(2) ?? 0,
-            )}
+            value={round(sumBy(cdus, c => c.total_loss), 2)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -93,7 +91,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={Number(statistics?.p_flops.toFixed(2) ?? 0)}
+            value={round(statistics?.p_flops, 2)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -128,7 +126,7 @@ export function SimulationGauges({
               tickLabels: {
                 type: "outer",
                 ticks: [
-                  { value: Number(data?.g_flops_w_peak.toFixed(2) ?? 0) },
+                  { value: round(data?.g_flops_w_peak, 2) },
                 ],
               },
               valueLabel: {
@@ -145,19 +143,13 @@ export function SimulationGauges({
       <div className="flex flex-col">
         <GaugeWrapper>
           <GraphHeader>Temperature</GraphHeader>
-          {/* <Gauge TODO:
+          <Gauge
             minValue={5}
             maxValue={50}
-            value={Number(
-              (
-                (metrics?.reduce(
-                  (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_temp,
-                  0,
-                ) ?? 0) /
-                (metrics?.filter((metric) => !!metric.htwr_htws_ctwr_ctws_temp)
-                  .length ?? 0)
-              ).toFixed(2),
-            )}
+            value={cep ?
+              round((cep.htw_return_temp + cep.htw_supply_temp + cep.ctw_return_temp + cep.ctw_supply_temp) / 4, 2)
+              : 0
+            }
             labels={{
               tickLabels: {
                 type: "outer",
@@ -198,24 +190,17 @@ export function SimulationGauges({
                 },
               ],
             }}
-          />  */}
+          />
         </GaugeWrapper>
         <GaugeWrapper>
           <GraphHeader>Pressure</GraphHeader>
-          {/* <Gauge TODO:
+          <Gauge
             minValue={10}
             maxValue={90}
-            value={Number(
-              (
-                (metrics?.reduce(
-                  (prev, curr) => prev + curr.htwr_htws_ctwr_ctws_pressure,
-                  0,
-                ) ?? 0) /
-                (metrics?.filter(
-                  (metric) => !!metric.htwr_htws_ctwr_ctws_pressure,
-                ).length ?? 0)
-              ).toFixed(2),
-            )}
+            value={cep ?
+              round((cep.htw_return_pressure + cep.htw_supply_pressure + cep.ctw_return_pressure + cep.ctw_supply_pressure) / 4, 2)
+              : 0
+            }
             labels={{
               tickLabels: {
                 type: "outer",
@@ -253,7 +238,7 @@ export function SimulationGauges({
                 },
               ],
             }}
-          /> */}
+          />
         </GaugeWrapper>
       </div>
     </>

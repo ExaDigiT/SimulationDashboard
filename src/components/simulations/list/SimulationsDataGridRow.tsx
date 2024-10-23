@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { Simulation } from "../../../models/Simulation.model";
 import { formatDate } from "../../../util/datetime";
 import { CSSProperties } from "react";
-import { addSeconds, differenceInSeconds } from "date-fns";
 
 function SimulationDataGridCell({
   value,
@@ -35,18 +34,6 @@ export function SimulationsDataGridRow({
       params={{ simulationId: simulation.id }}
       className="grid w-full grid-cols-8 border-b-2 border-neutral-400 transition-opacity duration-500 hover:opacity-75 dark:border-neutral-700"
       search={{
-        start: simulation.start,
-        end: simulation.end,
-        currentTimestamp: addSeconds(
-          simulation.start,
-          simulation.progress *
-            differenceInSeconds(simulation.end, simulation.start),
-        ).toISOString(),
-        initialTimestamp: addSeconds(
-          simulation.start,
-          simulation.progress *
-            differenceInSeconds(simulation.end, simulation.start),
-        ).toISOString(),
         playbackInterval: 15,
       }}
       style={{ ...style }}

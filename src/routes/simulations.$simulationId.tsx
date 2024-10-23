@@ -5,34 +5,32 @@ import {
   PlayIcon,
 } from "@heroicons/react/24/outline";
 import {
-  Link,
-  LinkProps,
-  Outlet,
-  createFileRoute,
-  useNavigate,
+  Link, LinkProps, Outlet, createFileRoute, useNavigate, Navigate,
 } from "@tanstack/react-router";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { BaseSyntheticEvent, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { Timeline } from "../components/simulations/details/timeline";
-import { addSeconds, differenceInSeconds, isEqual } from "date-fns";
+import { differenceInSeconds, isEqual as isDateEqual } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
-import {
-  useReplayCooling,
-  useReplayJobs,
-  useReplayScheduler,
-} from "../util/hooks/useReplay";
+import { useInterval } from "../util/hooks/misc";
+import { getMaxTimestamp, snapReplayTimestamp } from "../util/hooks/useReplay"
+import { formatDate } from "../util/datetime";
+
+
+type SearchParams = {
+  currentTimestamp?: string,
+  playbackInterval: number,
+}
+
 
 export const Route = createFileRoute("/simulations/$simulationId")({
   component: Simulation,
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): SearchParams => {
     return {
-      start: (search.start as string) || new Date().toISOString(),
-      end: (search.end as string) || new Date().toISOString(),
-      currentTimestamp: search.currentTimestamp as string,
+      currentTimestamp: search.currentTimestamp as string|undefined,
       playbackInterval: (search.playbackInterval as number) || 15,
-      initialTimestamp: search.initialTimestamp as string,
     };
   },
 });
@@ -56,174 +54,78 @@ function TabLink(props: LinkProps) {
 
 function Simulation() {
   const navigate = useNavigate({ from: Route.fullPath });
+  const updateSearchParams = (params: Partial<SearchParams>) => {
+    navigate({
+      search: (prev) => ({ ...prev, ...params }),
+      replace: false,
+    });
+  }
+
   const { simulationId } = Route.useParams();
   const search = Route.useSearch();
   const { data, isLoading } = useQuery(
     simulationConfigurationQueryOptions(simulationId),
   );
-  const maxTimestamp =
-    (data?.progress ?? 0) * differenceInSeconds(search.end, search.start);
 
-  const [replayStatus, setReplayStatus] = useState<"play" | "pause" | "stop">(
-    "stop",
+  const [replayStatus, setReplayStatus] = useState<"play" | "pause" | "summarize">(
+    search.currentTimestamp ? "pause" : "summarize"
   );
-
-  const [currentTimestamp, setCurrentTimestamp] = useState(
-    search.currentTimestamp,
-  );
-  const [initialTimestamp, setInitialTimestamp] = useState(
-    search.initialTimestamp,
-  );
-  const [playbackInterval, setPlaybackInterval] = useState(
-    search.playbackInterval,
-  );
-
   const [rate, setRate] = useState(20);
 
-  const {
-    fetchNextPage: fetchNextCoolingPage,
-    data: coolingData,
-    isFetchingNextPage: isFetchingNextCoolingPage,
-    hasNextPage: hasNextCoolingPage,
-  } = useReplayCooling({
-    end: search.end,
-    start: search.start,
-    simulationId,
-    currentTimestamp,
-    initialTimestamp,
-    playbackInterval,
-  });
+  const maxTimestamp = data ? getMaxTimestamp(data, search.playbackInterval) : undefined;
+  const { currentTimestamp, nextTimestamp } = (data && search.currentTimestamp) ?
+    snapReplayTimestamp(data, search.currentTimestamp, search.playbackInterval) : {}
 
-  const {
-    fetchNextPage: fetchNextSchedulerPage,
-    isFetchingNextPage: isFetchingNextSchedulerPage,
-    hasNextPage: hasNextSchedulerPage,
-  } = useReplayScheduler({
-    end: search.end,
-    start: search.start,
-    simulationId,
-    currentTimestamp,
-    initialTimestamp,
-    playbackInterval,
-  });
-
-  const {
-    fetchNextPage: fetchNextJobPage,
-    isFetchingNextPage: isFetchingNextJobPage,
-    hasNextPage: hasNextJobPage,
-  } = useReplayJobs({
-    end: search.end,
-    start: search.start,
-    simulationId,
-    initialTimestamp,
-    playbackInterval,
-  });
-
-  useEffect(() => {
-    const currentSeconds = differenceInSeconds(currentTimestamp, search.start);
-    const endSeconds = differenceInSeconds(search.end, search.start);
-    if (replayStatus === "play" && currentSeconds < endSeconds) {
-      const replayTimer = setTimeout(() => {
-        const newTimestamp = addSeconds(
-          currentTimestamp,
-          playbackInterval,
-        ).toISOString();
-
-        const lastPage = coolingData?.pageParams[
-          coolingData.pageParams.length - 1
-        ] as number;
-        const startCurrentDifference = differenceInSeconds(
-          currentTimestamp,
-          search.start,
-        );
-        const currentLastPageSeconds = playbackInterval * 20 + lastPage;
-        if (
-          startCurrentDifference >=
-          currentLastPageSeconds - playbackInterval * 10
-        ) {
-          if (!isFetchingNextCoolingPage && hasNextCoolingPage) {
-            fetchNextCoolingPage();
-          }
-
-          if (!isFetchingNextSchedulerPage && hasNextSchedulerPage) {
-            fetchNextSchedulerPage();
-          }
-
-          if (!isFetchingNextJobPage && hasNextJobPage) {
-            fetchNextJobPage();
-          }
-        }
-
-        setCurrentTimestamp(newTimestamp);
-        navigate({
-          search: (prev) => ({
-            ...prev,
-            currentTimestamp: newTimestamp,
-          }),
-        });
-
-        if (
-          isEqual(newTimestamp, search.end) ||
-          isEqual(newTimestamp, addSeconds(search.start, maxTimestamp))
-        ) {
-          setReplayStatus("stop");
-        }
-      }, 15000 / rate);
-      return () => clearTimeout(replayTimer);
+  useInterval(() => {
+    if (replayStatus == "play") {
+      if (nextTimestamp) {
+        updateSearchParams({currentTimestamp: nextTimestamp.toISOString()});
+      } else {
+        setReplayStatus("summarize")
+        updateSearchParams({currentTimestamp: undefined});
+      }
     }
-  }, [replayStatus, currentTimestamp, rate, playbackInterval]);
+  }, (replayStatus == "play") ? 15000 / rate : null)
 
   const onReplayUpdate = (e: BaseSyntheticEvent) => {
     e.preventDefault();
-    if (replayStatus === "pause" || replayStatus === "stop") {
-      setReplayStatus("play");
-    } else if (replayStatus === "play") {
+    if (replayStatus === "play") {
       setReplayStatus("pause");
+    } else {
+      setReplayStatus("play");
     }
   };
 
   const onRestart = (e: BaseSyntheticEvent) => {
     e.preventDefault();
-    setCurrentTimestamp(search.start);
-    setInitialTimestamp(search.start);
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        currentTimestamp: search.start,
-        initialTimestamp: search.start,
-      }),
-    });
-    setReplayStatus("play");
+    if (data) {
+      setReplayStatus("play");
+      updateSearchParams({currentTimestamp: data.start});
+    }
   };
 
   const onTimelineChange = (value: Date) => {
     setReplayStatus("pause");
-    const valueSecs = differenceInSeconds(value, search.start)
-    if (data && valueSecs <= maxTimestamp) {
-      const leftOver = valueSecs % playbackInterval;
-      let snappedValue = valueSecs;
-      if (leftOver > playbackInterval / 2) {
-        snappedValue = valueSecs + (playbackInterval - leftOver);
-      } else {
-        snappedValue = valueSecs - leftOver;
-      }
-      const newTimestamp =
-        addSeconds(search.start, snappedValue).toISOString().split(".")[0] +
-        "Z";
-
-      setCurrentTimestamp(newTimestamp);
-      setInitialTimestamp(newTimestamp);
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          currentTimestamp: newTimestamp,
-          initialTimestamp: newTimestamp,
-        }),
-      });
+    if (data) {
+      const result = snapReplayTimestamp(data, value, search.playbackInterval);
+      updateSearchParams({currentTimestamp: result.currentTimestamp.toISOString()});
     }
   };
 
-  if (isLoading || !data) return <LoadingSpinner />;
+  if (isLoading || !data || !maxTimestamp) {
+    return <LoadingSpinner />;
+  } else if (!search.currentTimestamp && !data.execution_end) {
+    // If currentTimestamp is missing and the sim is still running, jump to playing the sim where it
+    // is currently at. If the sim is complete, we'll summarize when currentTimestamp is undefined.
+    return <Navigate to={Route.fullPath}
+      params={{ simulationId: simulationId }}
+      search={prev => ({
+        ...prev,
+        playbackInterval: search.playbackInterval,
+        currentTimestamp: maxTimestamp.toISOString(), // will get snapped down if needed
+      })}
+    />
+  }
 
   return (
     <div className="m-6 flex flex-1 flex-col justify-center overflow-hidden">
@@ -280,7 +182,7 @@ function Simulation() {
       <div className="mt-6 flex items-center gap-4">
         <button
           onClick={onRestart}
-          disabled={differenceInSeconds(currentTimestamp, search.start) === 0}
+          disabled={currentTimestamp && isDateEqual(currentTimestamp, data.start)}
         >
           <ArrowPathIcon
             className={`h-6 w-6 text-neutral-400`}
@@ -291,44 +193,35 @@ function Simulation() {
         </button>
         <button
           onClick={onReplayUpdate}
-          disabled={
-            (replayStatus === "pause" || replayStatus === "stop") &&
-            maxTimestamp === 0
-          }
+          disabled={replayStatus !== "play" && isDateEqual(maxTimestamp, data.start)}
         >
-          {replayStatus === "stop" || replayStatus === "pause" ? (
+          {replayStatus == "play" ? (
+            <PauseIcon className={`h-6 w-6 text-neutral-400`} />
+          ) : (
             <PlayIcon
               data-tooltip-id="play-button"
               data-tooltip-content="Play Simulation"
               data-tooltip-delay-show={750}
               className={`h-6 w-6 text-neutral-400`}
             />
-          ) : (
-            <PauseIcon className={`h-6 w-6 text-neutral-400`} />
-          )}
+          )} 
         </button>
         <span
           className="w-36 text-nowrap text-right text-neutral-400"
           data-tooltip-id="current-timestamp"
-          data-tooltip-content={`${currentTimestamp} / ${search.end}`}
+          data-tooltip-content={`${formatDate(currentTimestamp)} / ${formatDate(data.end)}`}
           data-tooltip-delay-show={750}
         >
-          {differenceInSeconds(currentTimestamp, search.start)} /{" "}
-          {differenceInSeconds(search.end, search.start)}
+          {differenceInSeconds(currentTimestamp ?? data.end, data.start)} /{" "}
+          {differenceInSeconds(data.end, data.start)}
         </span>
         <Timeline
-          value={currentTimestamp}
-          start={search.start} end={search.end}
+          value={currentTimestamp ?? data.end}
+          start={data.start} end={data.end}
           onChange={onTimelineChange}
           interval={search.playbackInterval}
           onIntervalChange={(newInterval: number) => {
-            setPlaybackInterval(newInterval);
-            navigate({
-              search: (prev) => ({
-                ...prev,
-                playbackInterval: newInterval,
-              }),
-            });
+            updateSearchParams({playbackInterval: newInterval})
           }}
           onRateChange={(newRate: number) => {
             setRate(newRate);

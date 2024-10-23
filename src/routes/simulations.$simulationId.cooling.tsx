@@ -10,9 +10,6 @@ import { AppContext } from "../App";
 import colors from "tailwindcss/colors";
 
 type CoolingSearch = {
-  start: string;
-  end: string;
-  timestepType: "resolution" | "granularity";
   resolution?: number;
   granularity?: number;
 };
@@ -21,12 +18,8 @@ export const Route = createFileRoute("/simulations/$simulationId/cooling")({
   component: SimulationCooling,
   validateSearch: (search: Record<string, unknown>): CoolingSearch => {
     return {
-      start: (search.start as string) || new Date().toISOString(),
-      end: (search.end as string) || new Date().toISOString(),
       resolution: Number(search.resolution) || undefined,
       granularity: Number(search.granularity) || undefined,
-      timestepType:
-        (search.timestepType as "resolution" | "granularity") || "resolution",
     };
   },
 });
@@ -34,13 +27,12 @@ export const Route = createFileRoute("/simulations/$simulationId/cooling")({
 function SimulationCooling() {
   const { theme } = useContext(AppContext);
   const { simulationId } = Route.useParams();
-  const { granularity, resolution, start, end } = Route.useSearch();
+  const { granularity, resolution } = Route.useSearch();
+
   const { data, isLoading } = useQuery(
     simulationCoolingCDUQueryOptions(simulationId, {
-      start: start,
-      end: end,
-      resolution: resolution,
       granularity: granularity,
+      resolution: granularity ? undefined : resolution, // granularity will override resolution
     }),
   );
 

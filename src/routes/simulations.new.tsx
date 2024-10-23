@@ -29,10 +29,6 @@ function NewSimultation() {
         to: `/simulations/$simulationId/summary`,
         params: { simulationId: sim.data.id },
         search: {
-          start: sim.data.start,
-          end: sim.data.end,
-          currentTimestamp: sim.data.start,
-          initialTimestamp: sim.data.start,
           playbackInterval: 15,
         },
       });
