@@ -106,4 +106,5 @@ export const getFrontierSystemInformation = () =>
       }>(`frontier/system-info`);
       return res.data;
     },
+    staleTime: Infinity,
   });
