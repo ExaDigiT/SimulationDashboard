@@ -42,7 +42,7 @@ export function Timeline(props: TimelineProps) {
           <div
             {...thumbProps}
             data-tooltip-id="timeline-thumb"
-            data-tooltip-content={formatDate(addSeconds(props.start, state.value))}
+            data-tooltip-content={`${formatDate(addSeconds(props.start, state.value))} / ${formatDate(props.end)}`}
           />
         )}
       />

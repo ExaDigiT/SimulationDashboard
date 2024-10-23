@@ -2,7 +2,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Tooltip } from "react-tooltip";
 
-const rates = [1, 2, 5, 10, 20];
+const rates = [1, 2, 5, 10, 20, 50, 100];
 
 export function PlaybackRateSelector(props: {
   value: number;
