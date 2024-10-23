@@ -43,25 +43,18 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
 
 export const simulationCoolingCDUQueryOptions = (
   simulationId: string,
-  filterParams?: TimeSeriesParams,
+  params?: TimeSeriesParams,
 ) =>
   queryOptions({
     enabled:
-      !!filterParams &&
-      (!!filterParams.resolution || !!filterParams.granularity),
-    queryKey: ["simulation", "cooling", "cdu", simulationId, filterParams],
+      !!params &&
+      (!!params.resolution || !!params.granularity),
+    queryKey: ["simulation", "cooling", "cdu", simulationId, params],
     queryFn: async () => {
-      if (filterParams) {
+      if (params) {
         const res = await axios.get<
           TimeSeriesResponse<CoolingCDU>
-        >(`/frontier/simulation/${simulationId}/cooling/cdu`, {
-          params: {
-            start: filterParams.start,
-            end: filterParams.end,
-            resolution: filterParams.resolution,
-            granularity: filterParams.granularity,
-          },
-        });
+        >(`/frontier/simulation/${simulationId}/cooling/cdu`, { params: params });
 
         return res.data;
       }
