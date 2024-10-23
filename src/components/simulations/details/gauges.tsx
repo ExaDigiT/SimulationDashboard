@@ -4,6 +4,7 @@ import { Gauge } from "../../shared/plots/gauge";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
 import { useQuery } from "@tanstack/react-query";
 import { getFrontierSystemInformation } from "../../../util/queryOptions";
+import { LoadingSpinner } from "../../shared/loadingSpinner";
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
   return (
@@ -21,6 +22,9 @@ export function SimulationGauges({
   statistics?: SimulationStatistic;
 }) {
   const { data } = useQuery(getFrontierSystemInformation());
+  if (!data) {
+    return <LoadingSpinner/>
+  }
 
   return (
     <>
