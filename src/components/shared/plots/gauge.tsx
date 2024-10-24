@@ -13,7 +13,20 @@ const lightGauge: Partial<GaugeComponentProps> = {
     },
     valueLabel: {
       style: {
-        fill: colors.neutral[600],
+        fill: colors.neutral[800],
+        fontWeight: "bold",
+        textShadow: "unset",
+      },
+    },
+  },
+};
+
+const darkGauge: Partial<GaugeComponentProps> = {
+  labels: {
+    valueLabel: {
+      style: {
+        fontWeight: "bold",
+        textShadow: "unset",
       },
     },
   },
@@ -22,7 +35,7 @@ const lightGauge: Partial<GaugeComponentProps> = {
 export function Gauge(props: Partial<GaugeComponentProps>) {
   const { theme } = useContext(AppContext);
 
-  const baseGauge = theme === "light" ? lightGauge : {};
+  const baseGauge = theme === "light" ? lightGauge : darkGauge;
 
   const gauge = {};
   merge(gauge, baseGauge, props);
