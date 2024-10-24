@@ -58,6 +58,8 @@ export function Section({
             }}
             transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
             className={`mt-2 w-full ${flex ? "flex flex-row gap-2" : "grid grid-cols-2 items-center gap-y-4 overflow-hidden"} ${sectionProps?.className}`}
+            // Workaround for stack order bug: https://github.com/framer/motion/issues/2763
+            style={{ willChange: 'auto' }}
           >
             {children}
           </motion.section>
