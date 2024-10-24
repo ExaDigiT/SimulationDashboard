@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { sumBy } from "lodash";
-import { simulationCoolingCDUQueryOptions } from "../util/queryOptions";
+import { sumBy } from "lodash"
+import {
+  simulationConfigurationQueryOptions,
+  simulationCoolingCDUQueryOptions,
+} from "../util/queryOptions";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Graph } from "../components/shared/plots/graph";
@@ -29,6 +32,8 @@ function SimulationCooling() {
   const { simulationId } = Route.useParams();
   const { granularity, resolution } = Route.useSearch();
 
+  const { data: sim } = useQuery(simulationConfigurationQueryOptions(simulationId))
+
   const { data, isLoading } = useQuery(
     simulationCoolingCDUQueryOptions(simulationId, {
       granularity: granularity,
@@ -39,7 +44,7 @@ function SimulationCooling() {
   return (
     <div className={`flex-1 overflow-y-auto dark:[color-scheme:dark]`}>
       <TimeStepBar />
-      {!data || isLoading ? (
+      {!sim || !data || isLoading ? (
         <LoadingSpinner />
       ) : (
         <div
@@ -63,7 +68,10 @@ function SimulationCooling() {
             ]}
             layout={{
               title: "Total Power Usage",
-              xaxis: { title: { text: "Time" }, type: "date" },
+              xaxis: {
+                title: { text: "Time" },
+                range: [sim.start, sim.end],
+              },
               yaxis: {
                 title: { text: "Power (kW)", standoff: 20 },
                 type: "linear",
@@ -87,7 +95,10 @@ function SimulationCooling() {
             ]}
             layout={{
               title: "Total Power Loss",
-              xaxis: { title: { text: "Time" } },
+              xaxis: {
+                title: { text: "Time" },
+                range: [sim.start, sim.end],
+              },
               yaxis: { title: { text: "Power (kW)", standoff: 20 } },
             }}
           />
@@ -124,7 +135,10 @@ function SimulationCooling() {
             ]}
             layout={{
               title: "Average Rack Temperatures",
-              xaxis: { title: { text: "Time" } },
+              xaxis: {
+                title: { text: "Time" },
+                range: [sim.start, sim.end],
+              },
               yaxis: { title: { text: "Temperature (°C)", standoff: 20 } },
             }}
           />
@@ -146,7 +160,10 @@ function SimulationCooling() {
             ]}
             layout={{
               title: "Average Rack Flowrate",
-              xaxis: { title: { text: "Time" } },
+              xaxis: {
+                title: { text: "Time" },
+                range: [sim.start, sim.end],
+              },
               yaxis: { title: { text: "Flowrate (gpm)", standoff: 20 } },
             }}
           />
