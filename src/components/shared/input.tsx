@@ -5,10 +5,10 @@ export interface InputProps extends HTMLProps<HTMLInputElement> {
   labelAlignment?: "vertical" | "horizontal";
 }
 
-export function Input(props: InputProps) {
+export function Input({labelAlignment, ...props}: InputProps) {
   return (
     <div
-      className={`${props.labelAlignment === "horizontal" ? "flex flex-row items-center" : "flex flex-col"} gap-2 ${props.label ? "h-20" : "h-11"}`}
+      className={`${labelAlignment === "horizontal" ? "flex flex-row items-center" : "flex flex-col"} gap-2 ${props.label ? "h-20" : "h-11"}`}
     >
       {props.label && (
         <label htmlFor="text-input" className="pl-3 dark:text-neutral-200">

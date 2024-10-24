@@ -7,12 +7,12 @@ export interface NumberInputProps extends HTMLProps<HTMLDivElement> {
   labelAlignment?: "vertical" | "horizontal";
 }
 
-export function NumberInput(props: NumberInputProps) {
+export function NumberInput({labelAlignment, ...props}: NumberInputProps) {
   return (
     <div
       className={
         props.className +
-        ` ${props.labelAlignment === "horizontal" ? "flex flex-row items-center gap-2" : "flex flex-col"} ${props.label ? "h-20" : "h-11"}`
+        ` ${labelAlignment === "horizontal" ? "flex flex-row items-center gap-2" : "flex flex-col"} ${props.label ? "h-20" : "h-11"}`
       }
     >
       {props.label && (
