@@ -117,7 +117,7 @@ function Simulation() {
   } else if (!search.currentTimestamp && !data.execution_end) {
     // If currentTimestamp is missing and the sim is still running, jump to playing the sim where it
     // is currently at. If the sim is complete, we'll summarize when currentTimestamp is undefined.
-    return <Navigate to={Route.fullPath}
+    return <Navigate
       params={{ simulationId: simulationId }}
       search={prev => ({
         ...prev,
