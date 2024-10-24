@@ -74,7 +74,7 @@ export const snapReplayTimestamp = (
  * from the whole simulation.
  */
 export const useReplay = <T extends TimeSeriesPoint>({
-  sim, query, timestamp, stepInterval, stepsPerQuery = 20, summarize = false,
+  sim, query, timestamp, stepInterval, stepsPerQuery = 100, summarize = false,
 }: UseReplayOptions<T>): UseReplayResult<T> => {
   const queryClient = useQueryClient()
 
