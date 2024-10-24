@@ -54,7 +54,8 @@ function SimulationConsoleView() {
 
   const { data: jobs } = useQuery({
     ...simulationSchedulerJobs(simulationId, {
-      limit: 500,
+      // TODO: should use an "infiniteQuery" or something in case you have a lot of jobs in a simulation
+      limit: 1000,
       fields: [
         'job_id', 'name', 'node_count', 'state_current', 'time_limit', 'time_start', 'time_end',
         'time_submission',
