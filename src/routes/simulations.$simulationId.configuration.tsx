@@ -104,6 +104,18 @@ function SimulationConfiguration() {
             </Box>
           </>
         ) : null}
+        <Box>
+            <Box.Header>Schedule Policy</Box.Header>
+            <Box.Value>
+              {data.config.scheduler.schedule_policy}
+            </Box.Value>
+        </Box>
+        <Box>
+            <Box.Header>Reschedule</Box.Header>
+            <Box.Value>
+              {`${data.config.scheduler.reschedule}`.toUpperCase()}
+            </Box.Value>
+        </Box>
       </Section>
       <Section header="Cooling Configuration">
         <Box>

@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { JobsMode } from "../../models/Scheduler.model";
+import { JobsMode, Scheduler } from "../../models/Scheduler.model";
 import { SimulationRequest } from "../../models/SimulationRequest.model";
 import { Checkbox } from "../shared/checkbox";
 import { Select } from "../shared/dropdown";
@@ -80,6 +80,38 @@ export function RAPSForm(props: {
           />
         </>
       )}
+      <Select
+        label="Schedule Policy"
+        choices={[
+          //{ label: "Custom", value: "custom" },
+          { label: "fcfs", value: "fcfs" },
+          { label: "sjf", value: "sjf" },
+          { label: "prq", value: "prq" },
+        ]}
+        value={props.form.scheduler.schedule_policy}
+        onChange={(e) => {
+          props.setForm({
+            ...props.form,
+            scheduler: {
+              ...props.form.scheduler,
+              schedule_policy: e.target.value as Scheduler['schedule_policy'],
+            }
+          });
+        }}
+      />
+      <Checkbox
+        label="Reschedule"
+        checked={props.form.scheduler.reschedule}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          props.setForm({
+            ...props.form,
+            scheduler: {
+              ...props.form.scheduler,
+              reschedule: e.target.checked,
+            },
+          });
+        }}
+      />
     </>
   );
 }

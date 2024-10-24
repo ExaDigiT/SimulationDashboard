@@ -4,6 +4,7 @@ export interface Simulation {
   id: string;
   user: string;
   state: "running" | "success" | "fail";
+  error_messages: string|null;
   start: string;
   end: string;
   execution_start: string;
