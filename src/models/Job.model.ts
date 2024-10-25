@@ -23,7 +23,7 @@ export interface Job {
   /**
    * ISO Datetime string
    */
-  time_end: string;
+  time_end: string|null;
 
   state_current:
     | "COMPLETED"
