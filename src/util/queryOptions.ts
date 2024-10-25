@@ -36,11 +36,10 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
     queryKey: ["simulation", "configuration", simulationId],
     queryFn: async (): Promise<Simulation> => {
       const res = await axios.get(`/frontier/simulation/${simulationId}`);
-
       return res.data;
     },
     refetchOnWindowFocus: false,
-    refetchInterval: (query) => query.state.data?.execution_end ? false : 5000,
+    refetchInterval: (query) => query.state.data?.execution_end ? false : 3000,
     staleTime: (query) => query.state.data?.execution_end ? Infinity : 1000,
   });
 
