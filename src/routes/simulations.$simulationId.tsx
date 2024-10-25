@@ -80,10 +80,11 @@ function Simulation() {
     if (replayStatus == "play") {
       if (nextTimestamp) {
         updateSearchParams({currentTimestamp: nextTimestamp.toISOString()});
-      } else {
+      } else if (data?.execution_end) {
         setReplayStatus("summarize")
         updateSearchParams({currentTimestamp: undefined});
       }
+      // Just wait for the simulation to produce more data
     }
   }, (replayStatus == "play") ? 15000 / rate : null)
 
