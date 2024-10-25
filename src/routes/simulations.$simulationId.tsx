@@ -218,7 +218,7 @@ function Simulation() {
         </span>
         <Timeline
           value={currentTimestamp ?? data.end}
-          start={data.start} end={data.end}
+          start={data.start} available={maxTimestamp} end={data.end}
           onChange={onTimelineChange}
           interval={search.playbackInterval}
           onIntervalChange={(newInterval: number) => {

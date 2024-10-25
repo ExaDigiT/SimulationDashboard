@@ -8,6 +8,8 @@ import { DateLike, formatDate } from "../../../util/datetime";
 export interface TimelineProps {
   value: DateLike;
   start: DateLike;
+  /** Will show a second "track" up to this point, e.g. so you can see simulation progress */
+  available: DateLike;
   end: DateLike;
   onChange: (value: Date) => void;
   interval: number;
@@ -17,30 +19,59 @@ export interface TimelineProps {
 }
 
 export function Timeline(props: TimelineProps) {
-  let max = differenceInSeconds(props.end, props.start)
-  if (max % props.interval == 0) {
-    max = max - props.interval
-  } else {
-    max = max - (max % props.interval)
+  const prevStep = (d: number) => {
+    if (d % props.interval == 0) {
+      return Math.max(0, d - props.interval)
+    } else {
+      return d - (d % props.interval)
+    }
   }
+
+  const value = differenceInSeconds(props.value, props.start)
+  const available = prevStep(differenceInSeconds(props.available, props.start))
+  const max = prevStep(differenceInSeconds(props.end, props.start))
 
   return (
     <div className="flex w-full items-center gap-4">
       <ReactSlider
-        orientation="horizontal"
-        className="h-4 w-full"
-        trackClassName="bg-neutral-200 dark:bg-neutral-700 cursor-pointer h-2 rounded-full top-1 [&.track-0]:bg-blue-500 track"
-        thumbClassName="bg-blue-500 h-4 w-4 rounded-full cursor-pointer shadow-xl"
         min={0}
         max={max}
         step={props.interval}
-        value={differenceInSeconds(props.value, props.start)}
-        onAfterChange={(value) => {
-          props.onChange(addSeconds(props.start, value))
+        value={value}
+        onChange={(value) => {
+          props.onChange(addSeconds(props.start, Math.min(value, available)))
         }}
-        renderThumb={(thumbProps, state) => (
+        orientation="horizontal"
+        className="h-4 w-full"
+        trackClassName="cursor-pointer h-2 rounded-full top-1 track"
+        renderTrack={({key, className, ...trackProps}, state) => {
+          if (state.index == 0) {
+            return (<div key={key} className={className + " bg-blue-500"} {...trackProps}/>)
+          } else {
+            // index=1 is the part of the slider after the thumb.
+            // We're adding a progress bar on top of it to show the simulation progress
+            // react-slider supports multiple "tracks" which sort does what we want, but it adds
+            // an extra thumb makes the second track interactable, so its easier to just do set it
+            // up here.
+            const percent = 100 * (available - value) / (max - value)
+            return (
+              <div
+                key={key}
+                className={className + " bg-neutral-200 dark:bg-neutral-700"}
+                {...trackProps}
+              >
+                <div
+                  className="h-full rounded-full bg-neutral-300 dark:bg-neutral-600"
+                  style={{width: `${percent}%`}}
+                />
+              </div>
+            )
+          }
+        }}
+        thumbClassName="bg-blue-500 h-4 w-4 rounded-full cursor-pointer thumb"
+        renderThumb={({key, ...thumbProps}, state) => (
           <div
-            {...thumbProps}
+            key={key} {...thumbProps}
             data-tooltip-id="timeline-thumb"
             data-tooltip-content={`${formatDate(addSeconds(props.start, state.value))} / ${formatDate(props.end)}`}
           />
