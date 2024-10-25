@@ -6,6 +6,7 @@ import { JobQueue } from "../components/simulations/console/jobQueue";
 import { CDUList } from "../components/simulations/console/cduList";
 import { Power } from "../components/simulations/console/power";
 import { Scheduler } from "../components/simulations/console/scheduler";
+import { Message } from "../components/shared/simulation/message";
 import { toDate } from "date-fns";
 import {
   simulationConfigurationQueryOptions, simulationSystemStatsQueryOptions,
@@ -71,21 +72,25 @@ function SimulationConsoleView() {
 
   return (
     <section className="grid min-w-[1024px] grid-cols-12 gap-2 overflow-auto p-2">
-      {cdus ? (
-        <PressureFlowRate metrics={cdus.cdus} />
-      ): (<LoadingSpinner/>)}
-      {jobs ? (
-        <JobQueue jobs={jobs} />
-      ) : (<LoadingSpinner/>)}
-      {cdus ? (
-        <CDUList metrics={cdus.cdus} />
-      ) : (<LoadingSpinner/>)}
-      {cdus && cep ? (
-        <Power cdus={cdus.cdus} cep={cep}/>
-      ) : (<LoadingSpinner/>)}
-      {schedulerStatistics ? (
-        <Scheduler statistics={schedulerStatistics} />
-      ) : (<LoadingSpinner/>)}
+      {(sim && sim.progress_date == sim.start) ? (
+        <Message>No data available {sim.state == 'running' ? 'yet' : ''}</Message>
+      ) : (<>
+        {cdus ? (
+          <PressureFlowRate metrics={cdus.cdus} />
+        ): (<LoadingSpinner/>)}
+        {jobs ? (
+          <JobQueue jobs={jobs} />
+        ) : (<LoadingSpinner/>)}
+        {cdus ? (
+          <CDUList metrics={cdus.cdus} />
+        ) : (<LoadingSpinner/>)}
+        {cdus && cep ? (
+          <Power cdus={cdus.cdus} cep={cep}/>
+        ) : (<LoadingSpinner/>)}
+        {schedulerStatistics ? (
+          <Scheduler statistics={schedulerStatistics} />
+        ) : (<LoadingSpinner/>)}
+      </>)}
     </section>
   );
 }

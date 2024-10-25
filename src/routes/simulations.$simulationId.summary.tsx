@@ -5,6 +5,7 @@ import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { Section } from "../components/shared/simulation/section";
 import Box from "../components/shared/simulation/box";
+import { Message } from "../components/shared/simulation/message";
 import { SimulationGauges } from "../components/simulations/details/gauges";
 import { useReplay } from "../util/hooks/useReplay";
 import {
@@ -49,15 +50,17 @@ function SimulationSummary() {
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
       <Section header="Metrics" sectionProps={{ className: "grid-cols-3" }}>
-          {cdus && schedulerStatistics ? (
-            <SimulationGauges
-              cdus={cdus.cdus}
-              statistics={schedulerStatistics}
-              cep={cep}
-            />
-          ) : (
-            <LoadingSpinner />
-          )}
+        {(cdus && schedulerStatistics) ? (
+          <SimulationGauges
+            cdus={cdus.cdus}
+            statistics={schedulerStatistics}
+            cep={cep}
+          />
+        ) : (sim && sim.progress_date == sim.start) ? (
+            <Message>No data available {sim.state == 'running' ? 'yet' : ''}</Message>
+        ) : (
+          <LoadingSpinner/>
+        )}
       </Section>
       <Section header={!currentTimestamp ? "Final Projections" : "Latest Projections"}>
         <Box>
