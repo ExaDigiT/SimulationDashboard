@@ -1,4 +1,4 @@
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions, infiniteQueryOptions } from "@tanstack/react-query";
 import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { CoolingCDU } from "../models/CoolingCDU.model";
@@ -96,13 +96,14 @@ export const simulationSystemStatsQueryOptions = (
  * Query jobs from the job endpoint.
  * sort should be passed as a list like ["desc:name", "asc:job_id"]
  * filters is in the format ["job_id=eq:5"]
+ * This should be passed to useInfiniteQuery
  * TODO: allow passing sort/filters in cleaner format than raw query params.
  */
 export const simulationSchedulerJobs = (
   simulationId: string,
   params?: {
     start?: string, end?: string,
-    limit?: number, offset?: number,
+    limit?: number,
     fields?: string[], sort?: string[],
     filters?: string[],
     currentTimestamp?: string,
@@ -113,21 +114,25 @@ export const simulationSchedulerJobs = (
   searchParams.push(...(params?.sort?.map(s => `sort=${s}`) ?? []));
   // Just specify filters as an array of ["job_id=eq:1"] for now
   searchParams.push(...(params?.filters ?? []));
+  const limit = params?.limit ?? 1000;
 
-  return queryOptions({
+  return infiniteQueryOptions({
     queryKey: ["simulation", "scheduler", "jobs", simulationId, params],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       const res = await axios.get<{
         offset: number; limit: number, total_results: number, results: Job[];
       }>(`/frontier/simulation/${simulationId}/scheduler/jobs?${searchParams.join("&")}`, {
         params: {
           start: params?.start, end: params?.end,
-          limit: params?.limit, offset: params?.offset,
+          limit: limit, offset: pageParam,
           fields: params?.fields?.join(","),
         },
       });
       return res.data;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam, _allPageParams) =>
+      (lastPageParam + limit < lastPage.total_results) ? lastPageParam + limit : undefined,
   })
 }
 

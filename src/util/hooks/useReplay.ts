@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useQuery, UseQueryOptions, useQueryClient } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import {
   toDate,  isEqual as isDateEqual, min as minDate, addSeconds, subSeconds, differenceInSeconds,
@@ -164,6 +164,8 @@ export type UseJobReplayOptions = {
 
 export type UseJobReplayResult = {
   data: Job[],
+  hasNextPage: boolean,
+  fetchNextPage: () => void,
   maxTimestamp: Date|undefined,
   currentTimestamp: Date|undefined,
   nextTimestamp: Date|undefined,
@@ -206,7 +208,7 @@ export const useJobReplay = ({
     enabled = false;
   }
 
-  const { data: response } = useQuery({
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
     ...simulationSchedulerJobs(sim?.id ?? '', {
       start: queryStart?.toISOString(), end: queryEnd?.toISOString(),
       limit: 1000,
@@ -218,12 +220,14 @@ export const useJobReplay = ({
   });
 
   let jobs = (
-    response?.results
+    data?.pages
+      .map((page) => page.results)
+      .flat()
       .map(j => ({...j, state_current: computeJobState(j, currentTimestamp)}))
       // Filter out unsubmitted jobs, and completed jobs after a few steps
-      .filter(j => 
+      .filter(j =>
         j.state_current != "UNSUBMITTED" &&
-        (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) > jobLingerTime)
+        (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) < jobLingerTime)
       )
   ) as Job[];
   jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id);
@@ -234,7 +238,7 @@ export const useJobReplay = ({
       const nextQueryStart = addSeconds(queryStart, querySize)
       if (nextQueryStart < maxTimestamp!) {
         const nextQueryEnd = minDate([addSeconds(nextQueryStart, querySize), maxTimestamp!])
-        queryClient.prefetchQuery({
+        queryClient.prefetchInfiniteQuery({
           ...simulationSchedulerJobs(sim?.id ?? '', {
             start: nextQueryStart?.toISOString(), end: nextQueryEnd?.toISOString(),
             limit: 1000,
@@ -246,5 +250,14 @@ export const useJobReplay = ({
     }
   })
 
-  return { data: jobs, maxTimestamp, currentTimestamp, nextTimestamp }
+  return {
+    data: jobs,
+    maxTimestamp, currentTimestamp, nextTimestamp,
+    hasNextPage,
+    fetchNextPage: async () => {
+      if (!isFetching) {
+        await fetchNextPage();
+      }
+    },
+  }
 }
