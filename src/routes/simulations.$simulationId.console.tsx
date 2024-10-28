@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { sortBy } from "lodash";
 import { PressureFlowRate } from "../components/simulations/console/pressureFlowRate";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { JobQueue } from "../components/simulations/console/jobQueue";
@@ -76,7 +77,7 @@ function SimulationConsoleView() {
     staleTime: Infinity, // We're capping queries to maxTimestamp so they should always be valid
   });
 
-  const jobs = (
+  let jobs = (
     jobsRaw?.results
       .map(j => ({...j, state_current: computeJobState(j, currentTimestamp)}))
       // Filter out unsubmitted jobs, and completed jobs after a few steps
@@ -84,7 +85,8 @@ function SimulationConsoleView() {
         j.state_current != "UNSUBMITTED" &&
         (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) > jobLingerTime)
       )
-  ) as Job[]
+  ) as Job[];
+  jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id)
 
   return (
     <section className="grid min-w-[1024px] grid-cols-12 gap-2 overflow-auto p-2">
