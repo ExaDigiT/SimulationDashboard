@@ -1,10 +1,16 @@
 import { useEffect } from "react";
 import { useQuery, UseQueryOptions, useQueryClient } from "@tanstack/react-query";
-import { toDate,  isEqual as isDateEqual, min as minDate, addSeconds } from "date-fns";
+import { sortBy } from "lodash";
+import {
+  toDate,  isEqual as isDateEqual, min as minDate, addSeconds, subSeconds, differenceInSeconds,
+} from "date-fns";
 
 import { Simulation } from "../../models/Simulation.model";
+import { Job } from "../../models/Job.model";
 import { TimeSeriesPoint, TimeSeriesResponse, TimeSeriesParams } from "../queryOptions";
 import { floorDate, snapDate, DateLike} from "../datetime";
+import { simulationSchedulerJobs } from "../queryOptions"
+import { computeJobState } from "../jobs";
 
 
 export type UseReplayOptions<T extends TimeSeriesPoint> = {
@@ -146,3 +152,99 @@ export const useReplay = <T extends TimeSeriesPoint>({
   return { data, maxTimestamp, currentTimestamp, nextTimestamp }
 }
 
+
+export type UseJobReplayOptions = {
+  sim?: Simulation,
+  timestamp?: Date,
+  /** stepInterval in seconds */
+  stepInterval: number,
+  /** If set, will return a summary of whole simulation instead of a single time step */
+  summarize?: boolean,
+}
+
+export type UseJobReplayResult = {
+  data: Job[],
+  maxTimestamp: Date|undefined,
+  currentTimestamp: Date|undefined,
+  nextTimestamp: Date|undefined,
+}
+
+
+/**
+ * Get a list of jobs for the simulation.
+ */
+export const useJobReplay = ({
+  sim, timestamp, stepInterval, summarize = false,
+}: UseJobReplayOptions): UseJobReplayResult => {
+  const queryClient = useQueryClient();
+
+  const querySize = stepInterval * 100;
+  // how long completed jobs will stay in the chart
+  const jobLingerTime = stepInterval * 5;
+  const fields = [
+    'job_id', 'name', 'node_count', 'state_current', 'time_limit', 'time_start', 'time_end',
+    'time_submission',
+  ]
+
+  const maxTimestamp = sim ? getMaxTimestamp(sim, stepInterval) : undefined;
+  const {
+    currentTimestamp, nextTimestamp,
+  } = (sim && timestamp && !summarize) ? snapReplayTimestamp(sim, timestamp, stepInterval) : {};
+
+  let queryStart: Date, queryEnd: Date;
+  let enabled: boolean
+
+  if (sim && summarize) {
+    [queryStart, queryEnd] = [toDate(sim.start), maxTimestamp!];
+    enabled = true;
+  } else if (sim && currentTimestamp) {
+    queryStart = subSeconds(floorDate(currentTimestamp, querySize, sim.start), jobLingerTime)
+    queryEnd = minDate([addSeconds(queryStart, querySize + jobLingerTime), maxTimestamp!])
+    enabled = true;
+  } else {
+    [queryStart, queryEnd] = [toDate(0), toDate(0)]; // Just a placeholder
+    enabled = false;
+  }
+
+  const { data: response } = useQuery({
+    ...simulationSchedulerJobs(sim?.id ?? '', {
+      start: queryStart?.toISOString(), end: queryEnd?.toISOString(),
+      limit: 1000,
+      fields: fields,
+    }),
+    enabled: enabled,
+    placeholderData: (prevData, _prevQuery) => prevData,
+    staleTime: Infinity, // We're capping queries to maxTimestamp so they should always be valid
+  });
+
+  let jobs = (
+    response?.results
+      .map(j => ({...j, state_current: computeJobState(j, currentTimestamp)}))
+      // Filter out unsubmitted jobs, and completed jobs after a few steps
+      .filter(j => 
+        j.state_current != "UNSUBMITTED" &&
+        (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) > jobLingerTime)
+      )
+  ) as Job[];
+  jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id);
+
+  // Prefetch the next query
+  useEffect(() => {
+    if (sim && !summarize && currentTimestamp) {
+      const nextQueryStart = addSeconds(queryStart, querySize)
+      if (nextQueryStart < maxTimestamp!) {
+        const nextQueryEnd = minDate([addSeconds(nextQueryStart, querySize), maxTimestamp!])
+        queryClient.prefetchQuery({
+          ...simulationSchedulerJobs(sim?.id ?? '', {
+            start: nextQueryStart?.toISOString(), end: nextQueryEnd?.toISOString(),
+            limit: 1000,
+            fields: fields,
+          }),
+          staleTime: Infinity,
+        })
+      }
+    }
+  })
+
+  return { data: jobs, maxTimestamp, currentTimestamp, nextTimestamp }
+}

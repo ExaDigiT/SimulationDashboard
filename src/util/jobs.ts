@@ -16,6 +16,6 @@ export const computeJobState = (job: Job, timestamp?: DateLike) => {
       return job.state_current;
     }
   } else {
-      return job.state_current;
+    return job.state_current;
   }
 };
