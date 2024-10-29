@@ -7,6 +7,7 @@ import { FetchNextPageOptions } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { defaultRangeExtractor, useVirtualizer } from "@tanstack/react-virtual";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { SortDirection } from "../../../models/filters/sortDetails.model";
 
 export function SimulationsDataGrid({
   columns,
@@ -20,11 +21,7 @@ export function SimulationsDataGrid({
   total_results,
 }: {
   columns: ColumnHeader[];
-  onSort: (
-    columnName: string,
-    sorted: boolean,
-    direction: "asc" | "desc",
-  ) => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
   rows: Simulation[];
   isLoading: boolean;
   isError: boolean;

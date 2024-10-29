@@ -1,10 +1,3 @@
-export type SortDetails = { sortable: boolean } & (
-  | {
-      sorted: true;
-      direction: "asc" | "desc";
-    }
-  | {
-      sorted: false;
-      direction: null;
-    }
-);
+// direction will be undefined if the column isn't currently being sorted
+export type SortDirection = "asc"|"desc"|null;
+export type SortDetails = { sortable: boolean, direction: "asc"|"desc"|SortDirection };

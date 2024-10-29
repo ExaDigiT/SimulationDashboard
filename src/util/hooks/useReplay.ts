@@ -233,7 +233,7 @@ export const useJobReplay = ({
         (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) < jobLingerTime)
       )
   ) as Job[];
-  if (sort?.length) {
+  if (!sort || sort.length < 0) {
     jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id);
   }
 

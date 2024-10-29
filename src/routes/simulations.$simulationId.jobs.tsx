@@ -7,10 +7,12 @@ import { headers as JobColumns } from "../components/jobs/list/JobListColumns";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { toDate } from "date-fns";
+import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { JobListFilterModal } from "../components/jobs/list/JobListFilterModal";
 import { useJobReplay } from "../util/hooks/useReplay";
+import { SortDirection } from "../models/filters/sortDetails.model";
 
 export const Route = createFileRoute("/simulations/$simulationId/jobs")({
   component: SimulationJobs,
@@ -21,7 +23,7 @@ function SimulationJobs() {
   const search = Route.useSearch();
   const currentTimestamp = search.currentTimestamp ? toDate(search.currentTimestamp) : undefined;
 
-  const [columns, setColumns] = useState(structuredClone(JobColumns));
+  const [columns, setColumns] = useState(cloneDeep(JobColumns));
 
   const { data: sim } = useQuery(simulationConfigurationQueryOptions(simulationId));
 
@@ -34,18 +36,13 @@ function SimulationJobs() {
     filters: operatorCombinator(columns),
   })
 
-  const onSort = (
-    header: string,
-    sorted: boolean,
-    direction: "asc" | "desc",
-  ) => {
-    const updatedColumns = [...columns];
+  const onSort = (columnName: string, direction: SortDirection) => {
+    const updatedColumns = cloneDeep(columns);
     const currentColumn = updatedColumns.find(
-      (column) => column.name === header,
+      (column) => column.name === columnName,
     );
 
     if (currentColumn) {
-      currentColumn.sort.sorted = sorted;
       currentColumn.sort.direction = direction;
     }
 
@@ -72,6 +69,7 @@ function SimulationJobs() {
       </div>
       <JobList
         jobs={jobs}
+        columns={columns}
         totalJobs={totalResults}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}

@@ -8,6 +8,8 @@ import axios from "axios";
 import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
 import { ListResponse } from "../util/queryOptions";
+import { SortDirection } from "../models/filters/sortDetails.model";
+import { cloneDeep } from "lodash";
 
 export const Route = createFileRoute("/simulations/")({
   component: SimulationList,
@@ -51,18 +53,13 @@ function SimulationList() {
     refetchOnWindowFocus: false,
   });
 
-  const onSort = (
-    columnName: string,
-    sorted: boolean,
-    direction: "asc" | "desc",
-  ) => {
-    const updatedColumns = [...columns];
+  const onSort = (columnName: string, direction: SortDirection) => {
+    const updatedColumns = cloneDeep(columns);
     const currentColumn = updatedColumns.find(
       (column) => column.name === columnName,
     );
 
     if (currentColumn) {
-      currentColumn.sort.sorted = sorted;
       currentColumn.sort.direction = direction;
     }
 

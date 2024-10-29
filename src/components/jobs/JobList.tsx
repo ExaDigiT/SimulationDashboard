@@ -4,12 +4,12 @@ import { Job } from "../../models/Job.model";
 import { formatDate } from "../../util/datetime";
 import { JobListHeader } from "./list/JobListHeader";
 import { ColumnHeader } from "../../models/dataGrid/columnHeader.model";
-import { headers } from "./list/JobListColumns";
 import { GridSizes, getGridSize } from "../../util/gridSizing";
 import { FetchNextPageOptions } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Route as JobsRoute } from "../../routes/simulations.$simulationId.jobs";
 import { computeJobState } from "../../util/jobs"
+import { SortDirection } from "../../models/filters/sortDetails.model";
 
 function JobListColumn({
   size,
@@ -34,21 +34,23 @@ function JobListColumn({
 
 export function JobList({
   jobs,
+  columns,
   totalJobs,
   fetchNextPage,
   hasNextPage,
   onSort,
 }: {
   jobs: Job[];
+  columns: ColumnHeader[],
   totalJobs: number;
   fetchNextPage: (options?: FetchNextPageOptions | undefined) => void;
   hasNextPage: boolean;
-  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
 }) {
   const navigate = useNavigate({ from: JobsRoute.fullPath });
   const { simulationId } = JobsRoute.useParams();
   const { currentTimestamp } = JobsRoute.useSearch();
-  const rows: (ColumnHeader[] | Job)[] = [headers, ...jobs];
+  const rows: (ColumnHeader[] | Job)[] = [columns, ...jobs];
 
   const parentRef = useRef(null);
 

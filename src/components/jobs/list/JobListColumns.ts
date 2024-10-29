@@ -19,7 +19,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     propertyName: "job_id",
-    sort: { sortable: true, sorted: true, direction: "asc" },
+    sort: { sortable: true, direction: "asc" },
     size: "small",
   },
   {
@@ -27,7 +27,7 @@ export const headers: ColumnHeader[] = [
     inputType: "text",
     name: "Name",
     propertyName: "name",
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     operators: [
       FilterOperators.Contains,
       FilterOperators.DoesNotContain,
@@ -48,7 +48,7 @@ export const headers: ColumnHeader[] = [
     name: "State",
     operators: [],
     propertyName: "state_current",
-    sort: { sortable: false, sorted: false, direction: null },
+    sort: { sortable: false, direction: null },
     size: "small",
     filterable: false,
   },
@@ -67,7 +67,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     size: "small",
   },
   {
@@ -85,7 +85,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     size: "large",
   },
   {
@@ -103,7 +103,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     size: "small",
   },
   {
@@ -121,7 +121,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     size: "medium",
   },
   {
@@ -139,7 +139,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.OneOf,
       FilterOperators.NotOneOf,
     ],
-    sort: { sortable: true, sorted: false, direction: null },
+    sort: { sortable: true, direction: null },
     size: "medium",
   },
 ];

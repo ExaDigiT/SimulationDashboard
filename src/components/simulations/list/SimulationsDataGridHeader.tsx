@@ -1,6 +1,7 @@
 import { ArrowLongDownIcon } from "@heroicons/react/16/solid";
 import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
 import { CSSProperties } from "react";
+import { SortDirection } from "../../../models/filters/sortDetails.model";
 
 function SimulationsDataGridHeaderCell({
   column,
@@ -8,11 +9,7 @@ function SimulationsDataGridHeaderCell({
   index,
 }: {
   column: ColumnHeader;
-  onSort: (
-    columnString: string,
-    sorted: boolean,
-    direction: "asc" | "desc",
-  ) => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
   index: number;
 }) {
   return (
@@ -21,21 +18,25 @@ function SimulationsDataGridHeaderCell({
       onClick={(e) => {
         e.preventDefault();
         if (column.sort.sortable) {
-          const direction = column.sort.sorted
-            ? column.sort.direction === "asc"
-              ? "desc"
-              : "asc"
-            : "asc";
-          onSort(column.name, column.sort.direction !== "desc", direction);
+          // cycle between asc/desc/no-sort
+          let direction: SortDirection;
+          if (column.sort.direction == "asc") {
+            direction = "desc"
+          } else if (column.sort.direction == "desc") {
+            direction = null;
+          } else {
+            direction = "asc";
+          }
+          onSort(column.name, direction);
         }
       }}
     >
       <span>{column.name}</span>
-      {column.sort.sortable && (
+      {column.sort.sortable && column.sort.direction ? (
         <ArrowLongDownIcon
-          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort?.sorted && column.sort?.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort?.sorted && "opacity-0"}`}
+          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort.direction === "desc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100`}
         />
-      )}
+      ) : ""}
     </button>
   );
 }
@@ -46,11 +47,7 @@ export function SimulationsDataGridHeader({
   style,
 }: {
   columns: ColumnHeader[];
-  onSort: (
-    columnName: string,
-    sorted: boolean,
-    direction: "asc" | "desc",
-  ) => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
   style: CSSProperties;
 }) {
   return (

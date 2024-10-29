@@ -1,6 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import { ColumnHeader } from "../../../models/dataGrid/columnHeader.model";
 import { GridSizes, getGridSize } from "../../../util/gridSizing";
+import { SortDirection } from "../../../models/filters/sortDetails.model";
 import { ArrowLongDownIcon } from "@heroicons/react/24/outline";
 
 function JobListHeaderCell({
@@ -13,7 +14,7 @@ function JobListHeaderCell({
   size: GridSizes;
   children: ReactNode;
   lastIndex: boolean;
-  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
   column: ColumnHeader;
 }) {
   return (
@@ -22,21 +23,25 @@ function JobListHeaderCell({
       onClick={(e) => {
         e.preventDefault();
         if (column.sort.sortable) {
-          const direction = column.sort.sorted
-            ? column.sort.direction === "asc"
-              ? "desc"
-              : "asc"
-            : "asc";
-          onSort(column.name, column.sort.direction !== "desc", direction);
+          let direction: SortDirection;
+          // cycle between asc/desc/no-sort
+          if (column.sort.direction == "asc") {
+            direction = "desc"
+          } else if (column.sort.direction == "desc") {
+            direction = null;
+          } else {
+            direction = "asc";
+          }
+          onSort(column.name, direction);
         }
       }}
     >
       {children}
-      {column.sort.sortable && (
+      {column.sort.sortable && column.sort.direction ? (
         <ArrowLongDownIcon
-          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort?.sorted && column.sort?.direction === "asc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100 ${!column.sort?.sorted && "opacity-0"}`}
+          className={`absolute right-2 h-4 w-4 bg-neutral-300 dark:bg-neutral-800 ${column.sort.direction === "desc" && "rotate-180"} transition-opacity duration-300 ease-in-out group-hover:opacity-100`}
         />
-      )}
+      ) : ""}
     </button>
   );
 }
@@ -44,7 +49,7 @@ function JobListHeaderCell({
 interface JobListHeaderProps {
   headers: ColumnHeader[];
   style: CSSProperties;
-  onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
+  onSort: (columnName: string, direction: SortDirection) => void;
 }
 
 export function JobListHeader({ headers, style, onSort }: JobListHeaderProps) {
