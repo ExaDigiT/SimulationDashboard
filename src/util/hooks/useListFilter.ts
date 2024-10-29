@@ -1,6 +1,7 @@
 import { BaseSyntheticEvent, useState } from "react";
 import { ColumnHeader } from "../../models/dataGrid/columnHeader.model";
 import { FilterOperators } from "../../models/filters/filterOperators.enum";
+import { cloneDeep } from "lodash";
 
 export type onOpen = (e: BaseSyntheticEvent) => void;
 export type onClose = (reset?: boolean) => void;
@@ -65,8 +66,8 @@ export function useListFilter({
     operator: FilterOperators;
     value: string | null;
   }) {
-    const newColumsns = [...updatedColumns];
-    const column = newColumsns[openColumn];
+    const newColumns = cloneDeep(updatedColumns);
+    const column = newColumns[openColumn];
     if (payload.operator) {
       if (Object.values(FilterOperators).includes(payload.operator)) {
         column.activeFilters[payload.index].operator = payload.operator;
@@ -75,16 +76,16 @@ export function useListFilter({
     if (payload.value !== null) {
       column.activeFilters[payload.index].value = payload.value;
     }
-    setUpdatedColumns(newColumsns);
+    setUpdatedColumns(newColumns);
   }
 
   function onAddColumn(e: BaseSyntheticEvent) {
     e.preventDefault();
-    const newColumns = [...updatedColumns];
+    const newColumns = cloneDeep(updatedColumns);
     const column = newColumns[openColumn];
     if (column) {
       column.activeFilters.push({
-        operator: FilterOperators.Contains,
+        operator: column.operators[0],
         value: "",
       });
     }
@@ -93,7 +94,7 @@ export function useListFilter({
 
   function onDeleteColumn(e: BaseSyntheticEvent, index: number) {
     e.preventDefault();
-    const newColumns = [...updatedColumns];
+    const newColumns = cloneDeep(updatedColumns);
     const column = newColumns[openColumn];
     column.activeFilters.splice(index, 1);
     setUpdatedColumns(newColumns);
