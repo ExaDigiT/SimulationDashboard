@@ -19,7 +19,7 @@ export const headers: ColumnHeader[] = [
       FilterOperators.MaxiumumLength,
     ],
     propertyName: "job_id",
-    sort: { sortable: true, direction: "asc" },
+    sort: { sortable: true, direction: null },
     size: "small",
   },
   {
