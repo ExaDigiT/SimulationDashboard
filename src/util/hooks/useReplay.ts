@@ -185,7 +185,7 @@ export const useJobReplay = ({
 
   const querySize = stepInterval * 100;
   // how long completed jobs will stay in the chart
-  const jobLingerTime = stepInterval * 5;
+  const jobLingerTime = stepInterval * 10;
   const fields = [
     'job_id', 'name', 'node_count', 'state_current', 'time_limit', 'time_start', 'time_end',
     'time_submission',
