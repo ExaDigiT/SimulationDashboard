@@ -160,12 +160,15 @@ export type UseJobReplayOptions = {
   stepInterval: number,
   /** If set, will return a summary of whole simulation instead of a single time step */
   summarize?: boolean,
+  filters?: string[],
+  sort?: string[],
 }
 
 export type UseJobReplayResult = {
   data: Job[],
   hasNextPage: boolean,
   fetchNextPage: () => void,
+  totalResults: number,
   maxTimestamp: Date|undefined,
   currentTimestamp: Date|undefined,
   nextTimestamp: Date|undefined,
@@ -176,7 +179,7 @@ export type UseJobReplayResult = {
  * Get a list of jobs for the simulation.
  */
 export const useJobReplay = ({
-  sim, timestamp, stepInterval, summarize = false,
+  sim, timestamp, stepInterval, summarize = false, filters, sort,
 }: UseJobReplayOptions): UseJobReplayResult => {
   const queryClient = useQueryClient();
 
@@ -212,7 +215,7 @@ export const useJobReplay = ({
     ...simulationSchedulerJobs(sim?.id ?? '', {
       start: queryStart?.toISOString(), end: queryEnd?.toISOString(),
       limit: 1000,
-      fields: fields,
+      fields: fields, filters: filters, sort: sort,
     }),
     enabled: enabled,
     placeholderData: (prevData, _prevQuery) => prevData,
@@ -230,7 +233,9 @@ export const useJobReplay = ({
         (!currentTimestamp || !j.time_end || differenceInSeconds(currentTimestamp, j.time_end) < jobLingerTime)
       )
   ) as Job[];
-  jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id);
+  if (sort?.length) {
+    jobs = sortBy(jobs, j => j.state_current != "RUNNING", j => j.state_current, j => j.job_id);
+  }
 
   // Prefetch the next query
   useEffect(() => {
@@ -252,6 +257,7 @@ export const useJobReplay = ({
 
   return {
     data: jobs,
+    totalResults: data?.pages[0].total_results ?? 0,
     maxTimestamp, currentTimestamp, nextTimestamp,
     hasNextPage,
     fetchNextPage: async () => {
