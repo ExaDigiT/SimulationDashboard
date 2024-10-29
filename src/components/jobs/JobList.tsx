@@ -37,14 +37,12 @@ export function JobList({
   totalJobs,
   fetchNextPage,
   hasNextPage,
-  isFetchingNextPage,
   onSort,
 }: {
   jobs: Job[];
   totalJobs: number;
   fetchNextPage: (options?: FetchNextPageOptions | undefined) => void;
   hasNextPage: boolean;
-  isFetchingNextPage: boolean;
   onSort: (header: string, sorted: boolean, direction: "asc" | "desc") => void;
 }) {
   const navigate = useNavigate({ from: JobsRoute.fullPath });
@@ -73,8 +71,7 @@ export function JobList({
 
     if (
       lastItem.index >= rows.length - 1 &&
-      hasNextPage &&
-      !isFetchingNextPage
+      hasNextPage
     ) {
       fetchNextPage();
     }
@@ -82,7 +79,6 @@ export function JobList({
     hasNextPage,
     fetchNextPage,
     rows.length,
-    isFetchingNextPage,
     rowVirtualizer.getVirtualItems(),
   ]);
 

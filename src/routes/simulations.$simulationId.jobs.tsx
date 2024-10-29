@@ -1,52 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ListResponse } from "../util/queryOptions";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { simulationConfigurationQueryOptions } from "../util/queryOptions";
+import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
 import { JobList } from "../components/jobs/JobList";
 import { headers as JobColumns } from "../components/jobs/list/JobListColumns";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
-import { Job } from "../models/Job.model";
-import axios from "axios";
+import { toDate } from "date-fns";
 import { useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { JobListFilterModal } from "../components/jobs/list/JobListFilterModal";
+import { useJobReplay } from "../util/hooks/useReplay";
 
 export const Route = createFileRoute("/simulations/$simulationId/jobs")({
   component: SimulationJobs,
 });
 
-const jobLimit = 15;
-
 function SimulationJobs() {
   const { simulationId } = Route.useParams();
-  const [columns, setColumns] = useState(structuredClone(JobColumns));
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["simulation", "jobs", simulationId, columns],
-      queryFn: async ({ pageParam }) => {
-        const sortParams = sortCombinator(columns);
-        const filterParams = operatorCombinator(columns);
-        const fields = `&fields=job_id,name,node_count,state_current,time_limit,time_start,time_end,time_submission`;
-        const params =
-          fields +
-          (sortParams ? "&" : "") +
-          sortParams +
-          (filterParams ? "&" : "") +
-          filterParams;
-        const res = await axios.get<ListResponse<Job>>(
-          `/frontier/simulation/${simulationId}/scheduler/jobs?limit=${jobLimit}&offset=${pageParam * jobLimit}${params}`,
-        );
+  const search = Route.useSearch();
+  const currentTimestamp = search.currentTimestamp ? toDate(search.currentTimestamp) : undefined;
 
-        return res.data;
-      },
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, allPages) =>
-        allPages.length <= lastPage.total_results / jobLimit
-          ? allPages.length
-          : undefined,
-      refetchOnWindowFocus: false,
-    });
+  const [columns, setColumns] = useState(structuredClone(JobColumns));
+
+  const { data: sim } = useQuery(simulationConfigurationQueryOptions(simulationId));
+
+  const { data: jobs, totalResults, fetchNextPage, hasNextPage } = useJobReplay({
+    sim: sim,
+    timestamp: currentTimestamp,
+    stepInterval: search.playbackInterval,
+    summarize: !currentTimestamp,
+    sort: sortCombinator(columns),
+    filters: operatorCombinator(columns),
+  })
 
   const onSort = (
     header: string,
@@ -66,11 +52,10 @@ function SimulationJobs() {
     setColumns(updatedColumns);
   };
 
-  if (isLoading) {
+  if (!jobs) {
     return <LoadingSpinner />;
   }
 
-  const jobs = data?.pages.map((page) => page.results).flat() ?? [];
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <div className="flex items-center justify-end gap-4 px-4 py-4">
@@ -87,10 +72,9 @@ function SimulationJobs() {
       </div>
       <JobList
         jobs={jobs}
-        totalJobs={data?.pages[0].total_results ?? 0}
+        totalJobs={totalResults}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
         onSort={onSort}
       />
     </div>
