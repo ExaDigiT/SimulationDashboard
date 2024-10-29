@@ -247,7 +247,7 @@ export const useJobReplay = ({
           ...simulationSchedulerJobs(sim?.id ?? '', {
             start: nextQueryStart?.toISOString(), end: nextQueryEnd?.toISOString(),
             limit: 1000,
-            fields: fields,
+            fields: fields, filters: filters, sort: sort,
           }),
           staleTime: Infinity,
         })
