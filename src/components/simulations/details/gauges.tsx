@@ -40,7 +40,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={35000}
-            value={round(sumBy(cdus, c => c.total_power), 2)}
+            value={round(sumBy(cdus, c => c.total_power), 0)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -68,7 +68,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={round(sumBy(cdus, c => c.total_loss), 2)}
+            value={round(sumBy(cdus, c => c.total_loss), 0)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -91,7 +91,7 @@ export function SimulationGauges({
           <Gauge
             minValue={0}
             maxValue={2000}
-            value={round(statistics?.p_flops, 2)}
+            value={round(statistics?.p_flops, 0)}
             labels={{
               tickLabels: {
                 type: "outer",
@@ -117,20 +117,20 @@ export function SimulationGauges({
           />
         </GaugeWrapper>
         <GaugeWrapper>
-          <GraphHeader>Efficency</GraphHeader>
+          <GraphHeader>Efficiency</GraphHeader>
           <Gauge
             minValue={0}
             maxValue={data?.g_flops_w_peak ?? 2}
-            value={statistics?.g_flops_w ?? 0}
+            value={round(statistics?.g_flops_w, 0)}
             labels={{
               tickLabels: {
                 type: "outer",
                 ticks: [
-                  { value: round(data?.g_flops_w_peak, 2) },
+                  { value: round(data?.g_flops_w_peak, 0) },
                 ],
               },
               valueLabel: {
-                formatTextValue: (value) => value + " GFlops/watts",
+                formatTextValue: (value) => value + " GFlops/W",
               },
             }}
             arc={{
@@ -147,7 +147,7 @@ export function SimulationGauges({
             minValue={5}
             maxValue={50}
             value={cep ?
-              round((cep.htw_return_temp + cep.htw_supply_temp + cep.ctw_return_temp + cep.ctw_supply_temp) / 4, 2)
+              round((cep.htw_return_temp + cep.htw_supply_temp + cep.ctw_return_temp + cep.ctw_supply_temp) / 4, 1)
               : 0
             }
             labels={{
@@ -198,7 +198,7 @@ export function SimulationGauges({
             minValue={10}
             maxValue={90}
             value={cep ?
-              round((cep.htw_return_pressure + cep.htw_supply_pressure + cep.ctw_return_pressure + cep.ctw_supply_pressure) / 4, 2)
+              round((cep.htw_return_pressure + cep.htw_supply_pressure + cep.ctw_return_pressure + cep.ctw_supply_pressure) / 4, 1)
               : 0
             }
             labels={{
