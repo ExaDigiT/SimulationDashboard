@@ -43,6 +43,45 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
     staleTime: (query) => query.state.data?.execution_end ? Infinity : 1000,
   });
 
+/**
+ * Query jobs from the job endpoint.
+ * sort should be passed as a list like ["desc:state", "asc:sim_id"]
+ * filters is in the format ["state=eq:RUNNING"]
+ * This should be passed to useInfiniteQuery
+ * TODO: allow passing sort/filters in cleaner format than raw query params.
+ */
+export const simulationList = (
+  params?: {
+    limit?: number,
+    fields?: string[], sort?: string[],
+    filters?: string[],
+  }
+) => {
+  let searchParams: string[] = []
+  // axios adds `[]` to array params so we'll serialize it manually instead
+  searchParams.push(...(params?.sort?.map(s => `sort=${s}`) ?? []));
+  // Just specify filters as an array of ["job_id=eq:1"] for now
+  searchParams.push(...(params?.filters ?? []));
+  const limit = params?.limit ?? 100;
+
+  return infiniteQueryOptions({
+    queryKey: ["simulation", "list", params],
+    queryFn: async ({ pageParam }) => {
+      const res = await axios.get<ListResponse<Simulation>>(
+        `/frontier/simulation/list?${searchParams.join("&")}`, {
+        params: {
+          limit: limit, offset: pageParam,
+          fields: params?.fields?.join(","),
+        },
+      });
+      return res.data;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam, _allPageParams) =>
+      (lastPageParam + limit < lastPage.total_results) ? lastPageParam + limit : undefined,
+  })
+}
+
 export const simulationCoolingCDUQueryOptions = (
   simulationId: string,
   params?: TimeSeriesParams,
@@ -106,7 +145,6 @@ export const simulationSchedulerJobs = (
     limit?: number,
     fields?: string[], sort?: string[],
     filters?: string[],
-    currentTimestamp?: string,
   }
 ) => {
   let searchParams: string[] = []
@@ -119,9 +157,8 @@ export const simulationSchedulerJobs = (
   return infiniteQueryOptions({
     queryKey: ["simulation", "scheduler", "jobs", simulationId, params],
     queryFn: async ({ pageParam }) => {
-      const res = await axios.get<{
-        offset: number; limit: number, total_results: number, results: Job[];
-      }>(`/frontier/simulation/${simulationId}/scheduler/jobs?${searchParams.join("&")}`, {
+      const res = await axios.get<ListResponse<Job>>(
+        `/frontier/simulation/${simulationId}/scheduler/jobs?${searchParams.join("&")}`, {
         params: {
           start: params?.start, end: params?.end,
           limit: limit, offset: pageParam,

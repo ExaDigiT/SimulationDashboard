@@ -4,18 +4,15 @@ import { SimulationListControls } from "../components/simulations/list/Simulatio
 import { SimulationsDataGrid } from "../components/simulations/list/SimulationsDataGrid";
 import { columns as SimulationColumns } from "../components/simulations/list/SimulationsGridColumns";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { Simulation } from "../models/Simulation.model";
 import { operatorCombinator, sortCombinator } from "../util/filterCombinator";
-import { ListResponse } from "../util/queryOptions";
 import { SortDirection } from "../models/filters/sortDetails.model";
 import { cloneDeep } from "lodash";
+import { simulationList } from "../util/queryOptions";
 
 export const Route = createFileRoute("/simulations/")({
   component: SimulationList,
 });
 
-const pageLimit = 18;
 
 function SimulationList() {
   const [columns, setColumns] = useState(structuredClone(SimulationColumns));
@@ -28,30 +25,14 @@ function SimulationList() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["simulation", "list", columns],
-    queryFn: async ({ pageParam }) => {
-      const sortParams = sortCombinator(columns);
-      const filterParams = operatorCombinator(columns);
-      const fields = `&fields=all`;
-      const params =
-        fields +
-        (sortParams ? "&" : "") +
-        sortParams +
-        (filterParams ? "&" : "") +
-        filterParams;
-      const res = await axios.get<ListResponse<Simulation>>(
-        `/frontier/simulation/list?limit=${pageLimit}&offset=${pageParam * pageLimit}${params}`,
-      );
-
-      return res.data;
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) =>
-      allPages.length <= lastPage.total_results / pageLimit
-        ? allPages.length
-        : undefined,
-    refetchOnWindowFocus: false,
+    ...simulationList({
+      limit: 18,
+      fields: ["all"],
+      sort: sortCombinator(columns),
+      filters: operatorCombinator(columns),
+    })
   });
+  const simulations = data?.pages.map((page) => page.results).flat() ?? [];
 
   const onSort = (columnName: string, direction: SortDirection) => {
     const updatedColumns = cloneDeep(columns);
@@ -66,7 +47,6 @@ function SimulationList() {
     setColumns(updatedColumns);
   };
 
-  const simulations = data?.pages.map((page) => page.results).flat() ?? [];
   return (
     <div className="flex flex-1 flex-col">
       <SimulationListControls
