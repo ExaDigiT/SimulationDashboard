@@ -3,7 +3,7 @@ import { CoolingCEP } from "../../../models/CoolingCEP.model";
 import { ConsoleHeader } from "../../shared/simulation/consoleHeader";
 import { sumBy } from "lodash"
 
-export function Power({ cdus, cep }: { cdus: CoolingCDU[], cep: CoolingCEP }) {
+export function Power({ cdus = [], cep }: { cdus?: CoolingCDU[], cep?: CoolingCEP }) {
   const total_power = sumBy(cdus, c => c.total_power)
   const total_loss = sumBy(cdus, c => c.total_loss)
   return (
@@ -32,7 +32,7 @@ export function Power({ cdus, cep }: { cdus: CoolingCDU[], cep: CoolingCEP }) {
           {((total_loss / total_power) * 100).toFixed(2)}%
         </span>
         <span className="border-2 border-l-0 border-t-0 border-neutral-400 dark:border-neutral-900">
-          {cep.pue_output.toFixed(2)}
+          {(cep?.pue_output ?? 0).toFixed(2)}
         </span>
       </div>
     </div>

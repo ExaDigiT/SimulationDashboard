@@ -34,7 +34,7 @@ function SimulationConsoleView() {
     summarize: !currentTimestamp,
   })
   
-  const { data: cdus } = useReplay({
+  const { data: cdus, isLoading: cdusIsLoading } = useReplay({
     sim: sim,
     query: (params) => simulationCoolingCDUQueryOptions(simulationId, params),
     timestamp: currentTimestamp,
@@ -42,7 +42,7 @@ function SimulationConsoleView() {
     summarize: !currentTimestamp,
   })
   
-  const { data: cep } = useReplay({
+  const { data: cep, isLoading: cepIsLoading } = useReplay({
     sim: sim,
     query: (params) => simulationCoolingCEPQueryOptions(simulationId, params),
     timestamp: currentTimestamp,
@@ -50,7 +50,7 @@ function SimulationConsoleView() {
     summarize: !currentTimestamp,
   })
 
-  const { data: jobs } = useJobReplay({
+  const { data: jobs, isLoading: jobsIsLoading } = useJobReplay({
     sim: sim,
     timestamp: currentTimestamp,
     stepInterval: search.playbackInterval,
@@ -62,17 +62,17 @@ function SimulationConsoleView() {
       {(sim && sim.progress_date == sim.start) ? (
         <Message>No data available {sim.state == 'running' ? 'yet' : ''}</Message>
       ) : (<>
-        {cdus ? (
-          <PressureFlowRate metrics={cdus.cdus} />
+        {!cdusIsLoading ? (
+          <PressureFlowRate metrics={cdus?.cdus} />
         ): (<LoadingSpinner/>)}
-        {jobs ? (
+        {!jobsIsLoading ? (
           <JobQueue jobs={jobs} />
         ) : (<LoadingSpinner/>)}
-        {cdus ? (
-          <CDUList metrics={cdus.cdus} />
+        {!cdusIsLoading ? (
+          <CDUList metrics={cdus?.cdus} />
         ) : (<LoadingSpinner/>)}
-        {cdus && cep ? (
-          <Power cdus={cdus.cdus} cep={cep}/>
+        {!cdusIsLoading && !cepIsLoading ? (
+          <Power cdus={cdus?.cdus} cep={cep}/>
         ) : (<LoadingSpinner/>)}
         {schedulerStatistics ? (
           <Scheduler statistics={schedulerStatistics} />

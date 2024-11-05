@@ -35,6 +35,7 @@ export type UseReplayResult<T> = {
   maxTimestamp: Date|undefined,
   currentTimestamp: Date|undefined,
   nextTimestamp: Date|undefined,
+  isLoading: boolean,
 }
 
 
@@ -149,7 +150,10 @@ export const useReplay = <T extends TimeSeriesPoint>({
     }
   })
 
-  return { data, maxTimestamp, currentTimestamp, nextTimestamp }
+  return {
+    data, maxTimestamp, currentTimestamp, nextTimestamp,
+    isLoading: queryResult.isLoading,
+  };
 }
 
 
@@ -172,6 +176,7 @@ export type UseJobReplayResult = {
   maxTimestamp: Date|undefined,
   currentTimestamp: Date|undefined,
   nextTimestamp: Date|undefined,
+  isLoading: boolean,
 }
 
 
@@ -211,7 +216,7 @@ export const useJobReplay = ({
     enabled = false;
   }
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } = useInfiniteQuery({
     ...simulationSchedulerJobs(sim?.id ?? '', {
       start: queryStart?.toISOString(), end: queryEnd?.toISOString(),
       limit: 1000,
@@ -265,5 +270,6 @@ export const useJobReplay = ({
         await fetchNextPage();
       }
     },
+    isLoading,
   }
 }

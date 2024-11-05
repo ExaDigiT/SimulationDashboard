@@ -14,7 +14,7 @@ const columns = [
   "Rack Return Temperature (°C)",
 ];
 
-export function CDUList({ metrics }: { metrics: CoolingCDU[] }) {
+export function CDUList({ metrics = []}: { metrics?: CoolingCDU[] }) {
   return (
     <div className="col-start-1 col-end-8 row-start-4">
       <ConsoleHeader>Power and Temperature</ConsoleHeader>
@@ -43,31 +43,31 @@ export function CDUList({ metrics }: { metrics: CoolingCDU[] }) {
               {index + 1}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_1_power.toFixed(1)}
+              {cdu.rack_1_power?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_2_power.toFixed(1)}
+              {cdu.rack_2_power?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.rack_3_power.toFixed(1)}
+              {cdu.rack_3_power?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.total_power.toFixed(1)}
+              {cdu.total_power?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-green-600 dark:border-neutral-900 dark:text-green-500">
-              {cdu.total_loss.toFixed(1)}
+              {cdu.total_loss?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-blue-500 dark:border-neutral-900">
-              {cdu.facility_supply_temp.toFixed(1)}
+              {cdu.facility_supply_temp?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-red-500 dark:border-neutral-900">
-              {cdu.facility_return_temp.toFixed(1)}
+              {cdu.facility_return_temp?.toFixed(1)}
             </div>
             <div className="border-r-2 border-neutral-400 text-blue-500 dark:border-neutral-900">
-              {cdu.rack_supply_temp.toFixed(1)}
+              {cdu.rack_supply_temp?.toFixed(1)}
             </div>
             <div className=" text-red-500">
-              {cdu.rack_return_temp.toFixed(1)}
+              {cdu.rack_return_temp?.toFixed(1)}
             </div>
           </div>
         ))}

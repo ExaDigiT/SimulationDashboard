@@ -107,7 +107,7 @@ function SimulationCooling() {
             data={[
               {
                 x: data.data.map(d => d.timestamp),
-                y: data.data.map(d => sumBy(d.cdus, d => d.rack_return_temp) / d.cdus.length),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_return_temp ?? 0) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
@@ -120,7 +120,7 @@ function SimulationCooling() {
               },
               {
                 x: data.data.map(d => d.timestamp),
-                y: data.data.map(d => sumBy(d.cdus, d => d.rack_supply_temp) / d.cdus.length),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_supply_temp ?? 0) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:
@@ -147,7 +147,7 @@ function SimulationCooling() {
             data={[
               {
                 x: data.data.map(d => d.timestamp),
-                y: data.data.map(d => sumBy(d.cdus, d => d.rack_flowrate) / d.cdus.length),
+                y: data.data.map(d => sumBy(d.cdus, d => d.rack_flowrate ?? 0) / d.cdus.length),
                 type: "scatter",
                 mode: "lines+markers",
                 hovertemplate:

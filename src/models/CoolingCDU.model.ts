@@ -12,15 +12,15 @@ export interface CoolingCDU {
   rack_3_loss: number;
   total_loss: number;
 
-  work_done_by_cdup: number;
-  rack_return_temp: number;
-  rack_supply_temp: number;
-  rack_supply_pressure: number;
-  rack_return_pressure: number;
-  rack_flowrate: number;
-  facility_return_temp: number;
-  facility_supply_temp: number;
-  facility_supply_pressure: number;
-  facility_return_pressure: number;
-  facility_flowrate: number;
+  work_done_by_cdup?: number;
+  rack_return_temp?: number;
+  rack_supply_temp?: number;
+  rack_supply_pressure?: number;
+  rack_return_pressure?: number;
+  rack_flowrate?: number;
+  facility_return_temp?: number;
+  facility_supply_temp?: number;
+  facility_supply_pressure?: number;
+  facility_return_pressure?: number;
+  facility_flowrate?: number;
 }

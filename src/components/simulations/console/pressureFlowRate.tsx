@@ -1,55 +1,46 @@
 import { CoolingCDU } from "../../../models/CoolingCDU.model";
 import { ConsoleHeader } from "../../shared/simulation/consoleHeader";
+import { sumBy } from "lodash"
 
 const statistics = [
   {
     name: "Work Done by CDUPs (kW)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce((prev, curr) => prev + curr.work_done_by_cdup, 0) ?? 0) /
-      25,
+      sumBy(metrics, d => d.work_done_by_cdup ?? 0) / 25
   },
   {
     name: "Facility Supply Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce(
-        (prev, curr) => prev + curr.facility_supply_pressure,
-        0,
-      ) ?? 0) / 25,
+      sumBy(metrics, d => d.facility_supply_pressure ?? 0) / 25,
   },
   {
     name: "Facility Return Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce(
-        (prev, curr) => prev + curr.facility_return_pressure,
-        0,
-      ) ?? 0) / 25,
+      sumBy(metrics, d => d.facility_return_pressure ?? 0) / 25,
   },
   {
     name: "Facility Flowrate (gpm)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce((prev, curr) => prev + curr.facility_flowrate, 0) ?? 0) /
-      25,
+      sumBy(metrics, d => d.facility_flowrate ?? 0) / 25,
   },
   {
     name: "Rack Supply Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce((prev, curr) => prev + curr.rack_supply_pressure, 0) ??
-        0) / 25,
+      sumBy(metrics, d => d.rack_supply_pressure ?? 0) / 25,
   },
   {
     name: "Rack Return Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce((prev, curr) => prev + curr.rack_return_pressure, 0) ??
-        0) / 25,
+      sumBy(metrics, d => d.rack_return_pressure ?? 0) / 25,
   },
   {
     name: "Rack Flowrate (gpm)",
     value: (metrics: CoolingCDU[]) =>
-      (metrics?.reduce((prev, curr) => prev + curr.rack_flowrate, 0) ?? 0) / 25,
+      sumBy(metrics, d => d.rack_flowrate ?? 0) / 25,
   },
 ];
 
-export function PressureFlowRate({ metrics }: { metrics: CoolingCDU[] }) {
+export function PressureFlowRate({ metrics = [] }: { metrics?: CoolingCDU[] }) {
   return (
     <div className="col-start-1 col-end-8 row-start-2 row-end-4">
       <ConsoleHeader>Pressure and Flow Rates</ConsoleHeader>
