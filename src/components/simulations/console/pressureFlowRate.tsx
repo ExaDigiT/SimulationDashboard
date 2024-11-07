@@ -6,37 +6,37 @@ const statistics = [
   {
     name: "Work Done by CDUPs (kW)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.work_done_by_cdup ?? 0) / 25
+      sumBy(metrics, d => d.work_done_by_cdup ?? 0) / metrics.length
   },
   {
     name: "Facility Supply Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.facility_supply_pressure ?? 0) / 25,
+      sumBy(metrics, d => d.facility_supply_pressure ?? 0) / metrics.length,
   },
   {
     name: "Facility Return Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.facility_return_pressure ?? 0) / 25,
+      sumBy(metrics, d => d.facility_return_pressure ?? 0) / metrics.length,
   },
   {
     name: "Facility Flowrate (gpm)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.facility_flowrate ?? 0) / 25,
+      sumBy(metrics, d => d.facility_flowrate ?? 0) / metrics.length,
   },
   {
     name: "Rack Supply Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.rack_supply_pressure ?? 0) / 25,
+      sumBy(metrics, d => d.rack_supply_pressure ?? 0) / metrics.length,
   },
   {
     name: "Rack Return Pressure (psig)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.rack_return_pressure ?? 0) / 25,
+      sumBy(metrics, d => d.rack_return_pressure ?? 0) / metrics.length,
   },
   {
     name: "Rack Flowrate (gpm)",
     value: (metrics: CoolingCDU[]) =>
-      sumBy(metrics, d => d.rack_flowrate ?? 0) / 25,
+      sumBy(metrics, d => d.rack_flowrate ?? 0) / metrics.length,
   },
 ];
 
