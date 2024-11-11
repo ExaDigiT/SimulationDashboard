@@ -33,8 +33,7 @@ export interface Job {
     | "FAILED"
     | "TIMEOUT";
 
-  node_ranges: string;
-  xnames: string[];
+  nodes: string[];
 }
 
 export interface JobPower {

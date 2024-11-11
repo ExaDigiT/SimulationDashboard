@@ -118,11 +118,7 @@ function JobModal() {
             <Box.Value>{data.node_count}</Box.Value>
           </Box>
           <Box>
-            <Box.Header>Node Range</Box.Header>
-            <Box.Value>{data.node_ranges}</Box.Value>
-          </Box>
-          <Box>
-            <Box.Header>X-Names</Box.Header>
+            <Box.Header>Nodes</Box.Header>
             <input
               placeholder="Search..."
               onChange={(e) => {
@@ -133,10 +129,10 @@ function JobModal() {
               className="rounded-md border-2 bg-transparent px-3 py-1 text-black focus:outline-none dark:text-neutral-200"
             />
             <div className="mt-2 flex max-h-64 w-full flex-col overflow-auto px-8">
-              {data.xnames
-                .filter((xname) => (search ? xname.includes(search) : true))
-                .map((xname) => (
-                  <span key={xname}>{xname}</span>
+              {data.nodes
+                .filter((node) => (search ? node.includes(search) : true))
+                .map((node) => (
+                  <span key={node}>{node}</span>
                 ))}
             </div>
           </Box>
