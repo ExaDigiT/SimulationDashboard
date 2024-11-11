@@ -3,6 +3,7 @@ import { SimulationRequest } from "./SimulationRequest.model";
 export interface Simulation {
   id: string;
   user: string;
+  system: string;
   state: "running" | "success" | "fail";
   error_messages: string|null;
   start: string;

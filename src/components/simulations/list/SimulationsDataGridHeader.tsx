@@ -52,7 +52,7 @@ export function SimulationsDataGridHeader({
 }) {
   return (
     <div
-      className="grid grid-cols-8 border-b-2 border-neutral-400 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
+      className="grid grid-cols-9 border-b-2 border-neutral-400 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
       style={{ ...style }}
     >
       {columns.map((column, index) => (

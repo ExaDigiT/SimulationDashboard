@@ -52,7 +52,15 @@ function SimulationConfiguration() {
           </div>
         </Box>
       </Section>
-      <Section header="Timing">
+      <Section header="General">
+        <Box>
+          <Box.Header>System</Box.Header>
+          <Box.Value>{data.system}</Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>User</Box.Header>
+          <Box.Value>{data.user}</Box.Value>
+        </Box>
         <Box>
           <Box.Header>Logical Start</Box.Header>
           <Box.Value>{formatDate(data.start)}</Box.Value>
