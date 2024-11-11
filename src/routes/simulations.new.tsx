@@ -22,7 +22,7 @@ function NewSimultation() {
   const onSubmit = useMutation({
     mutationFn: async ({ form }: { form: SimulationRequest }) => {
       const sim = await axios.post<Simulation>(
-        "/frontier/simulation/run",
+        "/simulation/run",
         form,
       );
       navigate({

@@ -35,7 +35,7 @@ export const simulationConfigurationQueryOptions = (simulationId: string) =>
   queryOptions({
     queryKey: ["simulation", "configuration", simulationId],
     queryFn: async (): Promise<Simulation> => {
-      const res = await axios.get(`/frontier/simulation/${simulationId}`);
+      const res = await axios.get(`/simulation/${simulationId}`);
       return res.data;
     },
     refetchOnWindowFocus: false,
@@ -68,7 +68,7 @@ export const simulationList = (
     queryKey: ["simulation", "list", params],
     queryFn: async ({ pageParam }) => {
       const res = await axios.get<ListResponse<Simulation>>(
-        `/frontier/simulation/list?${searchParams.join("&")}`, {
+        `/simulation/list?${searchParams.join("&")}`, {
         params: {
           limit: limit, offset: pageParam,
           fields: params?.fields?.join(","),
@@ -91,7 +91,7 @@ export const simulationCoolingCDUQueryOptions = (
     queryFn: async () => {
       const res = await axios.get<
         TimeSeriesResponse<CoolingCDU>
-      >(`/frontier/simulation/${simulationId}/cooling/cdu`, { params: params });
+      >(`/simulation/${simulationId}/cooling/cdu`, { params: params });
       return res.data;
     },
     select: (data) => {
@@ -113,7 +113,7 @@ export const simulationCoolingCEPQueryOptions = (
     queryFn: async () => {
       const res = await axios.get<
         TimeSeriesResponse<CoolingCEP>
-      >(`/frontier/simulation/${simulationId}/cooling/cep`, { params: params });
+      >(`/simulation/${simulationId}/cooling/cep`, { params: params });
       return res.data;
     },
   });
@@ -126,7 +126,7 @@ export const simulationSystemStatsQueryOptions = (
     queryFn: async () => {
       const res = await axios.get<
         TimeSeriesResponse<SimulationStatistic>
-      >(`/frontier/simulation/${simulationId}/scheduler/system`, { params: params });
+      >(`/simulation/${simulationId}/scheduler/system`, { params: params });
       return res.data;
     },
   });
@@ -158,7 +158,7 @@ export const simulationSchedulerJobs = (
     queryKey: ["simulation", "scheduler", "jobs", simulationId, params],
     queryFn: async ({ pageParam }) => {
       const res = await axios.get<ListResponse<Job>>(
-        `/frontier/simulation/${simulationId}/scheduler/jobs?${searchParams.join("&")}`, {
+        `/simulation/${simulationId}/scheduler/jobs?${searchParams.join("&")}`, {
         params: {
           start: params?.start, end: params?.end,
           limit: limit, offset: pageParam,
@@ -173,15 +173,15 @@ export const simulationSchedulerJobs = (
   })
 }
 
-export const getFrontierSystemInformation = () =>
+export const getSystemInformation = (system: string) =>
   queryOptions({
-    queryKey: ["frontier", "system-info"],
+    queryKey: ["system-info", system],
     queryFn: async () => {
       const res = await axios.get<{
         peak_flops: number;
         peak_power: number;
         g_flops_w_peak: number;
-      }>(`frontier/system-info`);
+      }>(`/system-info/${system}`);
       return res.data;
     },
     staleTime: Infinity,

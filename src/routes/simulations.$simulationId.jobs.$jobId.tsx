@@ -36,7 +36,7 @@ function JobModal() {
     queryKey: ["simulation", "jobs", simulationId, "job", jobId],
     queryFn: async () => {
       const res = await axios.get<ListResponse<Job>>(
-        `/frontier/simulation/${simulationId}/scheduler/jobs?job_id=eq:${jobId}`,
+        `/simulation/${simulationId}/scheduler/jobs?job_id=eq:${jobId}`,
       );
 
       return res.data;
@@ -57,7 +57,7 @@ function JobModal() {
         end: string;
         data: JobPower[];
       }>(
-        `/frontier/simulation/${simulationId}/scheduler/jobs/${jobId}/power-history`,
+        `/simulation/${simulationId}/scheduler/jobs/${jobId}/power-history`,
       );
       return res;
     },

@@ -4,7 +4,7 @@ import { CoolingCEP } from "../../../models/CoolingCEP.model"
 import { Gauge } from "../../shared/plots/gauge";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
 import { useQuery } from "@tanstack/react-query";
-import { getFrontierSystemInformation } from "../../../util/queryOptions";
+import { getSystemInformation } from "../../../util/queryOptions";
 import { LoadingSpinner } from "../../shared/loadingSpinner";
 import { sumBy } from "lodash";
 
@@ -27,7 +27,7 @@ export function SimulationGauges({
   cep?: CoolingCEP;
   statistics?: SimulationStatistic;
 }) {
-  const { data } = useQuery(getFrontierSystemInformation());
+  const { data } = useQuery(getSystemInformation("frontier"));
   if (!data) {
     return <LoadingSpinner/>
   }
