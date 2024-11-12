@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useQuery, UseQueryOptions, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
-import { sortBy } from "lodash";
+import { sortBy, maxBy } from "lodash";
 import {
-  toDate,  isEqual as isDateEqual, min as minDate, addSeconds, subSeconds, differenceInSeconds,
+  toDate,  min as minDate, addSeconds, subSeconds,
+  differenceInSeconds,
 } from "date-fns";
 
 import { Simulation } from "../../models/Simulation.model";
@@ -130,7 +131,10 @@ export const useReplay = <T extends TimeSeriesPoint>({
   if (summarize) {
     data = queryResult.data?.data?.[0];
   } else if (currentTimestamp) {
-    data = queryResult.data?.data?.find(d => isDateEqual(d.timestamp, currentTimestamp));
+    data = maxBy( // Get max timestamp before currentTimestamp
+      queryResult.data?.data?.filter(d => toDate(d.timestamp) <= currentTimestamp),
+      d => d.timestamp
+    );
   }
 
   // Prefetch the next query
