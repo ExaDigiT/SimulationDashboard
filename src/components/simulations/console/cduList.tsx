@@ -37,7 +37,7 @@ export function CDUList({ metrics = []}: { metrics?: CoolingCDU[] }) {
         {metrics.map((cdu, index) => (
           <div
             className="grid grid-cols-10 text-center"
-            key={`${cdu.col}-${cdu.row}`}
+            key={cdu.name}
           >
             <div className="border-r-2 border-neutral-400 text-cyan-500 dark:border-neutral-900">
               {index + 1}

@@ -1,6 +1,6 @@
 export interface CoolingCDU {
   timestamp: string;
-  xname: string;
+  name: string;
   row: number;
   col: number;
   rack_1_power: number;
