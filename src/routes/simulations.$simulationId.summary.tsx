@@ -50,8 +50,9 @@ function SimulationSummary() {
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-8 py-8">
       <Section header="Metrics" sectionProps={{ className: "grid-cols-3" }}>
-        {(cdus && schedulerStatistics) ? (
+        {(sim && cdus && schedulerStatistics) ? (
           <SimulationGauges
+            sim={sim}
             cdus={cdus.cdus}
             statistics={schedulerStatistics}
             cep={cep}

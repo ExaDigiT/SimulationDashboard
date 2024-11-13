@@ -3,6 +3,7 @@ import { CoolingCDU } from "../../../models/CoolingCDU.model";
 import { CoolingCEP } from "../../../models/CoolingCEP.model"
 import { Gauge } from "../../shared/plots/gauge";
 import { SimulationStatistic } from "../../../models/SimulationStatistic.model";
+import { Simulation } from "../../../models/Simulation.model";
 import { useQuery } from "@tanstack/react-query";
 import { getSystemInformation } from "../../../util/queryOptions";
 import { LoadingSpinner } from "../../shared/loadingSpinner";
@@ -10,6 +11,10 @@ import { sumBy } from "lodash";
 
 function round(x: number|null|undefined, fractionDigits: number) {
   return Number(x?.toFixed(fractionDigits) ?? 0)
+}
+
+function snap(n: number|undefined|null, size: number) {
+  return n != undefined ? Math.ceil(n / size) * size : size;
 }
 
 function GaugeWrapper(props: { children: React.ReactNode }) {
@@ -21,16 +26,23 @@ function GaugeWrapper(props: { children: React.ReactNode }) {
 }
 
 export function SimulationGauges({
-  cdus = [], cep, statistics,
+  sim, cdus = [], cep, statistics,
 }: {
+  sim: Simulation
   cdus?: CoolingCDU[];
   cep?: CoolingCEP;
   statistics?: SimulationStatistic;
 }) {
-  const { data } = useQuery(getSystemInformation("frontier"));
-  if (!data) {
+  const { data: systemInfo } = useQuery(getSystemInformation(sim.system));
+  if (!systemInfo) {
     return <LoadingSpinner/>
   }
+
+  const powerMax = snap(systemInfo.peak_power / 1000, 5000)
+  const lossMax = powerMax / 10
+  const gFlopsWMax = snap(systemInfo.g_flops_w_peak, 2)
+  const flopsMax = snap(systemInfo.peak_flops / Math.pow(1000,  5), 100)
+  
 
   return (
     <>
@@ -39,27 +51,27 @@ export function SimulationGauges({
           <GraphHeader>Total Power</GraphHeader>
           <Gauge
             minValue={0}
-            maxValue={35000}
+            maxValue={powerMax}
             value={round(sumBy(cdus, c => c.total_power), 0)}
             labels={{
-              tickLabels: {
-                type: "outer",
-                ticks: [
-                  { value: 5000 },
-                  { value: 10000 },
-                  { value: 15000 },
-                  { value: 20000 },
-                  { value: 25000 },
-                  { value: 30000 },
-                ],
-              },
+              // tickLabels: {
+              //   type: "outer",
+              //   ticks: [
+              //     { value: 5000 },
+              //     { value: 10000 },
+              //     { value: 15000 },
+              //     { value: 20000 },
+              //     { value: 25000 },
+              //     { value: 30000 },
+              //   ],
+              // },
               valueLabel: {
                 formatTextValue: (value) => value + " kW",
               },
             }}
             arc={{
               colorArray: ["#5BE12C"],
-              subArcs: [{ color: "#5BE12C", limit: 35000 }],
+              subArcs: [{ color: "#5BE12C", limit: powerMax }],
             }}
           />
         </GaugeWrapper>
@@ -67,20 +79,20 @@ export function SimulationGauges({
           <GraphHeader>Total Loss</GraphHeader>
           <Gauge
             minValue={0}
-            maxValue={2000}
+            maxValue={lossMax}
             value={round(sumBy(cdus, c => c.total_loss), 0)}
             labels={{
-              tickLabels: {
-                type: "outer",
-                ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
-              },
+              // tickLabels: {
+              //   type: "outer",
+              //   ticks: [{ value: 500 }, { value: 1000 }, { value: 1500 }],
+              // },
               valueLabel: {
                 formatTextValue: (value) => value + " kW",
               },
             }}
             arc={{
               colorArray: ["#5BE12C"],
-              subArcs: [{ color: "#5BE12C", limit: 2000 }],
+              subArcs: [{ color: "#5BE12C", limit: lossMax }],
             }}
           />
         </GaugeWrapper>
@@ -90,14 +102,14 @@ export function SimulationGauges({
           <GraphHeader>Performance</GraphHeader>
           <Gauge
             minValue={0}
-            maxValue={2000}
+            maxValue={flopsMax}
             value={round(statistics?.p_flops, 0)}
             labels={{
               tickLabels: {
                 type: "outer",
                 ticks: [
                   {
-                    value: 2000,
+                    value: flopsMax,
                   },
                 ],
               },
@@ -110,7 +122,7 @@ export function SimulationGauges({
               subArcs: [
                 {
                   color: "#5BE12C",
-                  limit: 2000,
+                  limit: flopsMax,
                 },
               ],
             }}
@@ -120,13 +132,13 @@ export function SimulationGauges({
           <GraphHeader>Efficiency</GraphHeader>
           <Gauge
             minValue={0}
-            maxValue={data?.g_flops_w_peak ?? 2}
+            maxValue={gFlopsWMax}
             value={round(statistics?.g_flops_w, 0)}
             labels={{
               tickLabels: {
                 type: "outer",
                 ticks: [
-                  { value: round(data?.g_flops_w_peak, 0) },
+                  { value: gFlopsWMax },
                 ],
               },
               valueLabel: {
@@ -135,7 +147,7 @@ export function SimulationGauges({
             }}
             arc={{
               colorArray: ["#5BE12C"],
-              subArcs: [{ color: "#5BE12C", limit: data?.g_flops_w_peak ?? 2 }],
+              subArcs: [{ color: "#5BE12C", limit: gFlopsWMax }],
             }}
           />
         </GaugeWrapper>
