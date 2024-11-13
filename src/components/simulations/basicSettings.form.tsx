@@ -1,6 +1,7 @@
 import { addMinutes } from "date-fns";
 import { SimulationRequest } from "../../models/SimulationRequest.model";
 import { SharedDatePicker } from "../shared/datepicker";
+import { Select } from "../shared/dropdown";
 
 export function BasicSettingsForm({
   form,
@@ -29,6 +30,22 @@ export function BasicSettingsForm({
         }}
         value={form.end}
         boundedDate={new Date(form.start)}
+      />
+      <Select
+        label="System"
+        choices={[
+          { label: "Frontier", value: "frontier" },
+          { label: "Fugaku", value: "fugaku" },
+          { label: "Marconi 100", value: "marconi100" },
+          { label: "Lassen", value: "lassen" },
+        ]}
+        value={form.system}
+        onChange={(e) => {
+          setForm({
+            ...form,
+            system: e.target.value,
+          });
+        }}
       />
     </>
   );
