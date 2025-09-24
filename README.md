@@ -14,8 +14,16 @@ User Interface for the ExaDigiT project that allows for running simulations and 
 
 [Tanstack](https://tanstack.com/)
 
-## Getting Started
+## Running Locally
 
-To get the project up and running locally, you will want to start by cloning the project and running `npm install` in the projects directory. Then run `npm run dev`.
+To get the project up and running locally, first clone and deploy the SimulationServer from [GitHub](https://github.com/ExaDigiT/SimulationServer)
+or [GitLab](https://code.ornl.gov/exadigit/simulationserver) and follow the instructions to launch a local instance of the server.
 
-After doing so you can navigate to `localhost:8080` to login to the application.
+Then in the SimulationDashboard run:
+```bash
+npm install
+npm run dev
+```
+
+After doing so you can navigate to `localhost:9080` to use the application.
+
