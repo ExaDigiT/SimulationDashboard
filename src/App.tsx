@@ -13,36 +13,7 @@ import "react-tooltip/dist/react-tooltip.css";
 const basepath = import.meta.env.VITE_BASE_PATH
   ? new URL(import.meta.env.VITE_BASE_PATH).pathname
   : "/";
-
-const initOptions: KeycloakConfig = {
-  url: import.meta.env.VITE_AUTH_URL,
-  realm: "obsidian",
-  clientId: "obsidian-public",
-};
-
-const kc = new Keycloak(initOptions);
-
 axios.defaults.baseURL = import.meta.env.VITE_API_PATH;
-
-kc.init({
-  onLoad: "login-required",
-  redirectUri: window.location.toString(),
-}).then(
-  (auth) => {
-    if (auth) {
-      if (kc.token) {
-        localStorage.setItem("exadigitAuthToken", kc.token);
-        axios.defaults.headers.common = {
-          Authorization: `Bearer ${kc.token}`,
-        };
-        axios.defaults.withCredentials = true;
-      }
-    }
-  },
-  () => {
-    console.error("Authenticated Failed");
-  },
-);
 
 export { axios };
 
@@ -64,15 +35,13 @@ declare module "@tanstack/react-router" {
 }
 
 export const AppContext = createContext<{
-  AuthToken?: string;
   theme: string | null;
   setTheme: (value: "dark" | "light") => void;
-}>({ AuthToken: kc.token, theme: null, setTheme: () => {} });
+}>({ theme: null, setTheme: () => {} });
 
 function App() {
-  const authToken = localStorage.getItem("exadigitAuthToken") || undefined;
-  const theme = localStorage.getItem("theme");
-  const [_theme, setTheme] = useState(theme);
+  const [apiToken, setApiToken] = useState<string>();
+  const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
   const onThemeSwitch = (theme: "dark" | "light") => {
     if (theme === "dark") {
@@ -97,14 +66,48 @@ function App() {
     }
   }, []);
 
-  if (!authToken || axios.defaults.baseURL?.includes("localhost")) {
+  useEffect(() => {
+    if (!apiToken && import.meta.env.VITE_AUTH_URL) {
+      const initOptions: KeycloakConfig = {
+        url: import.meta.env.VITE_AUTH_URL,
+        realm: "obsidian",
+        clientId: "obsidian-public",
+      };
+
+      const kc = new Keycloak(initOptions);
+
+      kc.init({
+        onLoad: "login-required",
+        redirectUri: window.location.toString(),
+      }).then(
+        (auth) => {
+          if (auth) {
+            if (kc.token) {
+              axios.defaults.headers.common = {
+                Authorization: `Bearer ${kc.token}`,
+              };
+              axios.defaults.withCredentials = true;
+              setApiToken(kc.token)
+            }
+          }
+        },
+        () => {
+          console.error("Authenticated Failed");
+        },
+      );
+
+      setApiToken(apiToken)
+    } else {
+      setApiToken("no-auth")
+    }
+  }, [apiToken])
+
+  if (!apiToken) {
     return <h1>Please Authenticate</h1>;
   }
 
   return (
-    <AppContext.Provider
-      value={{ AuthToken: authToken, theme: _theme, setTheme: onThemeSwitch }}
-    >
+    <AppContext.Provider value={{ theme: theme, setTheme: onThemeSwitch }}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} basepath={basepath} />
       </QueryClientProvider>
