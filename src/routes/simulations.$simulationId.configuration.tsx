@@ -82,46 +82,45 @@ function SimulationConfiguration() {
           </Box.Value>
         </Box>
       </Section>
-      <Section header="Scheduler Configuration">
+      <Section header="RAPS Configuration">
         <Box>
-          <Box.Header>Enabled</Box.Header>
+          <Box.Header>Workload Mode</Box.Header>
           <Box.Value>
-            {`${data.config.scheduler.enabled}`.toUpperCase()}
+            {data.config.workload}
           </Box.Value>
         </Box>
-        <Box>
-          <Box.Header>Job Mode</Box.Header>
-          <Box.Value>
-            {data.config.scheduler.jobs_mode.charAt(0).toUpperCase() +
-              data.config.scheduler.jobs_mode.slice(1)}
-          </Box.Value>
-        </Box>
-        {data.config.scheduler.jobs_mode === "random" ? (
+        {data.config.workload ? (
           <>
             <Box>
               <Box.Header>Number of Jobs</Box.Header>
               <Box.Value>
-                {data.config.scheduler.num_jobs?.toString() || "-"}
+                {data.config.numjobs?.toString() || "-"}
               </Box.Value>
             </Box>
             <Box>
               <Box.Header>Seed for Randomizer</Box.Header>
               <Box.Value>
-                {data.config.scheduler.seed?.toString() || "-"}
+                {data.config.seed?.toString() || "-"}
               </Box.Value>
             </Box>
           </>
         ) : null}
         <Box>
-            <Box.Header>Schedule Policy</Box.Header>
+            <Box.Header>Scheduler</Box.Header>
             <Box.Value>
-              {data.config.scheduler.schedule_policy}
+              {data.config.scheduler}
             </Box.Value>
         </Box>
         <Box>
-            <Box.Header>Reschedule</Box.Header>
+            <Box.Header>Schedule Policy</Box.Header>
             <Box.Value>
-              {`${data.config.scheduler.reschedule}`.toUpperCase()}
+              {data.config.policy}
+            </Box.Value>
+        </Box>
+        <Box>
+            <Box.Header>Reschedule Arrival</Box.Header>
+            <Box.Value>
+              {data.config.arrival}
             </Box.Value>
         </Box>
       </Section>
@@ -129,7 +128,13 @@ function SimulationConfiguration() {
         <Box>
           <Box.Header>Enabled</Box.Header>
           <Box.Value>
-            {`${data.config.cooling.enabled}`.toUpperCase()}
+            {data.config.cooling.toString()}
+          </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Weather</Box.Header>
+          <Box.Value>
+            {data.config.weather.toString()}
           </Box.Value>
         </Box>
       </Section>

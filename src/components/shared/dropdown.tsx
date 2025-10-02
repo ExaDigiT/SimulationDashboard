@@ -7,7 +7,7 @@ export interface SelectProps extends HTMLProps<HTMLSelectElement> {
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export function Select(props: SelectProps) {
+export function Select({onChange, value, choices, ...props}: SelectProps) {
   return (
     <div className={`flex flex-col ${props.label ? "h-20" : "h-11"}`}>
       {props.label && (
@@ -15,8 +15,8 @@ export function Select(props: SelectProps) {
       )}
       <select
         {...props}
-        onChange={props.onChange}
-        value={props.value}
+        onChange={onChange}
+        value={value}
         className={
           props.className +
           " flex-1 cursor-pointer border-b-2 border-neutral-400 bg-transparent px-2 py-2 transition-colors duration-300 ease-in-out hover:border-blue-500 focus:border-blue-500 focus:outline-none dark:text-neutral-200"
@@ -25,7 +25,7 @@ export function Select(props: SelectProps) {
         <option disabled value="">
           {props.placeholder}
         </option>
-        {props.choices.map((choice) => (
+        {choices.map((choice) => (
           <option
             key={choice.value}
             value={choice.value}
