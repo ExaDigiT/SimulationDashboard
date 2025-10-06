@@ -16,14 +16,20 @@ User Interface for the ExaDigiT project that allows for running simulations and 
 
 ## Running Locally
 
-To get the project up and running locally, first clone and deploy the SimulationServer from [GitHub](https://github.com/ExaDigiT/SimulationServer)
-or [GitLab](https://code.ornl.gov/exadigit/simulationserver) and follow the instructions to launch a local instance of the server.
+To get the project up and running locally, clone and deploy the SimulationServer from [GitHub](https://github.com/ExaDigiT/SimulationServer)
+or [GitLab](https://code.ornl.gov/exadigit/simulationserver) and follow the instructions to launch a local instance of the full server and
+dashboard stack. The dashboard will be hosted on http://localhost:8080 by default.
 
-Then in the SimulationDashboard run:
+You can also run the ExaDigiT dashboard directly, e.g. for faster development builds or to run it against an existing ExaDigiT Simulation Server deployment.
+Run the simulation server locally without the dashboard by running this in `simulation-server`:
+```bash
+docker compose up simulation-server --wait
+```
+
+Then in `simulation-dashboard` run:
 ```bash
 npm install
 npm run dev
 ```
 
-After doing so you can navigate to `localhost:9080` to use the application.
-
+After doing so you can navigate to http://localhost:8080 to use the application.
