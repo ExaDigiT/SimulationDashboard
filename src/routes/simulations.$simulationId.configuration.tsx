@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { formatDate } from "../util/datetime";
+import * as iso8601 from "iso8601-duration";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
@@ -122,6 +123,10 @@ function SimulationConfiguration() {
             <Box.Value>
               {data.config.arrival}
             </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Time Delta</Box.Header>
+          <Box.Value>{iso8601.toSeconds(iso8601.parse(data.config.time_delta))}</Box.Value>
         </Box>
       </Section>
       <Section header="Cooling Configuration">

@@ -43,7 +43,7 @@ export interface SimulationConfig {
   end: string;
   // time?: string; // just use start/end instead
   // fastforward?: string;
-  // time_delta?: string;
+  time_delta: string;
   // time_unit?: string;
   numjobs?: number;
   // uncertainties?: boolean;
@@ -105,6 +105,7 @@ export function getDefaultSimulationConfig(): SimulationConfig {
     system: "frontier",
     start: startDate.toISOString(),
     end: endDate.toISOString(),
+    time_delta: "PT1S",
     cooling: false,
     weather: false,
     workload: "random",

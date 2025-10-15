@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import * as iso8601 from "iso8601-duration";
 import {
   SimulationConfig, WorkloadType, workloadTypes, schedulers, SchedulerType,
 } from "../../models/SimulationConfig.model";
@@ -91,6 +92,20 @@ export function RAPSForm(props: {
             arrival: e.target.value as "prescribed" | "poisson",
           });
         }}
+      />
+      <NumberInput
+        inputProps={{
+          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+            let value = parseInt(e.target.value)
+            value = isNaN(value) ? 1 : value,
+            props.setForm({
+              ...props.form,
+              time_delta: `PT${value}S`,
+            });
+          },
+          value: iso8601.toSeconds(iso8601.parse(props.form.time_delta)),
+        }}
+        label="Time Delta"
       />
     </>
   );
