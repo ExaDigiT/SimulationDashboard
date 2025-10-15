@@ -1,7 +1,7 @@
 import { addHours } from "date-fns";
 
 export const workloadTypes = [
-  "random", "benchmark", "peak", "idle", "synthetic", "multitenant", "replay",
+  "random", "benchmark", "peak", "idle", "synthetic", "multitenant", "replay", "randomAI",
 ] as const
 export type WorkloadType = typeof workloadTypes[number]
 
