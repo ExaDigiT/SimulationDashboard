@@ -19,4 +19,5 @@ RUN npm run build-prod
 
 FROM nginx:1.29.1
 EXPOSE 80
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /app/dist /app
