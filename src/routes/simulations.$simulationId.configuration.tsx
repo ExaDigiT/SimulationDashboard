@@ -52,6 +52,12 @@ function SimulationConfiguration() {
             </span>
           </div>
         </Box>
+        {data.state == "fail" ? (
+          <Box>
+            <Box.Header>Errors</Box.Header>
+            <Box.Value>{data.error_messages}</Box.Value>
+          </Box>
+        ) : null}
       </Section>
       <Section header="General">
         <Box>
