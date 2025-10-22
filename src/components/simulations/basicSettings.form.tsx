@@ -23,8 +23,11 @@ export function BasicSettingsForm({
       <SharedDatePicker
         label="Start Date"
         onChange={(newDate) => {
-          if (newDate && new Date(newDate) >= new Date(form.end)) {
-            const endDate = addMinutes(newDate, 60).toISOString();
+          if (newDate) {
+            let endDate = form.end;
+            if (new Date(newDate) >= new Date(form.end)) {
+              endDate = addMinutes(newDate, 60).toISOString();
+            }
             setForm({ ...form, start: newDate, end: endDate });
           }
         }}
