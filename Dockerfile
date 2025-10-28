@@ -19,7 +19,7 @@ RUN npm run build-prod
 
 FROM nginx:1.29.1
 EXPOSE 8080
-COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist /app
 # Resolve permissions issues on unprivileged setups
 RUN touch /run/nginx.pid
