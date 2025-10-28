@@ -21,3 +21,6 @@ FROM nginx:1.29.1
 EXPOSE 80
 COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /app
+# Resolve permissions issues on unprivileged setups
+RUN touch /run/nginx.pid
+RUN chmod -R g+rw /var/cache/nginx/ /run/nginx.pid
