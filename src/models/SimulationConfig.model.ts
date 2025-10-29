@@ -54,6 +54,7 @@ export interface SimulationConfig {
   // scale?: number;
   // live?: boolean;
   workload: WorkloadType;
+  replay: boolean;
   // multimodal?: number[];
   // jobsize_distribution?: ("uniform" | "weibull" | "normal")[] | null;
   // jobsize_normal_mean?: number | null;
@@ -109,6 +110,7 @@ export function getDefaultSimulationConfig(): SimulationConfig {
     cooling: false,
     weather: false,
     workload: "random",
+    replay: false,
     numjobs: undefined,
     seed: undefined,
     scheduler: "default",
