@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { formatDate } from "../util/datetime";
+import * as iso8601 from "iso8601-duration";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { simulationConfigurationQueryOptions } from "../util/queryOptions";
 import { LoadingSpinner } from "../components/shared/loadingSpinner";
@@ -51,6 +52,12 @@ function SimulationConfiguration() {
             </span>
           </div>
         </Box>
+        {data.state == "fail" ? (
+          <Box>
+            <Box.Header>Errors</Box.Header>
+            <Box.Value>{data.error_messages}</Box.Value>
+          </Box>
+        ) : null}
       </Section>
       <Section header="General">
         <Box>
@@ -82,54 +89,63 @@ function SimulationConfiguration() {
           </Box.Value>
         </Box>
       </Section>
-      <Section header="Scheduler Configuration">
+      <Section header="RAPS Configuration">
         <Box>
-          <Box.Header>Enabled</Box.Header>
+          <Box.Header>Workload Mode</Box.Header>
           <Box.Value>
-            {`${data.config.scheduler.enabled}`.toUpperCase()}
+            {data.config.workload}
           </Box.Value>
         </Box>
-        <Box>
-          <Box.Header>Job Mode</Box.Header>
-          <Box.Value>
-            {data.config.scheduler.jobs_mode.charAt(0).toUpperCase() +
-              data.config.scheduler.jobs_mode.slice(1)}
-          </Box.Value>
-        </Box>
-        {data.config.scheduler.jobs_mode === "random" ? (
+        {data.config.workload ? (
           <>
             <Box>
               <Box.Header>Number of Jobs</Box.Header>
               <Box.Value>
-                {data.config.scheduler.num_jobs?.toString() || "-"}
+                {data.config.numjobs?.toString() || "-"}
               </Box.Value>
             </Box>
             <Box>
               <Box.Header>Seed for Randomizer</Box.Header>
               <Box.Value>
-                {data.config.scheduler.seed?.toString() || "-"}
+                {data.config.seed?.toString() || "-"}
               </Box.Value>
             </Box>
           </>
         ) : null}
         <Box>
-            <Box.Header>Schedule Policy</Box.Header>
+            <Box.Header>Scheduler</Box.Header>
             <Box.Value>
-              {data.config.scheduler.schedule_policy}
+              {data.config.scheduler}
             </Box.Value>
         </Box>
         <Box>
-            <Box.Header>Reschedule</Box.Header>
+            <Box.Header>Schedule Policy</Box.Header>
             <Box.Value>
-              {`${data.config.scheduler.reschedule}`.toUpperCase()}
+              {data.config.policy}
             </Box.Value>
+        </Box>
+        <Box>
+            <Box.Header>Reschedule Arrival</Box.Header>
+            <Box.Value>
+              {data.config.arrival}
+            </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Time Delta</Box.Header>
+          <Box.Value>{iso8601.toSeconds(iso8601.parse(data.config.time_delta))}</Box.Value>
         </Box>
       </Section>
       <Section header="Cooling Configuration">
         <Box>
           <Box.Header>Enabled</Box.Header>
           <Box.Value>
-            {`${data.config.cooling.enabled}`.toUpperCase()}
+            {data.config.cooling.toString()}
+          </Box.Value>
+        </Box>
+        <Box>
+          <Box.Header>Weather</Box.Header>
+          <Box.Value>
+            {data.config.weather.toString()}
           </Box.Value>
         </Box>
       </Section>

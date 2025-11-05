@@ -84,8 +84,8 @@ export const columns: ColumnHeader[] = [
     inputType: "text",
   },
   {
-    name: "Jobs Mode",
-    propertyName: "jobs_mode",
+    name: "Workload",
+    propertyName: "workload",
     operators: [],
     activeFilters: [],
     inputType: "text",

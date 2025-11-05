@@ -48,7 +48,7 @@ export function SimulationsDataGridRow({
       </div>
       <SimulationDataGridCell value={simulation.user} />
       <SimulationDataGridCell value={simulation.system} />
-      <SimulationDataGridCell value={simulation.config.scheduler.jobs_mode} />
+      <SimulationDataGridCell value={simulation.config.workload} />
       <SimulationDataGridCell value={formatDate(simulation.start)} />
       <SimulationDataGridCell value={formatDate(simulation.end)} />
       <SimulationDataGridCell

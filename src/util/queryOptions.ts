@@ -6,6 +6,7 @@ import { CoolingCEP } from "../models/CoolingCEP.model";
 import { Job } from "../models/Job.model";
 import { groupBy, sortBy } from "lodash";
 import { SimulationStatistic } from "../models/SimulationStatistic.model";
+import { SystemInfo } from "../models/SystemInfo.model";
 
 export interface ListResponse<T> {
   total_results: number;
@@ -175,13 +176,19 @@ export const simulationSchedulerJobs = (
 
 export const getSystemInformation = (system: string) =>
   queryOptions({
-    queryKey: ["system-info", system],
+    queryKey: ["system", system],
     queryFn: async () => {
-      const res = await axios.get<{
-        peak_flops: number;
-        peak_power: number;
-        g_flops_w_peak: number;
-      }>(`/system-info/${system}`);
+      const res = await axios.get<SystemInfo>(`/system/${system}`);
+      return res.data;
+    },
+    staleTime: Infinity,
+  });
+
+export const getSystems = () =>
+  queryOptions({
+    queryKey: ["system", "list"],
+    queryFn: async () => {
+      const res = await axios.get<SystemInfo[]>(`/system/list`);
       return res.data;
     },
     staleTime: Infinity,

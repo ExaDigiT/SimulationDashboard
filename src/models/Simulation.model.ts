@@ -1,4 +1,4 @@
-import { SimulationRequest } from "./SimulationRequest.model";
+import { SimulationConfig } from "./SimulationConfig.model";
 
 export interface Simulation {
   id: string;
@@ -12,5 +12,5 @@ export interface Simulation {
   execution_end: string | null;
   progress: number;
   progress_date: string;
-  config: SimulationRequest;
+  config: SimulationConfig;
 }

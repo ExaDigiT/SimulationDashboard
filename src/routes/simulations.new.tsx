@@ -1,12 +1,14 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { RAPSForm } from "../components/simulations/raps.form";
 import { BasicSettingsForm } from "../components/simulations/basicSettings.form";
 import { Button } from "../components/shared/button";
 import { CoolingForm } from "../components/simulations/cooling.form";
-import { SimulationRequest } from "../models/SimulationRequest.model";
+import { SimulationConfig, getDefaultSimulationConfig } from "../models/SimulationConfig.model";
+import { TextArea } from "../components/shared/textArea"
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
+import { tryParseYaml } from "../util/misc";
 import axios from "axios";
 import { Section } from "../components/shared/simulation/section";
 import { Simulation } from "../models/Simulation.model";
@@ -16,14 +18,16 @@ export const Route = createFileRoute("/simulations/new")({
 });
 
 function NewSimultation() {
-  const [form, setForm] = useState<SimulationRequest>(new SimulationRequest());
+  const [form, setForm] = useState(getDefaultSimulationConfig);
+  const [advancedStr, setAdvancedStr] = useState("");
   const navigate = useNavigate();
 
   const onSubmit = useMutation({
-    mutationFn: async ({ form }: { form: SimulationRequest }) => {
+    mutationFn: async ({ form }: { form: SimulationConfig }) => {
+      const advancedConfig = tryParseYaml(advancedStr)[0]
       const sim = await axios.post<Simulation>(
         "/simulation/run",
-        form,
+        advancedConfig ?? form,
       );
       navigate({
         to: `/simulations/$simulationId/summary`,
@@ -69,6 +73,20 @@ function NewSimultation() {
             sectionProps={{ className: "grid-cols-3 gap-x-2" }}
           >
             <CoolingForm form={form} setForm={setForm} />
+          </Section>
+          <Section
+            header="Advanced Configuration (YAML)"
+            sectionProps={{ className: "grid-cols-1" }}
+            defaultExpanded={false}
+          >
+              <TextArea
+                value={advancedStr}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                  setAdvancedStr(e.target.value);
+                }}
+                className="h-[25vh]"
+                error={tryParseYaml(advancedStr)[1]}
+              />
           </Section>
         </div>
         <footer className="flex justify-end">
